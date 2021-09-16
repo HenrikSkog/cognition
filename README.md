@@ -4,7 +4,7 @@
 
 ## Description
 
-[Insert description]
+[Click here](./cognition/README.md) to read to project description.
 
 ## Developer Information
 
