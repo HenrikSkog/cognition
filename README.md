@@ -6,6 +6,10 @@
 
 [Click here](./cognition/README.md) to read to project description.
 
+## Deliverable Documentation
+
+[Click here](./docs) to read the deliverable documentation.
+
 ## Developer Information
 
 Developed by:
