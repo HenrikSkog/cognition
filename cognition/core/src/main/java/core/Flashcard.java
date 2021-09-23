@@ -1,11 +1,13 @@
 package core;
 
 public class Flashcard {
-    private final long id;
+    private long id;
     private String front;
     private String answer;
 
     /**
+     * Initializes a Flashcard object with the provided parameters.
+     *
      * @param id     is the identifier for the Flashcard.
      * @param front  is the front statement or question on the Flashcard.
      * @param answer is the flipped side of the Flashcard, and the answer to the front.
@@ -18,6 +20,17 @@ public class Flashcard {
         }
 
         this.answer = answer;
+    }
+
+    /**
+     * Initializes a Flashcard object with no values.
+     * This is used when deserializing the object.
+     */
+    public Flashcard() {
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -46,5 +59,14 @@ public class Flashcard {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Flashcard{" +
+                "id=" + id +
+                ", front='" + front + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
     }
 }

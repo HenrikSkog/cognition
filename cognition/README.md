@@ -25,10 +25,7 @@ As a user, I want to search quizzes and flashcards for easier and more intuitive
 
 ## Mockup screenshots
 
-> The following are mockup screenshots from our project Figma. 
-> The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
->
-
+The following are mockup screenshots from our project Figma. The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
 
 ### Login Screen
 
@@ -44,29 +41,10 @@ As a user, I want to search quizzes and flashcards for easier and more intuitive
 
 ### Flashcard - Type 1 (Input)
 
-<div>
-
 ![Flashcard - Type 1 (Input)](../docs/release1/img/flashcard_1.png)
 
-</div>
-
 ### Flashcard - Type 2 (Guess)
-
-<div>
 
 ![Flashcard - Type 2 (Input)](../docs/release1/img/flashcard_2_1.png)
 
 ![Flashcard - Type 2 (Input)](../docs/release1/img/flashcard_2_2.png)
-
-</div>
-
-<style>
-    img[alt="Flashcard - Type 1 (Input)"] { width: 250px; }
-    div {
-        display: flex;
-        justify-content: space-evenly;
-    }
-    div img {
-        width: 250px;
-    }
-</style>
