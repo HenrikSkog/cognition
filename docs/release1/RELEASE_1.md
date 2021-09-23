@@ -89,6 +89,23 @@ short description about how to test the new functionality can be added in order 
 
 Before merging, the commits in the branch to merge must be squashed. This cleans up the Git timeline.
 
+## User interface (FXML)
+
+The module `cognition/ui` handles the user interface of the app. It applies the library [JavaFX](https://openjfx.io/) to
+create an interactive graphical interface.
+
+So far, the user interface only consists of the login screen and has no functionality. Throughout future milestones, the
+interface will be styled according to the mockup screenshots in the [`cognition/README.md`](../../cognition/README.md)
+and be a functional flashcard app.
+
+## Core
+
+The module `cognition/core` consists of plain old Java object (POJOs). These objects are responsible for the business
+logic of Cognition.
+
+Currently, `coginition/core` only has a [`Flashcard`](../../cognition/core/src/main/java/core/Flashcard.java) class and
+a corresponding simple test called [`FlashcardTest`](../../cognition/core/src/test/java/core/FlashcardTest.java).
+
 ## Persistent storage
 
 The API for persistent storage is located in the module `cognition/api`. The API uses
@@ -99,11 +116,7 @@ Internally, the group's API uses the [MongoDB API](https://docs.mongodb.com/driv
 remote MongoDB database. This allows the entire group to share the same data set whilst developing, making it easier to
 collaborate on new functionality and saving time.
 
-## User interface (FXML)
-
-> TODO: Write about what we add in the `ui` module for the first deliverable.
-
-## Continuous Intergration (CI) and code quality
+## Continuous Integration (CI) and code quality
 
 The pipeline for continuous integration must succeed before merging new functionality.
 
