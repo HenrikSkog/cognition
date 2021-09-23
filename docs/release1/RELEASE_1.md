@@ -118,6 +118,12 @@ collaborate on new functionality and saving time.
 
 ## Continuous Integration (CI) and code quality
 
+The module `cognition/ui` handles the user interface of the app. It applies the library [Javafx](https://openjfx.io/) to easily create an interactive graphical interface.
+
+So far, the user interface only consists of the login screen and has no functionality. In future updates, the interface will be styled according to the mockup screenshots in the `README` and be a functional flashcard app.
+
+## Continuous Intergration (CI) and code quality
+
 The pipeline for continuous integration must succeed before merging new functionality.
 
 The code must compile, pass all code quality checks and pass all tests.
@@ -133,3 +139,50 @@ The following tools will be used to ensure code quality:
 ## Testing
 
 New functionality should - if appropriate (which it almost always is) - be tested before it is merged.
+
+## Design
+
+Provisional design sketches showing the login-, home- and quiz-screen, as well as a contemporary design for the flashcards themselves.
+
+The tentative design sketches can be found [here at Figma](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
+
+### Login Screen
+
+![Login Screen](img/login_screen.png)
+
+### Home Screen
+
+![Home Screen](img/home_screen.png)
+
+### Taking a Quiz
+
+![Quiz Screen](img/quiz_screen.png)
+
+### Flashcard - Type 1 (Input)
+
+<div>
+
+![Flashcard - Type 1 (Input)](img/flashcard_1.png)
+
+</div>
+
+### Flashcard - Type 2 (Guess)
+
+<div>
+
+![Flashcard - Type 2 (Input)](img/flashcard_2_1.png)
+
+![Flashcard - Type 2 (Input)](img/flashcard_2_2.png)
+
+</div>
+
+<style>
+    img[alt="Flashcard - Type 1 (Input)"] { width: 250px; }
+    div {
+        display: flex;
+        justify-content: space-evenly;
+    }
+    div img {
+        width: 250px;
+    }
+</style>

@@ -25,5 +25,48 @@ As a user, I want to search quizzes and flashcards for easier and more intuitive
 
 ## Mockup screenshots
 
-> Insert screenshots from Figma with design sketches.
-> Mark these with subheadings (###) for easier navigation in the README. -Magnus
+> The following are mockup screenshots from our project Figma. 
+> The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
+>
+
+
+### Login Screen
+
+![Login Screen](../docs/release1/img/login_screen.png)
+
+### Home Screen
+
+![Home Screen](../docs/release1/img/home_screen.png)
+
+### Taking a Quiz
+
+![Quiz Screen](../docs/release1/img/quiz_screen.png)
+
+### Flashcard - Type 1 (Input)
+
+<div>
+
+![Flashcard - Type 1 (Input)](../docs/release1/img/flashcard_1.png)
+
+</div>
+
+### Flashcard - Type 2 (Guess)
+
+<div>
+
+![Flashcard - Type 2 (Input)](../docs/release1/img/flashcard_2_1.png)
+
+![Flashcard - Type 2 (Input)](../docs/release1/img/flashcard_2_2.png)
+
+</div>
+
+<style>
+    img[alt="Flashcard - Type 1 (Input)"] { width: 250px; }
+    div {
+        display: flex;
+        justify-content: space-evenly;
+    }
+    div img {
+        width: 250px;
+    }
+</style>
