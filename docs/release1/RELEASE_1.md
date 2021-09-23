@@ -175,14 +175,3 @@ The tentative design sketches can be found [here at Figma](https://www.figma.com
 ![Flashcard - Type 2 (Input)](img/flashcard_2_2.png)
 
 </div>
-
-<style>
-    img[alt="Flashcard - Type 1 (Input)"] { width: 250px; }
-    div {
-        display: flex;
-        justify-content: space-evenly;
-    }
-    div img {
-        width: 250px;
-    }
-</style>
