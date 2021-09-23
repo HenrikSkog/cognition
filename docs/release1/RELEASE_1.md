@@ -91,36 +91,23 @@ Before merging, the commits in the branch to merge must be squashed. This cleans
 
 ## User interface (FXML)
 
-The module `cognition/ui` handles the user interface of the app. It applies the library [JavaFX](https://openjfx.io/) to
-create an interactive graphical interface.
-
-So far, the user interface only consists of the login screen and has no functionality. Throughout future milestones, the
-interface will be styled according to the mockup screenshots in the [`cognition/README.md`](../../cognition/README.md)
-and be a functional flashcard app.
+Please see the [UI module documentation](../../cognition/ui/README.md) for thorough documentation of its classes.
 
 ## Core
 
-The module `cognition/core` consists of plain old Java object (POJOs). These objects are responsible for the business
-logic of Cognition.
-
-Currently, `coginition/core` only has a [`Flashcard`](../../cognition/core/src/main/java/core/Flashcard.java) class and
-a corresponding simple test called [`FlashcardTest`](../../cognition/core/src/test/java/core/FlashcardTest.java).
+Please see the [Core module documentation](../../cognition/core/README.md) for thorough documentation of its classes.
 
 ## Persistent storage
 
-The API for persistent storage is located in the module `cognition/api`. The API uses
-the [Spring Boot](https://spring.io/projects/spring-boot) framework to create a web REST API. Additionally, Spring Boot
-has robust serialization and deserialization of _Plain Old Java Objects_ (POJOs).
-
-Internally, the group's API uses the [MongoDB API](https://docs.mongodb.com/drivers/java/sync/current/) to connect to a
-remote MongoDB database. This allows the entire group to share the same data set whilst developing, making it easier to
-collaborate on new functionality and saving time.
+Please see the [API module documentation](../../cognition/api/README.md) for thorough documentation of its classes.
 
 ## Continuous Integration (CI) and code quality
 
-The module `cognition/ui` handles the user interface of the app. It applies the library [Javafx](https://openjfx.io/) to easily create an interactive graphical interface.
+The module `cognition/ui` handles the user interface of the app. It applies the library [Javafx](https://openjfx.io/) to
+easily create an interactive graphical interface.
 
-So far, the user interface only consists of the login screen and has no functionality. In future updates, the interface will be styled according to the mockup screenshots in the `README` and be a functional flashcard app.
+So far, the user interface only consists of the login screen and has no functionality. In future updates, the interface
+will be styled according to the mockup screenshots in the `README` and be a functional flashcard app.
 
 ## Continuous Intergration (CI) and code quality
 
@@ -142,9 +129,11 @@ New functionality should - if appropriate (which it almost always is) - be teste
 
 ## Design
 
-Provisional design sketches showing the login-, home- and quiz-screen, as well as a contemporary design for the flashcards themselves.
+Provisional design sketches showing the login-, home- and quiz-screen, as well as a contemporary design for the
+flashcards themselves.
 
-The tentative design sketches can be found [here at Figma](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
+The tentative design sketches can be
+found [here at Figma](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
 
 ### Login Screen
 
@@ -160,18 +149,10 @@ The tentative design sketches can be found [here at Figma](https://www.figma.com
 
 ### Flashcard - Type 1 (Input)
 
-<div>
-
 ![Flashcard - Type 1 (Input)](img/flashcard_1.png)
 
-</div>
-
 ### Flashcard - Type 2 (Guess)
-
-<div>
 
 ![Flashcard - Type 2 (Input)](img/flashcard_2_1.png)
 
 ![Flashcard - Type 2 (Input)](img/flashcard_2_2.png)
-
-</div>
