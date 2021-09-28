@@ -1,20 +1,15 @@
 package core;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Please note that this model of Flashcards will later be abstracted if need be.
  */
 public class CognitionModel implements Iterable<Flashcard> {
-    // Currently, imagine this HashMap as a JSON representation of data.
-    // The key represents the identifier og the JSON object, and the Flashcard is the JSON object
-    // NOTE: This is not the final JSON model
-    private final Map<Long, Flashcard> map = new HashMap<>();
+    private final List<Flashcard> flashcards = new ArrayList<>();
 
-    public Map<Long, Flashcard> getMap() {
-        return map;
+    public List<Flashcard> getFlashcards() {
+        return flashcards;
     }
 
     /**
@@ -24,24 +19,21 @@ public class CognitionModel implements Iterable<Flashcard> {
      */
     @Override
     public Iterator<Flashcard> iterator() {
-        return map.values().iterator();
-    }
-
-    /**
-     * Gets a Flashcard with a given identifier.
-     *
-     * @param id is the identifier.
-     * @return an instance of the Flashcard class.
-     */
-    public Flashcard getFlashCard(long id) {
-        return map.get(id);
+        return flashcards.iterator();
     }
 
     /**
      * @param flashcard is an instance of the Flashcard class.
-     * @return the previous value associated with key, or null if there was no mapping for key.
+     * @return a boolean representing whether the operation was successful.
      */
-    public Flashcard putFlashCard(Flashcard flashcard) {
-        return map.put(flashcard.getId(), flashcard);
+    public boolean addFlashcard(Flashcard flashcard) {
+        return flashcards.add(flashcard);
+    }
+
+    @Override
+    public String toString() {
+        return "CognitionModel{" +
+                "flashcards=" + flashcards +
+                '}';
     }
 }

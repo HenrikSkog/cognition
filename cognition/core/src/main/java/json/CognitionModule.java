@@ -17,5 +17,6 @@ public class CognitionModule extends SimpleModule {
     public CognitionModule() {
         super(NAME, Version.unknownVersion());
         addSerializer(Flashcard.class, new FlashcardSerializer());
+        addDeserializer(Flashcard.class, new FlashcardDeserializer());
     }
 }

@@ -1,5 +1,6 @@
 package ui;
 
+import core.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,29 +12,35 @@ import java.util.Objects;
 
 public class App extends Application {
 
-    private Scene scene;
+    private static Scene scene;
 
-    public void start(Stage stage) throws Exception {
+    // Synchronized prevents errors when using static
+    // as it only allows a single thread to run at any given time
+    // in a multithreaded environment
+
+    public synchronized void start(Stage stage) throws Exception {
         scene = new Scene(loadFXML("UI"));
         // App.setStyles("main");
         stage.setScene(scene);
         stage.show();
+
     }
 
     public void setStyles(String css) {
         scene.getStylesheets().add(Objects.requireNonNull(App.class.getResource("styles/" + css + ".css")).toString());
     }
 
-    public void setRoot(String fxml) throws IOException {
+
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
-    public Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = setFXMLLoader(fxml);
         return fxmlLoader.load();
     }
 
-    public FXMLLoader setFXMLLoader(String fxml) {
+    public static FXMLLoader setFXMLLoader(String fxml) {
         return new FXMLLoader(App.class.getResource("views/" + fxml + ".fxml"));
     }
 
