@@ -38,7 +38,7 @@ Gitpod should automatically solve this issue for you.
 cd cognition
 
 # Install dependencies and run all tests
-mvn install
+mvn clean install
 
 # Run Spring Boot server (after running mvn install)
 mvn spring-boot:run -f api/pom.xml
