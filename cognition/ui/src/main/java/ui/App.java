@@ -1,6 +1,5 @@
 package ui;
 
-import core.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +15,7 @@ public class App extends Application {
 
     // Synchronized prevents errors when using static
     // as it only allows a single thread to run at any given time
-    // in a multithreaded environment
+    // in a multi-threaded environment
 
     public synchronized void start(Stage stage) throws Exception {
         scene = new Scene(loadFXML("UI"));

@@ -1,14 +1,11 @@
-package controllers;
+package ui.controllers;
 
 import core.CognitionModel;
 import core.Flashcard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 import json.CognitionPersistence;
 import ui.App;
 
@@ -18,7 +15,6 @@ public class DashboardController {
 
     @FXML
     private ListView<String> flashcardPane;
-
 
 
     public void handleLogout() throws IOException {

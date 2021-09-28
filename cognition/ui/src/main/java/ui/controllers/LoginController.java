@@ -1,6 +1,5 @@
-package controllers;
+package ui.controllers;
 
-import core.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Labeled;
@@ -32,8 +31,7 @@ public class LoginController extends App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             feedback.setAlignment(Pos.CENTER);
             feedback.setText("Could not find a valid user with that user-pass combo");
         }
@@ -45,6 +43,7 @@ public class LoginController extends App {
     }
 
     @FXML
-    public void initialize() {}
+    public void initialize() {
+    }
 
 }
