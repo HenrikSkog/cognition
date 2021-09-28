@@ -35,19 +35,6 @@ public class CognitionPersistence {
         mapper.registerModule(new CognitionModule());
     }
 
-    /**
-     * Creates the directories required if they do not exist
-     *
-     * @throws IOException if an error occurred when trying to create local storage directories.
-     */
-    private void createDirectoryIfNotExists(Path path) throws IOException {
-        try {
-            Files.createDirectories(path);
-        } catch (IOException e) {
-            throw new IOException("An error occurred when trying to create the directory: " + path);
-        }
-    }
-
 
     /**
      * Reads the CognitionModel.
@@ -121,8 +108,8 @@ public class CognitionPersistence {
 
         // Add some sample data to the model
         CognitionModel model = new CognitionModel();
-        model.putFlashCard(new Flashcard(1, "a", "b"));
-        model.putFlashCard(new Flashcard(2, "c", "d"));
+        model.addFlashcard(new Flashcard(1, "a", "b"));
+        model.addFlashcard(new Flashcard(2, "c", "d"));
 
         // Save the model
         CognitionPersistence persistence = new CognitionPersistence("flashcards.json");
