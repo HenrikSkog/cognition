@@ -1,0 +1,23 @@
+image: maven:latest
+
+variables:
+  MAVEN_CLI_OPTS: "-f cognition/pom.xml -s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  # This script cleans previous build, installs dependencies, runs all tests and checks that the project compiles
+  script:
+    - mvn $MAVEN_CLI_OPTS clean install
+    - mvn $MAVEN_CLI_OPTS compile -e
+
+test:
+  stage: test
+  # This is strictly speaking unnecessary due to the script run above, but nice to have just in case.
+  script:
+    - mvn $MAVEN_CLI_OPTS clean test
