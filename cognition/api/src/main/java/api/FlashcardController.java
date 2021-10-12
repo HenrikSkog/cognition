@@ -22,7 +22,7 @@ public class FlashcardController {
             @RequestParam(value = "answer", defaultValue = "No answer specified.") String answer
     ) {
         return new Flashcard(
-                counter.incrementAndGet(),
+                String.valueOf(counter.incrementAndGet()),
                 "Front: " + front,
                 "Answer: " + answer
         );

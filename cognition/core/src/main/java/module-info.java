@@ -1,5 +1,5 @@
 module cognition.core {
-    requires transitive com.fasterxml.jackson.databind;
+    requires com.google.gson;
 
     exports core;
     exports json;
