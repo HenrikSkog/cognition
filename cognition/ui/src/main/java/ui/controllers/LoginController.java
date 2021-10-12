@@ -53,14 +53,11 @@ public class LoginController extends Controller {
             return false;
         }
 
-        if (users == null) {
-            feedbackErrorMessage = "No users exist in local storage.";
-            return false;
-        }
-
-        for (User user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return true;
+        if (users != null) {
+            for (User user : users) {
+                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                    return true;
+                }
             }
         }
 
