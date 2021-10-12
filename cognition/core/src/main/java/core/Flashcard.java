@@ -1,20 +1,20 @@
 package core;
 
 public class Flashcard {
-    private long id;
+    private String UUID;
     private String front;
     private String answer;
+
 
     /**
      * Initializes a Flashcard object with the provided parameters.
      *
-     * @param id     is the identifier for the Flashcard.
+     * @param UUID   is the identifier for the Flashcard.
      * @param front  is the front statement or question on the Flashcard.
      * @param answer is the flipped side of the Flashcard, and the answer to the front.
      */
-    public Flashcard(long id, String front, String answer) {
-        this.id = id;
-
+    public Flashcard(String UUID, String front, String answer) {
+        this.UUID = UUID;
         if (isValidFront(front)) {
             this.front = front;
         }
@@ -29,12 +29,12 @@ public class Flashcard {
     public Flashcard() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
     }
 
-    public long getId() {
-        return id;
+    public String getUUID() {
+        return UUID;
     }
 
     public String getFront() {
@@ -64,7 +64,7 @@ public class Flashcard {
     @Override
     public String toString() {
         return "Flashcard{" +
-                "id=" + id +
+                "UUID=" + UUID +
                 ", front='" + front + '\'' +
                 ", answer='" + answer + '\'' +
                 '}';

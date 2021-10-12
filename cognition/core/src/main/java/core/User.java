@@ -1,18 +1,29 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
-    private int UUID;
+    private String UUID;
     private String username;
     private String password;
+    private List<Quiz> quizzes = new ArrayList<>();
 
-    public User(int UUID, String username, String password) {
+    public User() {
+    }
+
+    public User(String UUID, String username, String password) {
 
         this.UUID = UUID;
         this.username = username;
         setPassword(password);
     }
 
-    public void setUUID(int UUID) {
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setUUID(String UUID) {
         this.UUID = UUID;
     }
 
@@ -20,7 +31,7 @@ public class User {
         this.username = username;
     }
 
-    public int getUUID() {
+    public String getUUID() {
         return UUID;
     }
 
@@ -32,14 +43,25 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) throws IllegalArgumentException {
-        try {
-            if (password.length() >= 8) {
-                this.password = password;
-            }
-        }
-        catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Password must be at least 8 characters long");
-        }
+    public void addQuiz(Quiz quiz) {
+        quizzes.add(quiz);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "UUID='" + UUID + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", quizzes=" + quizzes +
+                '}';
     }
 }
