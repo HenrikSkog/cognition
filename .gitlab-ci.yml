@@ -1,7 +1,15 @@
 image: maven:latest
 
 variables:
-  MAVEN_CLI_OPTS: "-f cognition/pom.xml -s .m2/settings.xml --batch-mode"
+  # Parent pom.xml
+  PARENT_CLI_OPTS: "-f cognition/pom.xml -s .m2/settings.xml --batch-mode"
+  # API pom.xml
+  API_CLI_OPTS: "-f cognition/api/pom.xml -s .m2/settings.xml --batch-mode"
+  # Core pom.xml
+  CORE_CLI_OPTS: "-f cognition/core/pom.xml -s .m2/settings.xml --batch-mode"
+  # UI pom.xml
+  UI_CLI_OPTS: "-f cognition/ui/pom.xml -s .m2/settings.xml --batch-mode"
+
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 cache:
@@ -11,13 +19,16 @@ cache:
 
 build:
   stage: build
-  # This script cleans previous build, installs dependencies, runs all tests and checks that the project compiles
+  # Cleans previous build, installs dependencies, runs all tests and checks that the project compiles
   script:
-    - mvn $MAVEN_CLI_OPTS clean install
-    - mvn $MAVEN_CLI_OPTS compile -e
+    - mvn $API_CLI_OPTS clean install
+    - mvn $CORE_CLI_OPTS clean install
+    - mvn $UI_CLI_OPTS clean # GitLab doesn't support TestFX, so we cannot run these tests
+    - mvn $PARENT_CLI_OPTS compile -e
 
 test:
   stage: test
   # This is strictly speaking unnecessary due to the script run above, but nice to have just in case.
   script:
-    - mvn $MAVEN_CLI_OPTS clean test
+    - mvn $API_CLI_OPTS clean test
+    - mvn $CORE_CLI_OPTS clean test
