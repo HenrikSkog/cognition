@@ -35,7 +35,7 @@ public class UserStorage extends Storage<User> {
         }
 
         try {
-            String content = Files.readString(Path.of(getStoragePath()), StandardCharsets.US_ASCII);
+            String content = Files.readString(Path.of(getStoragePath()), StandardCharsets.UTF_8);
             return getGson().fromJson(
                     content,
                     new TypeToken<List<User>>() {
@@ -54,7 +54,7 @@ public class UserStorage extends Storage<User> {
      * @throws JsonIOException if an error occurred when serializing the JSON content.
      */
     private void writeToJson(List<User> users) throws JsonIOException, IOException {
-        try (FileWriter writer = new FileWriter(getStoragePath(), StandardCharsets.US_ASCII)) {
+        try (FileWriter writer = new FileWriter(getStoragePath(), StandardCharsets.UTF_8)) {
             try {
                 getGson().toJson(users, writer);
             } catch (JsonIOException e) {

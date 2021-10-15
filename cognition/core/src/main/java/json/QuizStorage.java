@@ -36,7 +36,7 @@ public class QuizStorage extends Storage<Quiz> {
         }
 
         try {
-            String content = Files.readString(Path.of(getStoragePath()), StandardCharsets.US_ASCII);
+            String content = Files.readString(Path.of(getStoragePath()), StandardCharsets.UTF_8);
             return getGson().fromJson(
                     content,
                     new TypeToken<List<Quiz>>() {
@@ -55,7 +55,7 @@ public class QuizStorage extends Storage<Quiz> {
      * @throws JsonIOException if an error occurred when serializing the JSON content.
      */
     private void writeToJson(List<Quiz> quizzes) throws JsonIOException, IOException {
-        try (FileWriter writer = new FileWriter(getStoragePath(), StandardCharsets.US_ASCII)) {
+        try (FileWriter writer = new FileWriter(getStoragePath(), StandardCharsets.UTF_8)) {
             try {
                 getGson().toJson(quizzes, writer);
             } catch (JsonIOException e) {
