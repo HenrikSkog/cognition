@@ -1,40 +1,48 @@
 package core;
 
+import core.validators.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private String id;
+    private String UUID;
     private String name;
     private String description;
-    private List<Flashcard> flashcards = new ArrayList<>();
+    private final List<Flashcard> flashcards = new ArrayList<>();
 
     public Quiz() {
     }
 
-    public Quiz(String id) {
-        this.id = id;
+    public Quiz(String UUID, String name, String description) {
+        setUUID(UUID);
+        setName(name);
+        setDescription(description);
     }
 
-    public Quiz(String id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    private void setUUID(String UUID) {
+        if (Validator.isValidUUID(UUID)) {
+            this.UUID = UUID;
+        }
     }
 
-    public Quiz(String id, String name, String description, List<Flashcard> flashcards) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.flashcards = flashcards;
-    }
-
-    public String getId() {
-        return id;
+    public String getUUID() {
+        return UUID;
     }
 
     public void addFlashcard(Flashcard flashcard) {
-        flashcards.add(flashcard);
+        if (flashcard == null) {
+            return;
+        }
+
+        if (!flashcards.contains(flashcard)) {
+            flashcards.add(flashcard);
+        }
+    }
+
+    public void removeFlashcard(Flashcard flashcard) {
+        // Removes only if it is present. Thus, not conditional is needed.
+        flashcards.remove(flashcard);
     }
 
     public String getName() {
@@ -42,6 +50,10 @@ public class Quiz {
     }
 
     public void setName(String name) {
+        if (name.equals("")) {
+            return;
+        }
+
         this.name = name;
     }
 
@@ -50,14 +62,12 @@ public class Quiz {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        if (description.length() < 500) {
+            this.description = description;
+        }
     }
 
     public List<Flashcard> getFlashcards() {
         return flashcards;
-    }
-
-    public void setFlashcards(List<Flashcard> flashcards) {
-        this.flashcards = flashcards;
     }
 }

@@ -3,7 +3,6 @@ package json;
 import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import core.Quiz;
-import core.Quiz;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -100,7 +99,7 @@ public class QuizStorage extends Storage<Quiz> {
 
         // Filters based on id and returns null if no match was found
         return quizzes.stream()
-                .filter(quiz -> quiz.getId().equals(identifier))
+                .filter(quiz -> quiz.getUUID().equals(identifier))
                 .findFirst()
                 .orElse(null);
     }
@@ -124,7 +123,7 @@ public class QuizStorage extends Storage<Quiz> {
 
         for (int i = 0; i < quizzes.size(); i++) {
             Quiz quiz = quizzes.get(i);
-            if (quiz.getId().equals(identifier)) {
+            if (quiz.getUUID().equals(identifier)) {
                 // Accept the provided action, passed in as parameter
                 action.accept(quizzes, i);
 

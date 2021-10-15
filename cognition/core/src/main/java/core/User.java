@@ -2,20 +2,20 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class User {
     private String UUID;
     private String username;
     private String password;
-    private List<Quiz> quizzes = new ArrayList<>();
+    private final List<Quiz> quizzes = new ArrayList<>();
 
     public User() {
     }
 
     public User(String UUID, String username, String password) {
-
-        this.UUID = UUID;
-        this.username = username;
+        setUUID(UUID);
+        setUsername(username);
         setPassword(password);
     }
 
@@ -23,11 +23,34 @@ public class User {
         return quizzes;
     }
 
-    public void setUUID(String UUID) {
+    private void setUUID(String UUID) {
         this.UUID = UUID;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User user = (User) o;
+        return Objects.equals(UUID, user.UUID) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(quizzes, user.quizzes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(UUID, username, password, quizzes);
+    }
+
     public void setUsername(String username) {
+        if (username.equals("")) {
+            return;
+        }
+
         this.username = username;
     }
 
@@ -44,16 +67,28 @@ public class User {
     }
 
     public void addQuiz(Quiz quiz) {
-        quizzes.add(quiz);
+        if (quiz == null) {
+            return;
+        }
+
+        if (!quizzes.contains(quiz)) {
+            quizzes.add(quiz);
+        }
+    }
+
+    public void removeQuiz(Quiz quiz) {
+        // Removes only if it is present. Thus, not conditional is needed.
+        quizzes.remove(quiz);
     }
 
     public void setPassword(String password) {
+        if (password.equals("")) {
+            return;
+        }
+
         this.password = password;
     }
 
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
 
     @Override
     public String toString() {
