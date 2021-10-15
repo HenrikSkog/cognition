@@ -1,10 +1,13 @@
 package core;
 
+import core.validators.Validator;
+
+import java.util.Objects;
+
 public class Flashcard {
     private String UUID;
     private String front;
     private String answer;
-
 
     /**
      * Initializes a Flashcard object with the provided parameters.
@@ -14,12 +17,9 @@ public class Flashcard {
      * @param answer is the flipped side of the Flashcard, and the answer to the front.
      */
     public Flashcard(String UUID, String front, String answer) {
-        this.UUID = UUID;
-        if (isValidFront(front)) {
-            this.front = front;
-        }
-
-        this.answer = answer;
+        setUUID(UUID);
+        setFront(front);
+        setAnswer(answer);
     }
 
     /**
@@ -27,10 +27,6 @@ public class Flashcard {
      * This is used when deserializing the object.
      */
     public Flashcard() {
-    }
-
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
     }
 
     public String getUUID() {
@@ -42,7 +38,9 @@ public class Flashcard {
     }
 
     public void setFront(String front) {
-        this.front = front;
+        if (!front.equals("")) {
+            this.front = front;
+        }
     }
 
     public String getAnswer() {
@@ -50,15 +48,34 @@ public class Flashcard {
     }
 
     public void setAnswer(String answer) {
-        this.answer = answer;
+        if (!answer.equals("")) {
+            this.answer = answer;
+        }
     }
 
-    private boolean isValidFront(String front) {
-        if (front == null) {
-            throw new NullPointerException("Front cannot be null.");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
 
-        return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Flashcard flashcard = (Flashcard) o;
+        return Objects.equals(UUID, flashcard.UUID) && Objects.equals(front, flashcard.front) && Objects.equals(answer, flashcard.answer);
+    }
+
+    private void setUUID(String UUID) {
+        if (Validator.isValidUUID(UUID)) {
+            this.UUID = UUID;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(UUID, front, answer);
     }
 
     @Override

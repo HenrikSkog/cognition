@@ -85,7 +85,6 @@ public class LoginTest extends ApplicationTest {
      */
     @Test
     @DisplayName("Existing user can log in.")
-    @Disabled
     void existingUserCanLogIn() {
         User user = new User(UUID.randomUUID().toString(), validUsername, validPassword);
 
@@ -99,6 +98,22 @@ public class LoginTest extends ApplicationTest {
         clickOn("#usernameInput").write(validUsername);
         clickOn("#passwordInput").write(validPassword);
         clickOn("#loginButton");
+
+        // Check that we loaded Dashboard view
+        FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, username"));
+    }
+
+    @Test
+    @DisplayName("Can go to register view.")
+    void canGoToRegisterView() {
+        // Check that the Login view was loaded correctly
+        FxAssert.verifyThat("#loginButton", LabeledMatchers.hasText("Sign in"));
+
+        // Click to switch view
+        clickOn("#goToRegisterButton");
+
+        // Check that the Register view has loaded correctly
+        FxAssert.verifyThat("#createAccountButton", LabeledMatchers.hasText("Create account"));
     }
 
 

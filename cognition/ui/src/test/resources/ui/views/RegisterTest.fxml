@@ -40,7 +40,7 @@
                 <Font size="18.0"/>
             </font>
         </TextField>
-        <Label layoutX="161.0" layoutY="70.0" text="Cognition" textAlignment="CENTER" textFill="#5c5353">
+        <Label layoutX="161.0" layoutY="70.0" fx:id="registerHeading" text="Cognition" textAlignment="CENTER" textFill="#5c5353">
             <font>
                 <Font name="Mulish" size="72.0"/>
             </font>

@@ -19,7 +19,7 @@
         <Button layoutX="71.0" layoutY="410.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="61.0"
                 prefWidth="367.0"
                 style="-fx-background-color: F9AD3C; -fx-background-radius: 6; -fx-font-size: 21; -fx-font-family: Mulish; -fx-font-weight: 700;"
-                text="Create account" textFill="WHITE"/>
+                fx:id="createAccountButton" text="Create account" textFill="WHITE"/>
         <Label fx:id="feedback" alignment="CENTER" layoutX="36.0" layoutY="480.0" prefHeight="19.0" prefWidth="435.0"
                textAlignment="CENTER" textFill="RED">
             <font>

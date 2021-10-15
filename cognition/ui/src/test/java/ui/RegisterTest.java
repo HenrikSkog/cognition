@@ -91,6 +91,19 @@ public class RegisterTest extends ApplicationTest {
     }
 
     @Test
+    @DisplayName("Can go to login view.")
+    void canGoToLoginView() {
+        // Check that the Register view has loaded correctly
+        FxAssert.verifyThat("#registerHeading", LabeledMatchers.hasText("Cognition"));
+
+        // Click to switch view
+        clickOn("#switchToLoginButton");
+
+        // Check that the Login view was loaded correctly
+        FxAssert.verifyThat("#loginButton", LabeledMatchers.hasText("Sign in"));
+    }
+
+    @Test
     @DisplayName("Valid register passes.")
     void validRegisterPasses() {
         // Sample input for test

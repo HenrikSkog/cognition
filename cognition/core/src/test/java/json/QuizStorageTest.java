@@ -146,7 +146,7 @@ public class QuizStorageTest {
         // Check if Quiz object with given identifier really was deleted
         for (Quiz quiz : quizzes) {
             // There still exists a Quiz object with the randomly generated identifier.
-            if (quiz.getId().equals(identifier)) {
+            if (quiz.getUUID().equals(identifier)) {
                 fail();
             }
         }

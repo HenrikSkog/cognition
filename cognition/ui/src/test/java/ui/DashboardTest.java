@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class DashboardTest extends ApplicationTest {
     private Scene scene;
-    private LoginController loginController;
     private DashboardController dashboardController;
     private UserStorage userStorage;
 
@@ -31,7 +30,7 @@ public class DashboardTest extends ApplicationTest {
     void setUp() {
         try {
             userStorage = new UserStorage("usersTest.json");
-            loginController.setUserStorage(userStorage);
+            dashboardController.setUserStorage(userStorage);
 
             // Add a user, such that storage is not empty. Empty storage is tested in core module.
             userStorage.create(
@@ -49,12 +48,6 @@ public class DashboardTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loginLoader = getLoader("LoginTest");
-        loginLoader.load();
-
-
-        loginController = loginLoader.getController();
-
         FXMLLoader loader = getLoader("DashboardTest");
         Parent root = loader.load();
 
@@ -75,7 +68,6 @@ public class DashboardTest extends ApplicationTest {
     @Test
     @DisplayName("Controller is defined.")
     void controllersAreDefined() {
-        Assertions.assertNotNull(loginController);
         Assertions.assertNotNull(dashboardController);
     }
 
@@ -88,12 +80,30 @@ public class DashboardTest extends ApplicationTest {
     @Test
     @DisplayName("User can log out")
     void userCanLogOut() {
-
         FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, username"));
 
         clickOn("#signOutButton");
         FxAssert.verifyThat("#loginButton", LabeledMatchers.hasText("Sign in"));
+    }
 
+    @Test
+    @DisplayName("Can set currently active user.")
+    void canSetCurrentlyActiveUser() {
+        String username = "active-username";
+        User user = new User(UUID.randomUUID().toString(), username, "password");
+
+        // Create sample user
+        try {
+            userStorage.create(user);
+        } catch (IOException e) {
+            fail();
+        }
+
+        // Set active user
+        dashboardController.setUser(username);
+
+        // Check that the currently active user is the one we just set as active user
+        Assertions.assertEquals(dashboardController.getUser(), user);
     }
 
 
@@ -104,7 +114,6 @@ public class DashboardTest extends ApplicationTest {
 
         FxAssert.verifyThat("#cqHeading", TextMatchers.hasText("Create quiz"));
     }
-
 
 
     /**

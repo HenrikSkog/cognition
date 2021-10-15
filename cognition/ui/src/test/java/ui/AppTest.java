@@ -1,20 +1,24 @@
 package ui;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import json.UserStorage;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
 import ui.controllers.LoginController;
 import ui.controllers.annotations.SuppressFBWarnings;
 
-import java.util.Objects;
-
-public class App extends Application {
-
+public class AppTest extends ApplicationTest {
     private Scene scene;
 
+    /**
+     * Checks that the application can start.
+     * If the entire method runs without failing, the test passes.
+     */
     @Override
     public void start(Stage stage) throws Exception {
         // Load FXML view
@@ -24,10 +28,6 @@ public class App extends Application {
 
         // Set state in controller
         LoginController loginController = loader.getController();
-        // The UserStorage that gets initialized here, is common for the entire application.
-        // This UserStorage is set in all other controllers, in order to maintain continuity.
-        // This logic also, most importantly,
-        // separates persistent storage between application logic and unit and end-to-end tests.
         loginController.setUserStorage(new UserStorage());
 
         // Switch stage
@@ -37,13 +37,17 @@ public class App extends Application {
     }
 
     @SuppressFBWarnings
-    public FXMLLoader getLoader(String fxml) {
+    private FXMLLoader getLoader(String fxml) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
         return loader;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    @Test
+    @DisplayName("Can get loader.")
+    void canGetLoader() {
+        App app = new App();
+        FXMLLoader loader = app.getLoader("Login");
+        Assertions.assertNotNull(loader);
     }
 }
