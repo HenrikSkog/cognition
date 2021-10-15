@@ -112,7 +112,7 @@ public class DashboardTest extends ApplicationTest {
     void userCanOpenCreateQuizScreen() {
         clickOn("#createQuizButton");
 
-        FxAssert.verifyThat("#cqHeading", TextMatchers.hasText("Create quiz"));
+        FxAssert.verifyThat("#cqHeading", TextMatchers.hasText("Create new quiz"));
     }
 
 

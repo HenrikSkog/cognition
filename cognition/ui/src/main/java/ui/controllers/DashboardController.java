@@ -1,20 +1,14 @@
 package ui.controllers;
 
-import javafx.event.ActionEvent;
 import core.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import json.UserStorage;
-import ui.App;
 
 import java.io.IOException;
 
@@ -25,16 +19,20 @@ public class DashboardController extends Controller {
     @FXML
     private Label feedback;
 
+    // Made public to support setting before the corresponding view is loaded
     @FXML
-    private Labeled heading;
+    public Labeled heading;
 
     /**
      * The currently logged-in user.
      */
     private User user;
 
+
+
     @FXML
     public void handleLogout(ActionEvent event) {
+
         // Load FXML view
         FXMLLoader loader = getLoader("Login");
 
@@ -93,15 +91,13 @@ public class DashboardController extends Controller {
      * @param username is the String representation of the username of the current user.
      */
     public void setUser(String username) {
-        User user = null;
+
         try {
-            user = getUserStorage().readByUsername(username);
+            this.user = getUserStorage().readByUsername(username);
         } catch (IOException e) {
             feedback.setText("An error occurred when loading the current user.");
-            return;
         }
 
-        this.user = user;
     }
 
     public User getUser() {

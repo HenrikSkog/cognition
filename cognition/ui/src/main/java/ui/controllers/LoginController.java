@@ -2,6 +2,7 @@ package ui.controllers;
 
 import core.User;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+
+import static core.tools.Tools.capitalize;
 
 public class LoginController extends Controller {
 
@@ -83,6 +86,20 @@ public class LoginController extends Controller {
         DashboardController dashboardController = loader.getController();
         dashboardController.setUserStorage(getUserStorage());
         dashboardController.setUser(username);
+
+
+        /*
+
+            Sets the "Welcome, username" heading in Dashboard. This is done here, because
+            here we know for sure that the user has been set, but if we tried to achieve
+            the same result in DashboardController, we would have to use the initialize()
+            function, which when called, has not yet had user set.
+
+         */
+
+        dashboardController.heading.setText("Welcome, " + capitalize(username));
+
+
 
         // Switch stage
         Stage stage = getStage(event);
