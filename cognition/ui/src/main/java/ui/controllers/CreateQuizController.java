@@ -2,6 +2,8 @@ package ui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,8 +11,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import json.UserStorage;
 import ui.controllers.annotations.SuppressFBWarnings;
+
+import javax.swing.*;
+import java.io.IOException;
+
+import static core.tools.Tools.capitalize;
 
 public class CreateQuizController extends Controller {
     public ScrollPane flashcardPane;
@@ -92,6 +100,33 @@ public class CreateQuizController extends Controller {
         createFlashcardNode();
 
         feedback.setText("Added flashcard.");
+    }
+
+    @FXML
+    public void handleDashboard(ActionEvent event) {
+        // Load FXML view
+        FXMLLoader loader = getLoader("Dashboard");
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            feedback.setText("An error occurred when trying to go home.");
+            return;
+        }
+
+        // Set state in controller
+        DashboardController dashboardController = loader.getController();
+        dashboardController.setUserStorage(getUserStorage());
+        dashboardController.heading.setText("");
+
+        // Switch stage
+        Stage stage = getStage(event);
+        try {
+            switchScene(stage, root);
+        } catch (IOException e) {
+            feedback.setText("An error occurred when trying to go home.");
+        }
     }
 
     /**
