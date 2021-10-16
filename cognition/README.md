@@ -25,7 +25,7 @@ As a user, I want to search quizzes and flashcards for easier and more intuitive
 
 ## Mockup screenshots
 
-The following are mockup screenshots from our project Figma. The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
+The following are mockup screenshots from our project Figma. The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1).
 
 ### Login Screen
 
