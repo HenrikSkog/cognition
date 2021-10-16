@@ -11,16 +11,16 @@ cd cognition
 # Install dependencies and run all tests
 mvn install
 
-# Run frontend (after running mvn install)
-mvn javafx:run -f ui/pom.xml
-
 # Run Spring Boot server (after running mvn install)
 mvn spring-boot:run -f api/pom.xml
+
+# Run frontend (after running mvn install)
+mvn javafx:run -f ui/pom.xml
 ```
 
 ## Gitpod
 
-The application can be developed and executed using Gitpod. Use the badge in the [`REAMDE.md`](../../README.md) to
+The application can be developed and executed using Gitpod. Use the badge in the root [`REAMDE.md`](../../README.md) to
 launch the application using Gitpod.
 
 Each developer is encouraged to use their IDE of choice, as long as all functionality also supports using Gitpod.
@@ -40,8 +40,7 @@ deliverables ("Gruppeinnlevering 1", "Gruppeinnlevering 2", etc...).
 The group have set up GitLab issue templates to streamline the process of creating a new issue. A reference guide can be
 found using [this link](https://docs.gitlab.com/ee/user/project/description_templates.html).
 
-An issue can either be a [**Feature Request**](../../.gitlab/issue_templates/Feature.md), a [**
-Bug**](../../.gitlab/issue_templates/Bug.md) or **Uncategorized**. Please inspect the raw Markdown code when viewing
+An issue can either be a [**Feature Request**](../../.gitlab/issue_templates/Feature.md), a [**Bug**](../../.gitlab/issue_templates/Bug.md) or **Uncategorized**. Please inspect the raw Markdown code when viewing
 these templates.
 
 The issue templates are adapted to resemble an informal user story.
@@ -67,7 +66,7 @@ be larger than that, the issue must have a checklist of subtasks.
 
 #### Example
 
-**#10 - Setup frontend**
+Issue name: **#10 - Setup frontend**
 
 - [x] Add dependencies
 - [ ] Make controllers
@@ -89,25 +88,17 @@ short description about how to test the new functionality can be added in order 
 
 Before merging, the commits in the branch to merge must be squashed. This cleans up the Git timeline.
 
-## User interface (FXML)
+## User Interface
 
 Please see the [UI module documentation](../../cognition/ui/README.md) for thorough documentation of its classes.
 
-## Core
+## Core and persistent local storage
 
 Please see the [Core module documentation](../../cognition/core/README.md) for thorough documentation of its classes.
 
-## Persistent storage
+## REST API
 
 Please see the [API module documentation](../../cognition/api/README.md) for thorough documentation of its classes.
-
-## Continuous Integration (CI) and code quality
-
-The module `cognition/ui` handles the user interface of the app. It applies the library [Javafx](https://openjfx.io/) to
-easily create an interactive graphical interface.
-
-So far, the user interface only consists of the login screen and has no functionality. In future updates, the interface
-will be styled according to the mockup screenshots in the `README` and be a functional flashcard app.
 
 ## Continuous Intergration (CI) and code quality
 
@@ -127,13 +118,23 @@ The following tools will be used to ensure code quality:
 
 New functionality should - if appropriate (which it almost always is) - be tested before it is merged.
 
+## Reflection
+
+In short, deliverable 1 went quite smoothly. Setting up the multi-module Maven project was fine in itself. Specifying each module's dependencies and opening up packages to other modules was a bit challenging, but the group worked it out during pair programming with some trial and errors. In this case, Maven was quite strict with naming and directory structure.
+
+Working with issue tracking and branches is something all 4 group members are comfortable with from before. Thus, the real challenge lies in scoping the issues correctly, i.e. not creating too large issues. For group deliverable 1, the group feels that this went very well. As mentioned in the deliverable documentation, we aim to scope each issue to take a maximum of 12 hours (See `### Scope of an issue`). In general, we feel that we accomplished this throughout the entire milestone of group deliverable 1.
+
+Working with GitLab issue templates and GitLab merge request templates also helped us narrow down and specify each problem to solve. This was beneficial both for the developer and the code reviewer.
+
+To summarize, group deliverable 1 mainly focused on laying down the groundwork for a pleasant Git workflow. There were some hiccups whilst setting up the multi-module Maven project, but that was quickly solved due to good teamwork. The group is happy with the current groundwork, and agrees that this will be easier to build upon in later stages.
+
 ## Design
 
 Provisional design sketches showing the login-, home- and quiz-screen, as well as a contemporary design for the
 flashcards themselves.
 
 The tentative design sketches can be
-found [here at Figma](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1)
+found [here at Figma](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1).
 
 ### Login Screen
 
