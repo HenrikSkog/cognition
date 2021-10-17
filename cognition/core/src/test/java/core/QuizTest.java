@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class QuizTest {
@@ -24,6 +26,60 @@ public class QuizTest {
         Quiz quiz = new Quiz(UUID.randomUUID().toString(), "name", "description");
 
         // If we get here, initializing was successful
+    }
+
+    @Test
+    @DisplayName("Illegal Quiz throws.")
+    void illegalQuizThrows() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Quiz("invalid-UUID", "name", "description")
+        );
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Quiz(UUID.randomUUID().toString(), "", "")
+        );
+
+        String invalidDescription = "*".repeat(Quiz.MAX_DESCRIPTION_LENGTH + 1);
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Quiz(UUID.randomUUID().toString(), "name", invalidDescription)
+        );
+    }
+
+    @Test
+    @DisplayName("Can add flashcards.")
+    void canAddFlashcards() {
+        List<Flashcard> flashcards = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            flashcards.add(new Flashcard(UUID.randomUUID().toString(), "front-" + i, "answer-" + i));
+        }
+
+        quiz.addFlashcards(flashcards);
+
+        Assertions.assertEquals(flashcards, quiz.getFlashcards());
+    }
+
+    @Test
+    @DisplayName("Can set flashcards.")
+    void canSetFlashcards() {
+        quiz.setFlashcards(null);
+
+        boolean didNotAdd = quiz.getFlashcards().size() == 0;
+
+        Assertions.assertTrue(didNotAdd);
+
+        quiz.setFlashcards(List.of(
+                new Flashcard(UUID.randomUUID().toString(), "front-1", "answer-2"),
+                new Flashcard(UUID.randomUUID().toString(), "front-2", "answer-2")
+        ));
+
+        boolean addedTwoFlashcards = quiz.getFlashcards().size() == 2;
+        
+        Assertions.assertTrue(addedTwoFlashcards);
     }
 
     @Test
@@ -86,7 +142,11 @@ public class QuizTest {
     @DisplayName("Can set name.")
     void canSetName() {
         String currentName = quiz.getName();
-        quiz.setName("");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> quiz.setName("")
+        );
 
         // Verify that the name is unchanged when provided with an empty string
         Assertions.assertEquals(currentName, quiz.getName());
@@ -99,10 +159,17 @@ public class QuizTest {
     }
 
     @Test
-    @DisplayName("Can get description.")
-    void canGetDescription() {
-        String description = quiz.getDescription();
+    @DisplayName("Can set description.")
+    void canSetDescription() {
+        String currentDescription = quiz.getDescription();
 
-        Assertions.assertEquals(description, quiz.getDescription());
+        // Verify that the name is unchanged when provided with an empty string
+        Assertions.assertEquals(quiz.getDescription(), currentDescription);
+
+        String newDescription = "new-name";
+        quiz.setDescription(newDescription);
+
+        // Verify that the name is changed when provided with a new name
+        Assertions.assertEquals(quiz.getDescription(), newDescription);
     }
 }

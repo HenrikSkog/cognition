@@ -5,11 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.UserStorage;
+import json.CognitionStorage;
 import ui.controllers.LoginController;
 import ui.controllers.annotations.SuppressFBWarnings;
-
-import java.util.Objects;
 
 public class App extends Application {
 
@@ -20,15 +18,15 @@ public class App extends Application {
         // Load FXML view
         FXMLLoader loader = getLoader("Login");
 
-        Parent root = loader.load();
-
         // Set state in controller
-        LoginController loginController = loader.getController();
         // The UserStorage that gets initialized here, is common for the entire application.
         // This UserStorage is set in all other controllers, in order to maintain continuity.
         // This logic also, most importantly,
         // separates persistent storage between application logic and unit and end-to-end tests.
-        loginController.setUserStorage(new UserStorage());
+        CognitionStorage cognitionStorage = new CognitionStorage("users.json");
+        loader.setController(new LoginController(cognitionStorage));
+
+        Parent root = loader.load();
 
         // Switch stage
         scene = new Scene(root);

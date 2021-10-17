@@ -2,12 +2,14 @@ package core;
 
 import core.validators.Validator;
 
+import java.util.Iterator;
 import java.util.Objects;
 
-public class Flashcard {
+public class Flashcard implements Iterable<Flashcard> {
     private String UUID;
     private String front;
     private String answer;
+
 
     /**
      * Initializes a Flashcard object with the provided parameters.
@@ -38,9 +40,15 @@ public class Flashcard {
     }
 
     public void setFront(String front) {
-        if (!front.equals("")) {
-            this.front = front;
+        if (!Flashcard.isValidFront(front)) {
+            throw new IllegalArgumentException();
         }
+
+        this.front = front;
+    }
+
+    public static boolean isValidFront(String front) {
+        return front != null && front.length() >= 1;
     }
 
     public String getAnswer() {
@@ -48,9 +56,14 @@ public class Flashcard {
     }
 
     public void setAnswer(String answer) {
-        if (!answer.equals("")) {
-            this.answer = answer;
+        if (!Flashcard.isValidAnswer(answer)) {
+            throw new IllegalArgumentException();
         }
+        this.answer = answer;
+    }
+
+    public static boolean isValidAnswer(String answer) {
+        return answer != null && answer.length() >= 1;
     }
 
     @Override
@@ -68,9 +81,11 @@ public class Flashcard {
     }
 
     private void setUUID(String UUID) {
-        if (Validator.isValidUUID(UUID)) {
-            this.UUID = UUID;
+        if (!Validator.isValidUUID(UUID)) {
+            throw new IllegalArgumentException();
         }
+
+        this.UUID = UUID;
     }
 
     @Override
@@ -85,5 +100,10 @@ public class Flashcard {
                 ", front='" + front + '\'' +
                 ", answer='" + answer + '\'' +
                 '}';
+    }
+
+    @Override
+    public Iterator iterator() {
+        return null;
     }
 }

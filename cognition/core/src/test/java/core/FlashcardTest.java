@@ -30,18 +30,37 @@ public class FlashcardTest {
     }
 
     @Test
+    @DisplayName("Illegal Flashcard throws.")
+    void illegalFlashcardThrows() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Flashcard("illegal-UUID", "front", "answer")
+        );
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Flashcard(UUID.randomUUID().toString(), "", "answer")
+        );
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new Flashcard(UUID.randomUUID().toString(), "front", "")
+        );
+    }
+
+    @Test
     @DisplayName("Can be compared using the overridden equals method")
     void canBeCompared() {
         Flashcard copy = new Flashcard(flashcard.getUUID(), flashcard.getFront(), flashcard.getAnswer());
         Flashcard notEqualFlashcard = new Flashcard(flashcard.getUUID(), "Another front", "Another answer");
 
-        Assertions.assertTrue(flashcard.equals(copy));
+        Assertions.assertEquals(flashcard, copy);
 
-        Assertions.assertFalse(flashcard.equals(null));
+        Assertions.assertNotEquals(null, flashcard);
 
-        Assertions.assertFalse(flashcard.equals(new Object()));
+        Assertions.assertNotEquals(flashcard, new Object());
 
-        Assertions.assertFalse(flashcard.equals(notEqualFlashcard));
+        Assertions.assertNotEquals(flashcard, notEqualFlashcard);
     }
 
     @Test
@@ -67,24 +86,15 @@ public class FlashcardTest {
     @Test
     @DisplayName("Can set front")
     void canSetFront() {
-        flashcard.setAnswer("Valid front");
-    }
-
-
-    @Test
-    @DisplayName("Can get front")
-    void canGetFront() {
-        String front = flashcard.getFront();
-
-        Assertions.assertEquals(front, flashcard.getFront());
+        flashcard.setFront("Valid front");
+        Assertions.assertEquals("Valid front", flashcard.getFront());
     }
 
     @Test
-    @DisplayName("Can get answer.")
-    void canGetAnswer() {
-        String answer = flashcard.getAnswer();
-
-        Assertions.assertEquals(answer, flashcard.getAnswer());
+    @DisplayName("Can set front")
+    void canSetAnswer() {
+        flashcard.setAnswer("Valid answer");
+        Assertions.assertEquals("Valid answer", flashcard.getAnswer());
     }
 
     @Test

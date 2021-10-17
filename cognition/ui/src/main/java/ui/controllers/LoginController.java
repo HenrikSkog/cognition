@@ -2,19 +2,15 @@ package ui.controllers;
 
 import core.User;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import json.CognitionStorage;
 
 import java.io.IOException;
 import java.util.List;
-
-import static core.tools.Tools.capitalize;
 
 public class LoginController extends Controller {
 
@@ -26,6 +22,10 @@ public class LoginController extends Controller {
     private PasswordField passwordInput;
 
     private String feedbackErrorMessage = "No user with that username and password could be found.";
+
+    public LoginController(CognitionStorage cognitionStorage) {
+        super(cognitionStorage);
+    }
 
     @FXML
     public void handleLogin(ActionEvent event) {
@@ -50,7 +50,7 @@ public class LoginController extends Controller {
         List<User> users;
 
         try {
-            users = getUserStorage().readUsers();
+            users = getCognitionStorage().readUsers();
         } catch (IOException e) {
             feedbackErrorMessage = "An error occurred when loading local storage.";
             return false;
@@ -70,70 +70,27 @@ public class LoginController extends Controller {
 
 
     public void goToDashboard(ActionEvent event, String username) {
-        // Load FXML view
-        FXMLLoader loader = getLoader("Dashboard");
 
-        Parent root = null;
+        User user;
         try {
-            root = loader.load();
+            user = getCognitionStorage().readByUsername(username);
         } catch (IOException e) {
-            feedbackErrorMessage = "An error occurred when trying to go to Dashboard.";
+            feedbackErrorMessage = "An error occured when reading the user from file";
             feedback.setText(feedbackErrorMessage);
             return;
         }
 
-        // Set state in controller
-        DashboardController dashboardController = loader.getController();
-        dashboardController.setUserStorage(getUserStorage());
-        dashboardController.setUser(username);
+
+        changeToView(event, new DashboardController(user, getCognitionStorage()), "Dashboard", feedback);
 
 
-        /*
-
-            Sets the "Welcome, username" heading in Dashboard. This is done here, because
-            here we know for sure that the user has been set, but if we tried to achieve
-            the same result in DashboardController, we would have to use the initialize()
-            function, which when called, has not yet had user set.
-
-         */
-
-        dashboardController.heading.setText("Welcome, " + capitalize(username));
-
-
-
-        // Switch stage
-        Stage stage = getStage(event);
-        try {
-            switchScene(stage, root);
-        } catch (IOException e) {
-            feedback.setText("An error occurred when trying to switch view.");
-        }
     }
 
     @FXML
     public void goToRegister(ActionEvent event) {
-        // Load FXML view
-        FXMLLoader loader = getLoader("Register");
 
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            feedback.setText("An error occurred when trying to switch view.");
-            return;
-        }
+        changeToView(event, new RegisterController(getCognitionStorage()), "Register", feedback);
 
-        // Set state in controller
-        RegisterController registerController = loader.getController();
-        registerController.setUserStorage(getUserStorage());
-
-        // Switch stage
-        Stage stage = getStage(event);
-        try {
-            switchScene(stage, root);
-        } catch (IOException e) {
-            feedback.setText("An error occurred when trying to switch view.");
-        }
     }
 
     /**

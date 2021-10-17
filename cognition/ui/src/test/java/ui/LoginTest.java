@@ -2,14 +2,12 @@ package ui;
 
 import core.User;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.UserStorage;
+import json.CognitionStorage;
 import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.ButtonMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
 import ui.controllers.LoginController;
 import ui.controllers.annotations.SuppressFBWarnings;
@@ -18,12 +16,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static core.tools.Tools.capitalize;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class LoginTest extends ApplicationTest {
     private Scene scene;
     private LoginController loginController;
-    private UserStorage userStorage;
+    private CognitionStorage cognitionStorage;
 
     private final String validUsername = "valid-user";
     private final String validPassword = "valid-password";
@@ -31,11 +30,8 @@ public class LoginTest extends ApplicationTest {
     @BeforeEach
     void setUp() {
         try {
-            userStorage = new UserStorage("usersTest.json");
-            loginController.setUserStorage(userStorage);
-
             // Add a user, such that storage is not empty. Empty storage is tested in core module.
-            userStorage.create(
+            cognitionStorage.create(
                     new User(UUID.randomUUID().toString(), "placeholder", "placeholder")
             );
         } catch (IOException e) {
@@ -51,11 +47,14 @@ public class LoginTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = getLoader("LoginTest");
-        Parent root = loader.load();
 
-        loginController = loader.getController();
+        this.cognitionStorage = new CognitionStorage("usersTest.json");
+        // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
+        this.loginController = new LoginController(cognitionStorage);
 
-        scene = new Scene(root);
+        loader.setController(loginController);
+
+        scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.show();
     }
@@ -76,7 +75,7 @@ public class LoginTest extends ApplicationTest {
     @Test
     @DisplayName("Storage is defined.")
     void storageIsDefined() {
-        Assertions.assertNotNull(userStorage);
+        Assertions.assertNotNull(cognitionStorage);
     }
 
     /**
@@ -90,7 +89,7 @@ public class LoginTest extends ApplicationTest {
 
         // Create sample user
         try {
-            userStorage.create(user);
+            cognitionStorage.create(user);
         } catch (IOException e) {
             fail();
         }
@@ -100,7 +99,7 @@ public class LoginTest extends ApplicationTest {
         clickOn("#loginButton");
 
         // Check that we loaded Dashboard view
-        FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, username"));
+        FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, " + capitalize(validUsername)));
     }
 
     @Test
@@ -146,7 +145,7 @@ public class LoginTest extends ApplicationTest {
      * Used before validating the return type when user storage is empty.
      */
     private void clearUserStorage() {
-        try (FileWriter writer = new FileWriter(userStorage.getStoragePath())) {
+        try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
             writer.write("");
         } catch (IOException e) {
             fail();

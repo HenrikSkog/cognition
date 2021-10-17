@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.BiConsumer;
 
-public class UserStorage extends Storage<User> {
+public class CognitionStorage extends Storage<User> {
 
-    public UserStorage() throws IOException {
-        super("users.json");
+    public CognitionStorage() throws IOException {
+        super("cognition.json");
     }
 
-    public UserStorage(String filename) throws IOException {
+    public CognitionStorage(String filename) throws IOException {
         super(filename);
     }
 
