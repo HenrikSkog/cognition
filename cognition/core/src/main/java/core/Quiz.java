@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
+    public static final int MAX_DESCRIPTION_LENGTH = 500;
     private String UUID;
     private String name;
     private String description;
-    private final List<Flashcard> flashcards = new ArrayList<>();
+    private List<Flashcard> flashcards = new ArrayList<>();
 
     public Quiz() {
     }
@@ -21,8 +22,16 @@ public class Quiz {
     }
 
     private void setUUID(String UUID) {
-        if (Validator.isValidUUID(UUID)) {
-            this.UUID = UUID;
+        if (!Validator.isValidUUID(UUID)) {
+            throw new IllegalArgumentException();
+        }
+
+        this.UUID = UUID;
+    }
+
+    public void addFlashcards(List<Flashcard> flashcards) {
+        for (Flashcard flashcard : flashcards) {
+            addFlashcard(flashcard);
         }
     }
 
@@ -50,11 +59,15 @@ public class Quiz {
     }
 
     public void setName(String name) {
-        if (name.equals("")) {
-            return;
+        if (!Quiz.isValidName(name)) {
+            throw new IllegalArgumentException();
         }
 
         this.name = name;
+    }
+
+    public static boolean isValidName(String name) {
+        return name != null && name.length() >= 1;
     }
 
     public String getDescription() {
@@ -62,12 +75,25 @@ public class Quiz {
     }
 
     public void setDescription(String description) {
-        if (description.length() < 500) {
-            this.description = description;
+        if (!Quiz.isValidDescription(description)) {
+            throw new IllegalArgumentException();
         }
+        this.description = description;
+    }
+
+    public static boolean isValidDescription(String description) {
+        return description != null && description.length() < MAX_DESCRIPTION_LENGTH;
     }
 
     public List<Flashcard> getFlashcards() {
         return flashcards;
+    }
+
+    public void setFlashcards(List<Flashcard> flashcards) {
+        if (flashcards == null) {
+            return;
+        }
+
+        this.flashcards = flashcards;
     }
 }

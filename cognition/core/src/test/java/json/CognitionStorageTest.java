@@ -17,14 +17,14 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class UserStorageTest {
+public class CognitionStorageTest {
     private static final char[] characters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    private UserStorage userStorage;
+    private CognitionStorage cognitionStorage;
 
     @BeforeEach
     void setUp() {
         try {
-            userStorage = new UserStorage("usersTest.json");
+            cognitionStorage = new CognitionStorage("cognitionTest.json");
         } catch (IOException e) {
             fail();
         }
@@ -32,7 +32,7 @@ public class UserStorageTest {
 
     @AfterEach
     void tearDown() {
-        clearUserStorage();
+        clearStorage();
     }
 
     /**
@@ -107,11 +107,8 @@ public class UserStorageTest {
             user.addQuiz(quiz);
         }
 
-        // Clear user storage in order to prevent influence from other tests of persistent storage
-        // clearUserStorage();
-
         try {
-            userStorage.create(user);
+            cognitionStorage.create(user);
         } catch (IOException e) {
             fail();
         }
@@ -119,7 +116,7 @@ public class UserStorageTest {
         // Read content of user storage as pure String
         String actual = "";
         try {
-            actual = Files.readString(Path.of(userStorage.getStoragePath()));
+            actual = Files.readString(Path.of(cognitionStorage.getStoragePath()));
         } catch (IOException e) {
             fail();
         }
@@ -172,13 +169,13 @@ public class UserStorageTest {
         User user = new User(UUID.randomUUID().toString(), username, password);
 
         try {
-            userStorage.create(user);
+            cognitionStorage.create(user);
         } catch (IOException e) {
             fail();
         }
 
         try {
-            User parsedUser = userStorage.readByUsername(username);
+            User parsedUser = cognitionStorage.readByUsername(username);
             Assertions.assertEquals(user, parsedUser);
         } catch (IOException e) {
             fail();
@@ -193,7 +190,7 @@ public class UserStorageTest {
     private void createUser(User user) {
         // Try to create a sample user
         try {
-            userStorage.create(user);
+            cognitionStorage.create(user);
         } catch (JsonIOException | IOException e) {
             fail();
         }
@@ -215,7 +212,7 @@ public class UserStorageTest {
         User user = new User();
 
         try {
-            user = userStorage.read(identifier);
+            user = cognitionStorage.read(identifier);
         } catch (IOException e) {
             fail();
         }
@@ -235,7 +232,7 @@ public class UserStorageTest {
         createUser(new User(identifier, "base-username", "base-password"));
 
         try {
-            userStorage.update(identifier, new User(identifier, "new-username", "new-password"));
+            cognitionStorage.update(identifier, new User(identifier, "new-username", "new-password"));
         } catch (IOException e) {
             fail();
         }
@@ -251,7 +248,7 @@ public class UserStorageTest {
         createUser(new User(identifier, "delete-username", "delete-password"));
 
         try {
-            userStorage.delete(identifier);
+            cognitionStorage.delete(identifier);
         } catch (IOException e) {
             fail();
         }
@@ -259,7 +256,7 @@ public class UserStorageTest {
         List<User> users = new ArrayList<>();
 
         try {
-            users = userStorage.readUsers();
+            users = cognitionStorage.readUsers();
         } catch (IOException e) {
             fail();
         }
@@ -279,10 +276,10 @@ public class UserStorageTest {
         List<User> users = new ArrayList<>();
 
         // Clear user storage before validating the return type when user storage is empty.
-        clearUserStorage();
+        clearStorage();
 
         try {
-            users = userStorage.readUsers();
+            users = cognitionStorage.readUsers();
         } catch (IOException e) {
             fail();
         }
@@ -296,8 +293,8 @@ public class UserStorageTest {
      * Empties the JSON data in file at the storage path.
      * Used before validating the return type when user storage is empty.
      */
-    private void clearUserStorage() {
-        try (FileWriter writer = new FileWriter(userStorage.getStoragePath())) {
+    private void clearStorage() {
+        try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
             writer.write("");
         } catch (IOException e) {
             fail();
@@ -308,8 +305,8 @@ public class UserStorageTest {
     @DisplayName("Has correct storage path.")
     void hasCorrectStoragePath() {
         Assertions.assertEquals(
-                String.valueOf(Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", "usersTest.json")),
-                userStorage.getStoragePath()
+                String.valueOf(Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", "cognitionTest.json")),
+                cognitionStorage.getStoragePath()
         );
     }
 }

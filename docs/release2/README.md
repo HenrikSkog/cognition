@@ -116,6 +116,12 @@ Please see the [API module documentation](../../cognition/api/README.md) for a t
 
 Currently, all data is written to one file: `~/it1901-gr2103/cognition/users.json`. In this file, the users are stored in an array with their corresponding quizzes. The advantage of this solution is that it is very comfortable to work with. On the contrary, we recognize that in an upscaled version of the app, this would be very inefficient. All users are read and written every time one single flashcard is updated or added. However, this is only a small scale project, and we are planning on moving to a database further on in the project.
 
+### Enforcing characters limits on user input
+
+When the user creates a quiz, the user adds a name, description and one or more flashcards to the current quiz. We have chosen not to enforce an upper limit to the length of the flashcard's front and back side.
+
+There are both advantages and disadvantages to this approach. One advantage of enforcing such a character limit is that we as developers and maintainers gain more control over the visual representation. As an example, if a user inputs 50'000 characters on the front of the flashcard, the view of the flashcard may appear disfigured and incorrectly formatted. However, we as developers do not want to affect the user's formulation on a flashcard. As an example, a user wants to write a some sentences and a question with 1'000 characters on the front of the flashcard. If we enforce an upper limit to the length of the flashcard's front and back, the user will have to trim down the formulation, potentially impeding them.
+
 ### Spotbugs and resource leaks
 
 During the group deliverable 2 milestones, we expanded upon the local, persistent storage. This, of course, included writing to file using the Java `FileWriter`. Spotbugs helped us expose a potential resource leak: We had an edge case where the `FileWriter` would not be flushed and closed correctly. This is a prime example of why one should utilize such workflow tools to improve the robustness of the application.
@@ -132,7 +138,7 @@ During parts of the milestone for group deliverable 2, a group member was physic
 
 As previously stated, our primary focus for this deadline was a robust solution for the `core` and `ui` modules. Testing the `core` module worked fine; no significant challenges occurred there. However, testing the `ui` module using [TestFX](https://github.com/TestFX/TestFX) proved to be quite challenging, specifically testing the process of switching a view. For example, when a valid user logs in, the user gets taken to the Dashboard view, i.e. the view switches.
 
-Part of the problem was that each UI controller initialized a new instance of the local storage, e.g. `new UserStorage()`. We solved this by having the initially loaded controller, that is the `LoginController`, set an instance of the local storage, e.g. `new UserStorage()`. That instance would then be passed around to a new controller using a setter, e.g. `setUserStorage(userStorage)`, whenever the view switches, ensuring continuity in the local storage persistence.
+Part of the problem was that each UI controller initialized a new instance of the local storage, e.g. `new UserStorage()`. We solved this by having the initially loaded controller, that is the `LoginController`, set an instance of the local storage, e.g. `new UserStorage()`. That instance would then be passed around to a new controller using a setter, e.g. `setUserStorage(cognitionStorage)`, whenever the view switches, ensuring continuity in the local storage persistence.
 
 Furthermore, when writing the tests for the `ui` module, we discovered that we manipulated the application's local storage by mistake. For example, testing that one can create a valid user should not add that test user to the actual application's local storage. Rather, the test user should be added to a test file (e.g. `usersTest.json`), and then cleared upon test completion.
 

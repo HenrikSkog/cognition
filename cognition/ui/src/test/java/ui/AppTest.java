@@ -1,10 +1,9 @@
 package ui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.UserStorage;
+import json.CognitionStorage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,14 +23,12 @@ public class AppTest extends ApplicationTest {
         // Load FXML view
         FXMLLoader loader = getLoader("Login");
 
-        Parent root = loader.load();
-
         // Set state in controller
-        LoginController loginController = loader.getController();
-        loginController.setUserStorage(new UserStorage());
+        LoginController loginController = new LoginController(new CognitionStorage("testUsers.json"));
+        loader.setController(loginController);
 
         // Switch stage
-        scene = new Scene(root);
+        scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.show();
     }

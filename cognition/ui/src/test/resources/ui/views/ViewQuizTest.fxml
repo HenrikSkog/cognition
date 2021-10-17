@@ -4,7 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -16,12 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: #FCB751;" stylesheets="@../../styles/dashboard.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.CreateQuizController">
-   <Label fx:id="feedback1" alignment="CENTER" layoutX="43.0" layoutY="490.0" prefHeight="19.0" prefWidth="437.0" textAlignment="CENTER" textFill="RED">
-      <font>
-         <Font size="15.0" />
-      </font>
-   </Label>
+<AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: #FCB751;" stylesheets="@../../../../main/resources/styles/dashboard.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" >
    <VBox prefHeight="745.0" prefWidth="922.0">
       <children>
          <HBox alignment="CENTER" prefHeight="56.0" prefWidth="600.0" style="-fx-padding: 20;">
@@ -45,7 +39,7 @@
                </HBox>
                <HBox alignment="CENTER" prefHeight="73.0" prefWidth="490.0" style="-fx-background-color: #fff;">
                   <children>
-                     <Button mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link" text="Home" />
+                     <Button fx:id="goHome" mnemonicParsing="false" styleClass="nav_link" text="Home" />
                      <Button mnemonicParsing="false" styleClass="nav_link" text="My quizzes">
                         <graphic>
                            <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK" />
@@ -77,7 +71,7 @@
          </HBox>
          <HBox alignment="CENTER" prefHeight="615.0" prefWidth="922.0">
             <children>
-               <VBox prefHeight="643.0" prefWidth="655.0" styleClass="container">
+               <VBox prefHeight="562.0" prefWidth="771.0" styleClass="container">
                   <opaqueInsets>
                      <Insets />
                   </opaqueInsets>
@@ -87,7 +81,7 @@
                   <children>
                      <VBox prefHeight="116.0" prefWidth="655.0">
                         <children>
-                           <Text fill="#5c5353" fx:id="cqHeading" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Create new quiz" wrappingWidth="653.2154846191406">
+                           <Text fx:id="heading" fill="#5c5353" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Quiz" wrappingWidth="770.1315002441406">
                               <VBox.margin>
                                  <Insets top="10.0" />
                               </VBox.margin>
@@ -100,25 +94,31 @@
                         </children>
                      </VBox>
                   
-                      <Text fx:id="feedback" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="267" />
+
                       <HBox prefHeight="374.0" prefWidth="655.0">
-                          <VBox prefHeight="102.0" prefWidth="304.0">
-                              <HBox alignment="CENTER" prefHeight="100.0">
-                                  <Label prefWidth="200.0" text="Quiz name" />
-                                  <TextField fx:id="name" />
+                          <VBox prefHeight="231.0" prefWidth="212.0">
+                              <HBox alignment="CENTER" prefHeight="59.0" prefWidth="212.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="210.21337890625" />
+                              </children>
                               </HBox>
-                              <HBox alignment="CENTER" prefHeight="100.0">
-                                  <Label prefWidth="300.0" text="Short description" />
-                                  <TextField fx:id="description" />
-                              </HBox>
+                           <Text fx:id="description" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                           </VBox>
-                          <VBox prefHeight="100.0" prefWidth="281.0">
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Flashcards" wrappingWidth="266.388671875" />
-                              <ScrollPane fx:id="flashcardPane" prefHeight="360.0" prefWidth="281.0">
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="262.0">
-                    <!-- Dynamically populate ScrollPane with FlashcardNodes -->
-                </AnchorPane>
-                              </ScrollPane>
+                          <VBox alignment="CENTER" prefHeight="374.0" prefWidth="549.0">
+                           <children>
+                              <AnchorPane prefHeight="303.0" prefWidth="426.0">
+                                 <children>
+                                    <Pane layoutX="102.0" layoutY="59.0" prefHeight="200.0" prefWidth="340.0" styleClass="flashcard">
+                                       <children>
+                                          <Text fx:id="flashcardText" layoutX="157.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                          <Button fx:id="submitAnswer" layoutX="253.0" layoutY="144.0" mnemonicParsing="false" onAction="#checkAnswer" text="Check" />
+                                          <TextField fx:id="answerInput" layoutX="38.0" layoutY="144.0" prefHeight="27.0" prefWidth="189.0" promptText="Answer" />
+                                       </children>
+                                    </Pane>
+                                    <Label fx:id="feedback" layoutX="262.0" layoutY="36.0" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
                           </VBox>
                       </HBox>
                   </children>

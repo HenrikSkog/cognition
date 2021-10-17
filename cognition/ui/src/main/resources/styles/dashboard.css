@@ -23,3 +23,9 @@
     -fx-text-fill: #5C5353;
     -fx-text-alignment: center;
 }
+
+
+.flashcard {
+    -fx-background-radius: 30px;
+    -fx-background-color: #777;
+}

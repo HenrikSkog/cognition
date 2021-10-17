@@ -1,5 +1,7 @@
 package core;
 
+import core.validators.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +25,20 @@ public class User {
         return quizzes;
     }
 
+    public void updateQuiz(Quiz updatedQuiz) {
+        for (Quiz quiz : quizzes) {
+            if (quiz.getUUID().equals(updatedQuiz.getUUID())) {
+                quizzes.remove(quiz);
+                quizzes.add(updatedQuiz);
+            }
+        }
+    }
+
     private void setUUID(String UUID) {
+        if (!Validator.isValidUUID(UUID)) {
+            throw new IllegalArgumentException();
+        }
+
         this.UUID = UUID;
     }
 
@@ -47,11 +62,15 @@ public class User {
     }
 
     public void setUsername(String username) {
-        if (username.equals("")) {
-            return;
+        if (!User.isValidUsername(username)) {
+            throw new IllegalArgumentException();
         }
 
         this.username = username;
+    }
+
+    public static boolean isValidUsername(String username) {
+        return username != null && username.length() >= 3;
     }
 
     public String getUUID() {
@@ -82,11 +101,15 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (password.equals("")) {
-            return;
+        if (!User.isValidPassword(password)) {
+            throw new IllegalArgumentException();
         }
 
         this.password = password;
+    }
+
+    public static boolean isValidPassword(String password) {
+        return password != null && password.length() >= 6;
     }
 
 

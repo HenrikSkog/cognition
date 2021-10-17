@@ -3,12 +3,10 @@ package ui.controllers;
 import core.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import json.CognitionStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +31,10 @@ public class RegisterController extends Controller {
      */
     private static final String feedbackSuccessMessage = "User created successfully!";
 
+    public RegisterController(CognitionStorage cognitionStorage) {
+        super(cognitionStorage);
+    }
+
     @FXML
     public void handleRegister() {
         String username = usernameInput.getText().toLowerCase();
@@ -42,7 +44,7 @@ public class RegisterController extends Controller {
         if (isValidRegister(username, password, passwordRepeat)) {
             registerUser(username, password);
         } else {
-            feedback.setStyle("-fx-text-fill: red");
+            setFeedbackErrorMode(true);
             feedback.setText(feedbackErrorMessage);
         }
     }
@@ -56,12 +58,12 @@ public class RegisterController extends Controller {
      * @return a boolean indicating whether the input is valid.
      */
     private boolean isValidRegister(String username, String password, String passwordRepeat) {
-        if (username.length() < 3) {
+        if (!User.isValidUsername(username)) {
             feedbackErrorMessage = "Username has to be at least 3 characters long";
             return false;
         }
 
-        if (password.length() < 6) {
+        if (!User.isValidPassword(password)) {
             feedbackErrorMessage = "Password must be at least 6 characters long";
             return false;
         }
@@ -73,7 +75,7 @@ public class RegisterController extends Controller {
 
         List<User> users = null;
         try {
-            users = getUserStorage().readUsers();
+            users = getCognitionStorage().readUsers();
         } catch (IOException e) {
             feedbackErrorMessage = "An error occurred when reading from local storage.";
             feedback.setText(feedbackErrorMessage);
@@ -94,10 +96,10 @@ public class RegisterController extends Controller {
 
     private void registerUser(String username, String password) {
         try {
-            getUserStorage().create(
+            getCognitionStorage().create(
                     new User(UUID.randomUUID().toString(), username, password)
             );
-            feedback.setStyle("-fx-text-fill: green");
+            setFeedbackErrorMode(false);
             feedback.setText(feedbackSuccessMessage);
         } catch (IOException e) {
             feedback.setText("An error occurred when writing to local storage.");
@@ -107,28 +109,10 @@ public class RegisterController extends Controller {
 
     @FXML
     public void goToLogin(ActionEvent event) {
-        // Load FXML view
-        FXMLLoader loader = getLoader("Login");
+        
+        changeToView(event, new LoginController(getCognitionStorage()), "Login", feedback);
 
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            feedback.setText("An error occurred when trying to switch view.");
-            return;
-        }
 
-        // Set state in controller
-        LoginController loginController = loader.getController();
-        loginController.setUserStorage(getUserStorage());
-
-        // Switch stage
-        Stage stage = getStage(event);
-        try {
-            switchScene(stage, root);
-        } catch (IOException e) {
-            feedback.setText("An error occurred when trying to switch view.");
-        }
     }
 
     /**
@@ -153,4 +137,14 @@ public class RegisterController extends Controller {
         return feedbackSuccessMessage;
     }
 
+    private void setFeedbackErrorMode(boolean mode) {
+        if (mode) {
+            feedback.setStyle("-fx-text-fill: red");
+        } else {
+            feedback.setStyle("-fx-text-fill: green");
+        }
+    }
+
+    @FXML
+    protected void initialize() {}
 }

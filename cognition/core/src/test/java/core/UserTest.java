@@ -10,6 +10,10 @@ import java.util.UUID;
 
 public class UserTest {
     private User user;
+
+    private final String invalidUsername = "a";
+    private final String invalidPassword = "b";
+
     private final String validUsername = "valid-username";
     private final String validPassword = "valid-password";
 
@@ -87,7 +91,11 @@ public class UserTest {
     @DisplayName("Can set username.")
     void canSetUsername() {
         String currentUsername = user.getUsername();
-        user.setUsername("");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> user.setUsername("")
+        );
 
         // Verify that the name is unchanged when provided with an empty string
         Assertions.assertEquals(currentUsername, user.getUsername());
@@ -103,7 +111,11 @@ public class UserTest {
     @DisplayName("Can set password.")
     void canSetPassword() {
         String currentPassword = user.getPassword();
-        user.setPassword("");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> user.setPassword("")
+        );
 
         // Verify that the password is unchanged when provided with an empty string
         Assertions.assertEquals(currentPassword, user.getPassword());
@@ -113,6 +125,25 @@ public class UserTest {
 
         // Verify that the name is changed when provided with a new name
         Assertions.assertEquals(user.getPassword(), newPassword);
+    }
+
+    @Test
+    @DisplayName("Illegal User throws.")
+    void illegalUserThrows() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new User("invalid-UUID", "username", "password")
+        );
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new User(UUID.randomUUID().toString(), invalidUsername, validPassword)
+        );
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new User(UUID.randomUUID().toString(), validUsername, invalidPassword)
+        );
     }
 
     @Test
@@ -141,5 +172,35 @@ public class UserTest {
 
         Assertions.assertEquals(firstUser, firstUser);
         Assertions.assertNotEquals(firstUser, null);
+    }
+
+    @Test
+    @DisplayName("Can update quiz.")
+    void canUpdateQuiz() {
+        String updatedName = "updated-name";
+
+        User user = new User(UUID.randomUUID().toString(), "username", "password");
+        Quiz quizToUpdate = new Quiz(UUID.randomUUID().toString(), "name", "description");
+
+        user.addQuiz(quizToUpdate);
+
+        // Update quiz with new state
+        quizToUpdate.setName(updatedName);
+
+        user.updateQuiz(quizToUpdate);
+
+        boolean quizWasUpdated = false;
+
+        // Find quiz and validate that the same quiz was updated
+        for (Quiz quiz : user.getQuizzes()) {
+            if (quiz.getUUID().equals(quizToUpdate.getUUID())
+                    && quiz.getName().equals(updatedName)
+                    && quiz.getDescription().equals(quizToUpdate.getDescription())) {
+                quizWasUpdated = true;
+                break;
+            }
+        }
+
+        Assertions.assertTrue(quizWasUpdated);
     }
 }
