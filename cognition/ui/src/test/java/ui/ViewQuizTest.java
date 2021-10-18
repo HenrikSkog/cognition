@@ -170,7 +170,7 @@ public class ViewQuizTest extends ApplicationTest {
 
         clickOn("#createQuizButton");
 
-        FxAssert.verifyThat("#heading", TextMatchers.hasText("Test quiz"));
+        FxAssert.verifyThat("#heading", TextMatchers.hasText("Create new quiz"));
 
     }
 
