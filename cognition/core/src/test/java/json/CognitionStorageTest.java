@@ -121,7 +121,7 @@ public class CognitionStorageTest {
             fail();
         }
 
-        // Assertions.assertEquals(expected, actual);
+         Assertions.assertEquals(expected, actual);
     }
 
     /**
@@ -142,6 +142,7 @@ public class CognitionStorageTest {
                          "quizzes": [
                              {
                                  "UUID": "4efd2ea4-a598-3ec5-bc09-09ffc0q625aq",
+                                 "name": "quiz-0",
                                  "description": "description-0",
                                  "flashcards": [
                                      {
