@@ -1,0 +1,10 @@
+{
+    "editor.formatOnSave": true,
+    "java.format.settings.url":  "cognition/config/checkstyle/eclipse-java-google-style.xml",
+    "java.format.enabled": true,
+    "java.format.settings.profile": "GoogleStyle",
+    "[java]": {
+        "editor.tabSize": 4,
+        "editor.detectIndentation": false
+    }
+}
