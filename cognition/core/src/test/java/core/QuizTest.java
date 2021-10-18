@@ -10,166 +10,148 @@ import java.util.List;
 import java.util.UUID;
 
 public class QuizTest {
-    private Quiz quiz;
-    private final String validName = "valid-name";
-    private final String validDescription = "valid-description";
+  private final String validName = "valid-name";
+  private final String validDescription = "valid-description";
+  private Quiz quiz;
 
-    @BeforeEach
-    void setUp() {
-        quiz = new Quiz(UUID.randomUUID().toString(), validName, validDescription);
+  @BeforeEach
+  void setUp() {
+    quiz = new Quiz(UUID.randomUUID().toString(), validName, validDescription);
+  }
+
+  @Test
+  @DisplayName("Can initialize quiz.")
+  void canInitializeQuiz() {
+    Quiz emptyQuiz = new Quiz();
+    Quiz quiz = new Quiz(UUID.randomUUID().toString(), "name", "description");
+
+    Assertions.assertNotNull(emptyQuiz);
+    Assertions.assertNotNull(quiz);
+    // If we get here, initializing was successful
+  }
+
+  @Test
+  @DisplayName("Illegal Quiz throws.")
+  void illegalQuizThrows() {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz("invalid-UUID", "name", "description"));
+
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz(UUID.randomUUID().toString(), "", ""));
+
+    String invalidDescription = "*".repeat(Quiz.MAX_DESCRIPTION_LENGTH + 1);
+
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new Quiz(UUID.randomUUID().toString(), "name", invalidDescription));
+  }
+
+  @Test
+  @DisplayName("Can add flashcards.")
+  void canAddFlashcards() {
+    List<Flashcard> flashcards = new ArrayList<>();
+
+    for (int i = 0; i < 5; i++) {
+      flashcards.add(new Flashcard(UUID.randomUUID().toString(), "front-" + i, "answer-" + i));
     }
 
-    @Test
-    @DisplayName("Can initialize quiz.")
-    void canInitializeQuiz() {
-        Quiz emptyQuiz = new Quiz();
-        Quiz quiz = new Quiz(UUID.randomUUID().toString(), "name", "description");
+    quiz.addFlashcards(flashcards);
 
-        // If we get here, initializing was successful
-    }
+    Assertions.assertEquals(flashcards, quiz.getFlashcards());
+  }
 
-    @Test
-    @DisplayName("Illegal Quiz throws.")
-    void illegalQuizThrows() {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> new Quiz("invalid-UUID", "name", "description")
-        );
+  @Test
+  @DisplayName("Can set flashcards.")
+  void canSetFlashcards() {
+    quiz.setFlashcards(null);
 
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> new Quiz(UUID.randomUUID().toString(), "", "")
-        );
+    boolean didNotAdd = quiz.getFlashcards().size() == 0;
 
-        String invalidDescription = "*".repeat(Quiz.MAX_DESCRIPTION_LENGTH + 1);
+    Assertions.assertTrue(didNotAdd);
 
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> new Quiz(UUID.randomUUID().toString(), "name", invalidDescription)
-        );
-    }
+    quiz.setFlashcards(List.of(new Flashcard(UUID.randomUUID().toString(), "front-1", "answer-2"),
+            new Flashcard(UUID.randomUUID().toString(), "front-2", "answer-2")));
 
-    @Test
-    @DisplayName("Can add flashcards.")
-    void canAddFlashcards() {
-        List<Flashcard> flashcards = new ArrayList<>();
+    boolean addedTwoFlashcards = quiz.getFlashcards().size() == 2;
 
-        for (int i = 0; i < 5; i++) {
-            flashcards.add(new Flashcard(UUID.randomUUID().toString(), "front-" + i, "answer-" + i));
-        }
+    Assertions.assertTrue(addedTwoFlashcards);
+  }
 
-        quiz.addFlashcards(flashcards);
+  @Test
+  @DisplayName("No duplicate flashcards.")
+  void noDuplicateFlashcards() {
+    Flashcard flashcard = new Flashcard(UUID.randomUUID().toString(), "front", "answer");
 
-        Assertions.assertEquals(flashcards, quiz.getFlashcards());
-    }
+    // Add flashcard for the first time
+    quiz.addFlashcard(flashcard);
 
-    @Test
-    @DisplayName("Can set flashcards.")
-    void canSetFlashcards() {
-        quiz.setFlashcards(null);
+    // Add flashcard for the second time. This time, it should not be added.
+    quiz.addFlashcard(flashcard);
 
-        boolean didNotAdd = quiz.getFlashcards().size() == 0;
+    // Flashcards should only be added once
+    Assertions.assertEquals(1, quiz.getFlashcards().size());
+  }
 
-        Assertions.assertTrue(didNotAdd);
+  @Test
+  @DisplayName("Can add flashcard.")
+  void canAddFlashcard() {
+    quiz.addFlashcard(null);
 
-        quiz.setFlashcards(List.of(
-                new Flashcard(UUID.randomUUID().toString(), "front-1", "answer-2"),
-                new Flashcard(UUID.randomUUID().toString(), "front-2", "answer-2")
-        ));
+    // Flashcard should not have been added
+    Assertions.assertEquals(0, quiz.getFlashcards().size());
 
-        boolean addedTwoFlashcards = quiz.getFlashcards().size() == 2;
-        
-        Assertions.assertTrue(addedTwoFlashcards);
-    }
+    quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "front", "answer"));
 
-    @Test
-    @DisplayName("No duplicate flashcards.")
-    void noDuplicateFlashcards() {
-        Flashcard flashcard = new Flashcard(UUID.randomUUID().toString(), "front", "answer");
+    // Flashcard should have been added
+    Assertions.assertEquals(1, quiz.getFlashcards().size());
+  }
 
-        // Add flashcard for the first time
-        quiz.addFlashcard(flashcard);
+  @Test
+  @DisplayName("Can remove flashcard.")
+  void canRemoveFlashcard() {
+    Flashcard nonExistingFlashcard = new Flashcard(UUID.randomUUID().toString(), "non-existing-front",
+            "non-existing-asnwer");
+    Flashcard existingFlashcard = new Flashcard(UUID.randomUUID().toString(), "existing-front", "existing-asnwer");
 
-        // Add flashcard for the second time. This time, it should not be added.
-        quiz.addFlashcard(flashcard);
+    // Add flashcard and verify number of flashcards
+    quiz.addFlashcard(existingFlashcard);
+    Assertions.assertEquals(1, quiz.getFlashcards().size());
 
-        // Flashcards should only be added once
-        Assertions.assertEquals(1, quiz.getFlashcards().size());
-    }
+    // Remove non-existing flashcard and verify that size is unchanged
+    quiz.removeFlashcard(nonExistingFlashcard);
+    Assertions.assertEquals(1, quiz.getFlashcards().size());
 
-    @Test
-    @DisplayName("Can add flashcard.")
-    void canAddFlashcard() {
-        quiz.addFlashcard(null);
+    // Remove existing flashcard, and verify that size decrease by 1
+    quiz.removeFlashcard(existingFlashcard);
+    Assertions.assertEquals(0, quiz.getFlashcards().size());
+  }
 
-        // Flashcard should not have been added
-        Assertions.assertEquals(0, quiz.getFlashcards().size());
+  @Test
+  @DisplayName("Can set name.")
+  void canSetName() {
+    String currentName = quiz.getName();
 
-        quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "front", "answer"));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> quiz.setName(""));
 
-        // Flashcard should have been added
-        Assertions.assertEquals(1, quiz.getFlashcards().size());
-    }
+    // Verify that the name is unchanged when provided with an empty string
+    Assertions.assertEquals(currentName, quiz.getName());
 
-    @Test
-    @DisplayName("Can remove flashcard.")
-    void canRemoveFlashcard() {
-        Flashcard nonExistingFlashcard = new Flashcard(
-                UUID.randomUUID().toString(),
-                "non-existing-front",
-                "non-existing-asnwer"
-        );
-        Flashcard existingFlashcard = new Flashcard(
-                UUID.randomUUID().toString(),
-                "existing-front",
-                "existing-asnwer"
-        );
+    String newName = "new-name";
+    quiz.setName(newName);
 
-        // Add flashcard and verify number of flashcards
-        quiz.addFlashcard(existingFlashcard);
-        Assertions.assertEquals(1, quiz.getFlashcards().size());
+    // Verify that the name is changed when provided with a new name
+    Assertions.assertEquals(quiz.getName(), newName);
+  }
 
-        // Remove non-existing flashcard and verify that size is unchanged
-        quiz.removeFlashcard(nonExistingFlashcard);
-        Assertions.assertEquals(1, quiz.getFlashcards().size());
+  @Test
+  @DisplayName("Can set description.")
+  void canSetDescription() {
+    String currentDescription = quiz.getDescription();
 
-        // Remove existing flashcard, and verify that size decrease by 1
-        quiz.removeFlashcard(existingFlashcard);
-        Assertions.assertEquals(0, quiz.getFlashcards().size());
-    }
+    // Verify that the name is unchanged when provided with an empty string
+    Assertions.assertEquals(quiz.getDescription(), currentDescription);
 
-    @Test
-    @DisplayName("Can set name.")
-    void canSetName() {
-        String currentName = quiz.getName();
+    String newDescription = "new-name";
+    quiz.setDescription(newDescription);
 
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> quiz.setName("")
-        );
-
-        // Verify that the name is unchanged when provided with an empty string
-        Assertions.assertEquals(currentName, quiz.getName());
-
-        String newName = "new-name";
-        quiz.setName(newName);
-
-        // Verify that the name is changed when provided with a new name
-        Assertions.assertEquals(quiz.getName(), newName);
-    }
-
-    @Test
-    @DisplayName("Can set description.")
-    void canSetDescription() {
-        String currentDescription = quiz.getDescription();
-
-        // Verify that the name is unchanged when provided with an empty string
-        Assertions.assertEquals(quiz.getDescription(), currentDescription);
-
-        String newDescription = "new-name";
-        quiz.setDescription(newDescription);
-
-        // Verify that the name is changed when provided with a new name
-        Assertions.assertEquals(quiz.getDescription(), newDescription);
-    }
+    // Verify that the name is changed when provided with a new name
+    Assertions.assertEquals(quiz.getDescription(), newDescription);
+  }
 }

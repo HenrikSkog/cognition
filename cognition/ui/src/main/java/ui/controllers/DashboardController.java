@@ -1,6 +1,7 @@
 package ui.controllers;
 
 import core.User;
+import core.tools.Tools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -8,41 +9,43 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
 import json.CognitionStorage;
 
-import static core.tools.Tools.capitalize;
-
+/**
+ * DashboardController has the presentation logic for the DashBoard view.
+ */
 public class DashboardController extends LoggedInController {
 
-    public DashboardController(User user, CognitionStorage cognitionStorage) {
-        super(user, cognitionStorage);
-    }
+  @FXML
+  public Labeled heading;
+  @FXML
+  private ListView<String> flashcardPane;
 
-    @FXML
-    private ListView<String> flashcardPane;
+  @FXML
+  private Label feedback;
 
-    @FXML
-    private Label feedback;
+  public DashboardController(User user, CognitionStorage cognitionStorage) {
+    super(user, cognitionStorage);
+  }
 
-    @FXML
-    public Labeled heading;
+  @FXML
+  protected void initialize() {
+    heading.setText("Welcome, " + Tools.capitalize(getUser().getUsername()));
+  }
 
-    @FXML
-    protected void initialize() {
-        heading.setText("Welcome, " + capitalize(getUser().getUsername()));
-    }
+  @FXML
+  public void handleLogout(ActionEvent event) {
+    changeToView(event, new LoginController(getCognitionStorage()),
+            "Login", feedback);
+  }
 
-    @FXML
-    public void handleLogout(ActionEvent event) {
-        changeToView(event, new LoginController(getCognitionStorage()), "Login", feedback);
-    }
+  @FXML
+  public void handleCreateQuiz(ActionEvent event) {
+    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
+            "Quiz", feedback);
+  }
 
-    @FXML
-    public void handleCreateQuiz(ActionEvent event) {
-        changeToView(event, new QuizController(getUser(), getCognitionStorage()), "Quiz", feedback);
-    }
-
-    @FXML
-    public void handleMyQuizzes(ActionEvent event) {
-        changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()), "MyQuizzes", feedback);
-    }
-
+  @FXML
+  public void handleMyQuizzes(ActionEvent event) {
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+            "MyQuizzes", feedback);
+  }
 }
