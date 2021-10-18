@@ -48,23 +48,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <!-- Run the checkstyle code quality tool -->
-
-            <!--            TODO: Currently disabling checkstyle for deliverable 1,
-                            as project does not recognize com.puppycrawl.tools.
-                            Enabling after IT1901 staff fixes their pom.xml, such that dependencies install correctly.
-             -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
-            <!--                <version>3.1.2</version>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>com.puppycrawl.tools</groupId>-->
-            <!--                        <artifactId>checkstyle</artifactId>-->
-            <!--                        <version>9.0</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
 
             <!-- Run the spotbugs code quality tool -->
             <plugin>
