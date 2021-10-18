@@ -23,7 +23,7 @@ public class App extends Application {
         // This UserStorage is set in all other controllers, in order to maintain continuity.
         // This logic also, most importantly,
         // separates persistent storage between application logic and unit and end-to-end tests.
-        CognitionStorage cognitionStorage = new CognitionStorage("users.json");
+        CognitionStorage cognitionStorage = new CognitionStorage();
         loader.setController(new LoginController(cognitionStorage));
 
         Parent root = loader.load();

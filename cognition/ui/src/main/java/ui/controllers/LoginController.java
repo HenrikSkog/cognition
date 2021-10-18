@@ -70,27 +70,21 @@ public class LoginController extends Controller {
 
 
     public void goToDashboard(ActionEvent event, String username) {
-
         User user;
         try {
             user = getCognitionStorage().readByUsername(username);
         } catch (IOException e) {
-            feedbackErrorMessage = "An error occured when reading the user from file";
+            feedbackErrorMessage = "An error occurred when reading the user from file";
             feedback.setText(feedbackErrorMessage);
             return;
         }
 
-
         changeToView(event, new DashboardController(user, getCognitionStorage()), "Dashboard", feedback);
-
-
     }
 
     @FXML
     public void goToRegister(ActionEvent event) {
-
         changeToView(event, new RegisterController(getCognitionStorage()), "Register", feedback);
-
     }
 
     /**

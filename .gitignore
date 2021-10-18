@@ -1,6 +1,5 @@
 # Custom ignores
 .idea
-.vscode
 .DS_Store
 *.iml
 .project

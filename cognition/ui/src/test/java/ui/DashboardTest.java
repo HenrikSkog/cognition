@@ -91,7 +91,7 @@ public class DashboardTest extends ApplicationTest {
 
         clickOn("#createQuizButton");
 
-        FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, Valid-username"));
+        FxAssert.verifyThat("#heading", TextMatchers.hasText("Create new quiz"));
     }
 
     @Test
