@@ -91,17 +91,26 @@ public class MyQuizzesController extends LoggedInController {
 
         quizzesListView.setOnMouseClicked(event -> {
             int index = quizzesListView.getSelectionModel().getSelectedIndex();
-            getUser().getQuizzes().remove(index);
 
-            try {
-                getCognitionStorage().update(getUser().getUUID(), getUser());
-            } catch (IOException e) {
-                feedback.setText("An error occurred when trying to delete selected quiz.");
+            // Prevents IndexOutOfBoundsException
+            if (index != -1) {
+
+                getUser().getQuizzes().remove(index);
+
+                try {
+                    getCognitionStorage().update(getUser().getUUID(), getUser());
+
+                } catch (IOException e) {
+                    feedback.setText("An error occurred when trying to delete selected quiz.");
+                }
+
+                initialize();
+
             }
 
-            // Re-render view
-            initialize();
+
         });
+
     }
 
 

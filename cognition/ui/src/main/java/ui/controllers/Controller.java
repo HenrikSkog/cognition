@@ -19,7 +19,8 @@ public abstract class Controller {
         this.cognitionStorage = cognitionStorage;
     }
 
-    public Controller() {}
+    public Controller() {
+    }
 
 
     public Stage getStage(ActionEvent event) {
@@ -49,7 +50,6 @@ public abstract class Controller {
 
 
     public void changeToView(ActionEvent event, Controller controller, String fxml, Labeled feedback) {
-
         FXMLLoader loader = getLoader(fxml);
 
         loader.setController(controller);
@@ -59,10 +59,8 @@ public abstract class Controller {
         try {
             switchScene(stage, loader.load());
         } catch (IOException e) {
-            feedback.setText("An error occurred when trying to go to Dashboard");
-
+            feedback.setText("An error occurred when trying to go to " + fxml + ".");
         }
-
     }
 
     public CognitionStorage getCognitionStorage() {

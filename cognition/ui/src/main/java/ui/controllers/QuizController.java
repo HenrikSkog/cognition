@@ -45,7 +45,6 @@ public class QuizController extends LoggedInController {
 
     @FXML
     public void initialize() {
-
         if (quiz != null) {
             // Set state if quiz is to be updated
             name.setText(quiz.getName());
@@ -147,24 +146,17 @@ public class QuizController extends LoggedInController {
 
     @FXML
     public void handleDashboard(ActionEvent event) {
-
         changeToView(event, new DashboardController(getUser(), getCognitionStorage()), "Dashboard", feedback);
-
     }
 
     @FXML
     public void handleMyQuizzes(ActionEvent event) {
-
         changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()), "MyQuizzes", feedback);
-
     }
 
     @FXML
     public void handleCreateQuiz(ActionEvent event) {
-
         changeToView(event, new QuizController(getUser(), getCognitionStorage()), "Quiz", feedback);
-
-
     }
 
     /**
@@ -369,7 +361,7 @@ public class QuizController extends LoggedInController {
     }
 
     @FXML
-    public void handleLogout(ActionEvent event){
+    public void handleLogout(ActionEvent event) {
         // Load FXML view
         FXMLLoader loader = getLoader("Login");
 
