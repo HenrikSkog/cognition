@@ -23,121 +23,126 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * DashboardTest tests that all functionality works as intended
+ * for the Dashboard view.
+ */
 public class DashboardTest extends ApplicationTest {
-    private Scene scene;
-    private DashboardController dashboardController;
-    private CognitionStorage cognitionStorage;
-    private final String validUsername = "valid-username";
-    private final String validPassword = "valid-password";
+  private final String validUsername = "valid-username";
+  private final String validPassword = "valid-password";
+  private Scene scene;
+  private DashboardController dashboardController;
+  private CognitionStorage cognitionStorage;
 
-    @AfterEach
-    void tearDown() {
-        clearUserStorage();
-    }
+  @AfterEach
+  void tearDown() {
+    clearUserStorage();
+  }
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = getLoader("DashboardTest");
+        FXMLLoader loader = getLoader("Dashboard");
 
-        this.cognitionStorage = new CognitionStorage("usersTest.json");
+        this.cognitionStorage = new CognitionStorage("cognitionTest.json");
 
-        // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-        User loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    // in the app there is no logical way for Create Quiz to be accessed without a
+    // logged in user. Thus, we create a fake user here to emulate it
+    User loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
 
-        cognitionStorage.create(loggedInUser);
-        // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-        this.dashboardController = new DashboardController(loggedInUser, cognitionStorage);
+    cognitionStorage.create(loggedInUser);
+    // in the app there is no logical way for Create Quiz to be accessed without a
+    // logged in user. Thus, we create a fake user here to emulate it
+    this.dashboardController = new DashboardController(loggedInUser, cognitionStorage);
 
-        loader.setController(dashboardController);
+    loader.setController(dashboardController);
 
-        scene = new Scene(loader.load());
-        stage.setScene(scene);
-        stage.show();
-    }
+    scene = new Scene(loader.load());
+    stage.setScene(scene);
+    stage.show();
+  }
 
-    @SuppressFBWarnings
-    private FXMLLoader getLoader(String fxml) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
-        return loader;
-    }
+  @SuppressFBWarnings
+  private FXMLLoader getLoader(String fxml) {
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
+    return loader;
+  }
 
-    @Test
-    @DisplayName("Controller is defined.")
-    void controllerIsDefined() {
-        Assertions.assertNotNull(dashboardController);
-    }
+  @Test
+  @DisplayName("Controller is defined.")
+  void controllerIsDefined() {
+    Assertions.assertNotNull(dashboardController);
+  }
 
-    @Test
-    @DisplayName("Storage is defined.")
-    void storageIsDefined() {
-        Assertions.assertNotNull(cognitionStorage);
-    }
+  @Test
+  @DisplayName("Storage is defined.")
+  void storageIsDefined() {
+    Assertions.assertNotNull(cognitionStorage);
+  }
 
     @Test
     @DisplayName("User can log out")
     void userCanLogOut() {
-        FxAssert.verifyThat("#heading", LabeledMatchers.hasText("Welcome, " + Tools.capitalize(validUsername)));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
-        clickOn("#signOutButton");
+    clickOn("#signOutButton");
 
-        FxAssert.verifyThat("#loginButton", LabeledMatchers.hasText("Sign in"));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
     }
 
     @Test
     @DisplayName("Can switch to Create Quiz.")
     void canSwitchToCreateQuiz() {
-        FxAssert.verifyThat("#dashboardLogo", TextMatchers.hasText("Cognition"));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
-        clickOn("#createQuizButton");
+    clickOn("#createQuizButton");
 
-        FxAssert.verifyThat("#heading", TextMatchers.hasText("Create new quiz"));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
     }
 
     @Test
     @DisplayName("Can switch to My Quizzes.")
     void canSwitchToMyQuizzes() {
-        FxAssert.verifyThat("#dashboardLogo", TextMatchers.hasText("Cognition"));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
-        clickOn("#switchToMyQuizzesButton");
+    clickOn("#switchToMyQuizzesButton");
 
-        FxAssert.verifyThat("#myQuizzesLabel", LabeledMatchers.hasText("My Quizzes"));
+        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
     }
 
-    @Test
-    @DisplayName("Can set currently active user.")
-    void canSetCurrentlyActiveUser() {
-        String username = "active-username";
-        User user = new User(UUID.randomUUID().toString(), username, "password");
+  @Test
+  @DisplayName("Can set currently active user.")
+  void canSetCurrentlyActiveUser() {
+    String username = "active-username";
+    User user = new User(UUID.randomUUID().toString(), username, "password");
 
-        // Create sample user
-        try {
-            cognitionStorage.create(user);
-        } catch (IOException e) {
-            fail();
-        }
-
-        // Set active user
-        try {
-            dashboardController.setUser(user);
-        } catch (NullPointerException e) {
-            fail();
-        }
-
-        // Check that the currently active user is the one we just set as active user
-        Assertions.assertEquals(user, dashboardController.getUser());
+    // Create sample user
+    try {
+      cognitionStorage.create(user);
+    } catch (IOException e) {
+      fail();
     }
 
-
-    /**
-     * Empties the JSON data in file at the storage path.
-     * Used before validating the return type when user storage is empty.
-     */
-    private void clearUserStorage() {
-        try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
-            writer.write("");
-        } catch (IOException e) {
-            fail();
-        }
+    // Set active user
+    try {
+      dashboardController.setUser(user);
+    } catch (NullPointerException e) {
+      fail();
     }
+
+    // Check that the currently active user is the one we just set as active user
+    Assertions.assertEquals(user, dashboardController.getUser());
+  }
+
+  /**
+   * Empties the JSON data in file at the storage path. Used before validating the
+   * return type when user storage is empty.
+   */
+  private void clearUserStorage() {
+    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+      writer.write("");
+    } catch (IOException e) {
+      fail();
+    }
+  }
 }

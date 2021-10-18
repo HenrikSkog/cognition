@@ -13,18 +13,19 @@ import ui.controllers.LoginController;
 import java.io.IOException;
 
 public class ControllerTest extends ApplicationTest {
-    private Controller controller;
+  private Controller controller;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        // Because Controller is an abstract class, we use an extending controller for testing.
-        controller = new LoginController(new CognitionStorage());
-    }
+  @BeforeEach
+  void setUp() throws IOException {
+    // Because Controller is an abstract class, we use an extending controller for
+    // testing.
+    controller = new LoginController(new CognitionStorage());
+  }
 
-    @Test
-    @DisplayName("Can get loader based on FXML.")
-    void canGetLoaderBasedOnFxml() {
-        FXMLLoader loader = controller.getLoader("LoginTest");
-        Assertions.assertNotNull(loader);
-    }
+  @Test
+  @DisplayName("Can get loader based on FXML.")
+  void canGetLoaderBasedOnFxml() {
+    FXMLLoader loader = controller.getLoader("LoginTest");
+    Assertions.assertNotNull(loader);
+  }
 }

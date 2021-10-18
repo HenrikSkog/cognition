@@ -1,11 +1,11 @@
 module cognition.core {
-    requires com.google.gson;
+  requires transitive com.google.gson;
 
-    exports core;
-    exports json;
+  exports core;
+  exports json;
 
-    opens core;
-    opens core.tools;
-    opens core.validators;
-    opens json;
+  opens core;
+  opens core.tools;
+  opens core.validators;
+  opens json;
 }

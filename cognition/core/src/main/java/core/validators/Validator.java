@@ -1,7 +1,10 @@
 package core.validators;
 
+/**
+ * Validator class with static validator methods.
+ */
 public class Validator {
-    public static boolean isValidUUID(String UUID) {
-        return UUID.length() == 36 && UUID.split("-").length == 5;
-    }
+  public static boolean isValidUuid(String uuid) {
+    return uuid.length() == 36 && uuid.split("-").length == 5;
+  }
 }

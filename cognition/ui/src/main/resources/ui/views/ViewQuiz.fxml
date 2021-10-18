@@ -18,6 +18,7 @@
 <AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: #FCB751;"
             stylesheets="@../../styles/dashboard.css" xmlns="http://javafx.com/javafx/15.0.1"
             xmlns:fx="http://javafx.com/fxml/1" >
+    <Label fx:id="pageId" text="ViewQuiz" visible="false" alignment="CENTER" prefHeight="27.0" prefWidth="485.0"/>
     <VBox prefHeight="745.0" prefWidth="922.0">
         <children>
             <HBox alignment="CENTER" prefHeight="56.0" prefWidth="600.0" style="-fx-padding: 20;">

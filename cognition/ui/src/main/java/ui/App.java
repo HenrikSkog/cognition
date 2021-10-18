@@ -9,39 +9,51 @@ import json.CognitionStorage;
 import ui.controllers.LoginController;
 import ui.controllers.annotations.SuppressFBWarnings;
 
+/**
+ * Launches the JavaFX application.
+ */
 public class App extends Application {
 
-    private Scene scene;
+  private Scene scene;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        // Load FXML view
-        FXMLLoader loader = getLoader("Login");
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-        // Set state in controller
-        // The UserStorage that gets initialized here, is common for the entire application.
-        // This UserStorage is set in all other controllers, in order to maintain continuity.
-        // This logic also, most importantly,
-        // separates persistent storage between application logic and unit and end-to-end tests.
-        CognitionStorage cognitionStorage = new CognitionStorage();
-        loader.setController(new LoginController(cognitionStorage));
+  @Override
+  public void start(Stage stage) throws Exception {
+    // Load FXML view
+    FXMLLoader loader = getLoader("Login");
 
-        Parent root = loader.load();
+    // Set state in controller
+    // The UserStorage that gets initialized here, is common for the entire
+    // application.
+    // This UserStorage is set in all other controllers, in order to maintain
+    // continuity.
+    // This logic also, most importantly,
+    // separates persistent storage between application logic and unit and
+    // end-to-end tests.
+    CognitionStorage cognitionStorage = new CognitionStorage();
+    loader.setController(new LoginController(cognitionStorage));
 
-        // Switch stage
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    Parent root = loader.load();
 
-    @SuppressFBWarnings
-    public FXMLLoader getLoader(String fxml) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
-        return loader;
-    }
+    // Switch stage
+    scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+  /**
+   * Gets the loader for a given FXML file.
+   *
+   * @param fxml is the String representation of the FXML filename.
+   * @return an instance of the FXMLLoader with the set location based on provided FXML filename.
+   */
+  @SuppressFBWarnings
+  public FXMLLoader getLoader(String fxml) {
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
+    return loader;
+  }
 }

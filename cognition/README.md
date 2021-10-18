@@ -9,11 +9,14 @@ should feel quite familiar.
 
 ### Minimum Viable Product (MVP)
 
-As a user, I want to log in to the application and have a personalized experience of the application. This means that my collection of flashcards may be different to other users' flashcards.
+As a user, I want to log in to the application and have a personalized experience of the application. This means that my
+collection of flashcards may be different to other users' flashcards.
 
-When logged in, I want to create, view, update and delete flashcards. After creating a flashcard, I want to group several flashcards together to form a quiz; a collection of flashcards.
+When logged in, I want to create, view, update and delete flashcards. After creating a flashcard, I want to group
+several flashcards together to form a quiz; a collection of flashcards.
 
-Furthermore, I want to be able to exit the application and log in to continue where I left off. This means that the quizzes and flashcards are stored persistently.
+Furthermore, I want to be able to exit the application and log in to continue where I left off. This means that the
+quizzes and flashcards are stored persistently.
 
 ### Improvements and future functionality
 
@@ -25,7 +28,8 @@ As a user, I want to search quizzes and flashcards for easier and more intuitive
 
 ## Mockup screenshots
 
-The following are mockup screenshots from our project Figma. The tentative design sketches can be found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1).
+The following are mockup screenshots from our project Figma. The tentative design sketches can be
+found [at this Figma link](https://www.figma.com/file/dlrynKyn3KHJIdElsM12CB/Cognition-Design?node-id=0%3A1).
 
 ### Login Screen
 

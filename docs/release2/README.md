@@ -75,6 +75,16 @@ The following tools is used to ensure code quality:
 
 - [Jacoco](https://www.jacoco.org/jacoco/). Gathers test information and displays code coverage.
 
+### Important to note
+
+The `ui` module has 1 Checkstyle warning, due to the use of our custom `SupressFBWarnings` annotation. This annotation is inspired by the IT1901 staff's example Java project. The Checkstyle warning is the following:
+
+```sh
+[WARN] /Users/magnusrodseth/projects/it1901/gr2103/cognition/ui/src/main/java/ui/controllers/annotations/SuppressFBWarnings.java:11:19: Abbreviation in name 'SuppressFBWarnings' must contain no more than '1' consecutive capital letters. [AbbreviationAsWordInName]
+```
+
+**However, `SuppressFBWarnings` must have this specific name to be considered by SpotBugs. This is confirmed by the IT1901 staff.** Thus, we intentionally ignore this Checkstyle warning.
+
 ## Test coverage
 
 The focus for group deliverable 2 was robust local, persistent storage, and some frontend functionality. To enforce this, we have written tests for `UserStorage` and `QuizStorage`.
@@ -140,9 +150,9 @@ As previously stated, our primary focus for this deadline was a robust solution 
 
 Part of the problem was that each UI controller initialized a new instance of the local storage, e.g. `new UserStorage()`. We solved this by having the initially loaded controller, that is the `LoginController`, set an instance of the local storage, e.g. `new UserStorage()`. That instance would then be passed around to a new controller using a setter, e.g. `setUserStorage(cognitionStorage)`, whenever the view switches, ensuring continuity in the local storage persistence.
 
-Furthermore, when writing the tests for the `ui` module, we discovered that we manipulated the application's local storage by mistake. For example, testing that one can create a valid user should not add that test user to the actual application's local storage. Rather, the test user should be added to a test file (e.g. `usersTest.json`), and then cleared upon test completion.
+Furthermore, when writing the tests for the `ui` module, we discovered that we manipulated the application's local storage by mistake. For example, testing that one can create a valid user should not add that test user to the actual application's local storage. Rather, the test user should be added to a test file (e.g. `cognitionTest.json`), and then cleared upon test completion.
 
-As an extension of the solution, using setters to inject one instance of the `Storage` as explained above, we were now able to separate the application's local storage and the tests' local storage by simply initializing a new instance of the local storage, e.g. `new UserStorage("usersTest.json")`;
+As an extension of the solution, using setters to inject one instance of the `Storage` as explained above, we were now able to separate the application's local storage and the tests' local storage by simply initializing a new instance of the local storage, e.g. `new UserStorage("cognitionTest.json")`;
 
 Please see the [start method in the App class](../../cognition/ui/src/main/java/ui/App.java) and the [UI tests](../../cognition/ui/src/test/java/ui) for a better understanding of the solution.
 

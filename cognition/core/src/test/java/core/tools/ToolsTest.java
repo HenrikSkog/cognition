@@ -5,22 +5,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ToolsTest {
-    @Test
-    @DisplayName("Test capitalize.")
-    void testCapitalize() {
-        String lowerCase = "string";
-        String expected = "String";
+  @Test
+  @DisplayName("Test capitalize.")
+  void testCapitalize() {
+    String lowerCase = "string";
+    String expected = "String";
 
-        String actual = Tools.capitalize(lowerCase);
+    String actual = Tools.capitalize(lowerCase);
 
-        Assertions.assertEquals(expected, actual);
-    }
+    Assertions.assertEquals(expected, actual);
+  }
 
-    @Test
-    @DisplayName("Can initialize.")
-    void canInitialize() {
-        Tools tools = new Tools();
+  @Test
+  @DisplayName("Can initialize.")
+  void canInitialize() {
+    Tools tools = new Tools();
 
-        // If we reach this point, the class can be initialized
-    }
+    Assertions.assertNotNull(tools);
+
+    // If we reach this point, the class can be initialized
+  }
 }
