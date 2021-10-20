@@ -15,7 +15,7 @@ import ui.controllers.annotations.SuppressFBWarnings;
 
 /**
  * MyQuizzesController is responsible for handling the
- * presentation logic in the My Quizzes view.
+ * presentation logic in the "My Quizzes" view.
  */
 public class MyQuizzesController extends LoggedInController {
 
@@ -39,7 +39,7 @@ public class MyQuizzesController extends LoggedInController {
     ObservableList<String> displayedQuizzes = FXCollections
             .observableArrayList(
                     getUser().getQuizzes().stream().map(Quiz::getName)
-                    .collect(Collectors.toList()));
+                            .collect(Collectors.toList()));
 
     quizzesListView.setItems(displayedQuizzes);
 
@@ -145,9 +145,17 @@ public class MyQuizzesController extends LoggedInController {
             "Login", feedback);
   }
 
+  public String getFeedbackErrorMessage() {
+    return feedbackErrorMessage;
+  }
+
   @FXML
   public void handleDashboard(ActionEvent event) {
     changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
             "Dashboard", feedback);
+  }
+
+  public ListView getListView() {
+    return quizzesListView;
   }
 }
