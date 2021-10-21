@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
-import javafx.scene.control.ListView;
+import javafx.scene.text.Text;
 import json.CognitionStorage;
 
 /**
@@ -15,9 +15,10 @@ import json.CognitionStorage;
 public class DashboardController extends LoggedInController {
 
   @FXML
-  public Labeled heading;
+  private Labeled heading;
+
   @FXML
-  private ListView<String> flashcardPane;
+  private Text cognitionDescription;
 
   @FXML
   private Label feedback;
@@ -29,6 +30,8 @@ public class DashboardController extends LoggedInController {
   @FXML
   protected void initialize() {
     heading.setText("Welcome, " + Tools.capitalize(getUser().getUsername()));
+    
+    cognitionDescription.setText("TODO: Add some descriptive text here.");
   }
 
   @FXML
