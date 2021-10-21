@@ -3,15 +3,18 @@ package ui.controllers;
 import core.Quiz;
 import core.User;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import json.CognitionStorage;
-import ui.controllers.annotations.SuppressFBWarnings;
 
 /**
  * MyQuizzesController is responsible for handling the
@@ -19,11 +22,15 @@ import ui.controllers.annotations.SuppressFBWarnings;
  */
 public class MyQuizzesController extends LoggedInController {
 
-  @SuppressFBWarnings
-  public Label feedback;
+  @FXML
+  private Label feedback;
 
-  @SuppressFBWarnings
-  public ListView<String> quizzesListView;
+  @FXML
+  private ListView<Quiz> quizzesListView;
+
+  @FXML
+  private TextField searchInput;
+
   private Quiz selectedQuiz;
   private String feedbackErrorMessage;
 
@@ -36,21 +43,59 @@ public class MyQuizzesController extends LoggedInController {
    */
   @FXML
   public void initialize() {
-    ObservableList<String> displayedQuizzes = FXCollections
-            .observableArrayList(
-                    getUser().getQuizzes().stream().map(Quiz::getName)
-                            .collect(Collectors.toList()));
+    // Initially render ListView
+    quizzesListView.setItems(getQuizzes(""));
+    setupListView();
 
-    quizzesListView.setItems(displayedQuizzes);
+    // Add onChange event handler for search input
+    searchInput.textProperty().addListener((observable, oldValue, newValue) -> {
+      quizzesListView.setItems(getQuizzes(newValue));
+    });
 
     quizzesListView.setOnMouseClicked(event -> {
       int index = quizzesListView.getSelectionModel().getSelectedIndex();
+
       // Prevents IndexOutOfBoundsException if invalid element is selected
-      if (index != -1) {
-        selectedQuiz = getUser().getQuizzes().get(index);
-      }
+      if (index != -1) this.selectedQuiz = quizzesListView.getItems().get(index);
     });
 
+  }
+
+  /**
+   * Sets up list view cell factory so listview properly works using Quiz as type
+   */
+  private void setupListView() {
+    quizzesListView.setCellFactory(new Callback<>() {
+      @Override
+      public ListCell<Quiz> call(ListView<Quiz> param) {
+        return new ListCell<>() {
+
+          @Override
+          protected void updateItem(Quiz item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+              setText(null);
+              setGraphic(null);
+            } else {
+              setText(item.getName());
+            }
+          }
+        };
+      }
+    });
+  }
+
+  private ObservableList<Quiz> getQuizzes(String input) {
+    var stream = getUser().getQuizzes().stream();
+
+    if (!input.equals("")) {
+      stream = stream.filter(quiz -> quiz.getName().contains(input));
+    }
+
+//    List<String> quizzes = stream.map(Quiz::getName).collect(Collectors.toList());
+
+    return FXCollections.observableArrayList(stream.collect(Collectors.toList()));
   }
 
   /**
@@ -114,23 +159,22 @@ public class MyQuizzesController extends LoggedInController {
       return;
     }
 
-    quizzesListView.setOnMouseClicked(event -> {
-      int index = quizzesListView.getSelectionModel().getSelectedIndex();
+    // update java state
+    getUser().removeQuiz(selectedQuiz);
+    this.selectedQuiz = null;
 
-      // Prevents IndexOutOfBoundsException
-      if (index != -1) {
-        getUser().getQuizzes().remove(index);
+    // update ui state
+    quizzesListView.getItems().remove(quizzesListView.getSelectionModel().getSelectedItem());
+    ObservableList<Quiz> quizzes = quizzesListView.getItems();
+    quizzesListView.setItems(quizzes);
 
-        try {
-          getCognitionStorage().update(getUser().getUuid(), getUser());
+    // update local storage state
+    try {
+      getCognitionStorage().update(getUser().getUuid(), getUser());
 
-        } catch (IOException e) {
-          feedback.setText("An error occurred when trying to delete selected quiz.");
-        }
-        initialize();
-      }
-    });
-
+    } catch (IOException e) {
+      feedback.setText("An error occurred when trying to delete selected quiz.");
+    }
   }
 
   @FXML
@@ -158,4 +202,6 @@ public class MyQuizzesController extends LoggedInController {
   public ListView getListView() {
     return quizzesListView;
   }
+
+
 }

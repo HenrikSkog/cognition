@@ -30,7 +30,7 @@ public class MyQuizzesTest extends ApplicationTest {
   private CognitionStorage cognitionStorage;
   private User loggedInUser;
 
-  private ListView listView;
+  private ListView<Quiz> listView;
 
   private final String validUsername = "valid-username";
   private final String validPassword = "valid-password";
@@ -105,8 +105,8 @@ public class MyQuizzesTest extends ApplicationTest {
     // assert listview has all quizzes that user object has
     for (int i = 0; i < listView.getItems().size(); i++) {
       Assertions.assertEquals(
-          loggedInUser.getQuizzes().get(i).getName(),
-          listView.getItems().get(i)
+          loggedInUser.getQuizzes().get(i).getUuid(),
+          listView.getItems().get(i).getUuid()
       );
     }
   }
@@ -128,9 +128,6 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // delete selected quiz
     clickOn("#deleteQuizButton");
-
-    // one have to click on listview again for it to update
-    clickOn("#quizzesListView");
 
     //  -> make sure number of items are 10 - 1 = 9
     Assertions.assertEquals(9, listView.getItems().size());
