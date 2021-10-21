@@ -1,6 +1,7 @@
 package core;
 
 import core.validators.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +50,9 @@ public class User {
    * @param updatedQuiz updated version of quiz
    */
   public void updateQuiz(Quiz updatedQuiz) {
-    for (Quiz quiz : quizzes) {
+    for (int i = 0; i < quizzes.size(); i++) {
+      Quiz quiz = quizzes.get(i);
+
       if (quiz.getUuid().equals(updatedQuiz.getUuid())) {
         quizzes.remove(quiz);
         quizzes.add(updatedQuiz);
@@ -69,7 +72,7 @@ public class User {
 
     User user = (User) o;
     return Objects.equals(uuid, user.uuid) && Objects.equals(username, user.username)
-        && Objects.equals(password, user.password) && Objects.equals(quizzes, user.quizzes);
+            && Objects.equals(password, user.password) && Objects.equals(quizzes, user.quizzes);
   }
 
   @Override
@@ -151,7 +154,7 @@ public class User {
   @Override
   public String toString() {
     return "User{" + "uuid='" + uuid + '\'' + ", username='" + username + '\''
-        + ", password='" + password + '\''
-        + ", quizzes=" + quizzes + '}';
+            + ", password='" + password + '\''
+            + ", quizzes=" + quizzes + '}';
   }
 }
