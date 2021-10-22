@@ -17,7 +17,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import ui.controllers.MyQuizzesController;
 import ui.controllers.annotations.SuppressFBWarnings;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
@@ -54,16 +53,16 @@ public class MyQuizzesTest extends ApplicationTest {
     FXMLLoader loader = getLoader("MyQuizzes");
 
     // logged in user and storage instances must be present for this view to function
-    this.cognitionStorage = new CognitionStorage("usersTest.json");
+    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
     this.loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
 
     // create some test data. 10 quizzes
     for (int i = 0; i < 10; i++) {
       Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz "
-          + i, "Test description " + i);
+              + i, "Test description " + i);
       for (int j = 0; j < 10; j++) {
         Flashcard fc = new Flashcard(UUID.randomUUID().toString(), "Front"
-            + j, "Back" + j);
+                + j, "Back" + j);
         quiz.addFlashcard(fc);
       }
       loggedInUser.addQuiz(quiz);
@@ -105,8 +104,8 @@ public class MyQuizzesTest extends ApplicationTest {
     // assert listview has all quizzes that user object has
     for (int i = 0; i < listView.getItems().size(); i++) {
       Assertions.assertEquals(
-          loggedInUser.getQuizzes().get(i).getUuid(),
-          listView.getItems().get(i).getUuid()
+              loggedInUser.getQuizzes().get(i).getUuid(),
+              listView.getItems().get(i).getUuid()
       );
     }
   }
@@ -119,8 +118,8 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // Validate that user got correct feedback in UI
     Assertions.assertEquals(
-        "No selected quiz",
-        myQuizzesController.getFeedbackErrorMessage()
+            "No selected quiz",
+            myQuizzesController.getFeedbackErrorMessage()
     );
 
     // click on item in list -> click on delete button
@@ -141,8 +140,8 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // cannot start quiz without selecting one first
     Assertions.assertEquals(
-        "No selected quiz",
-        myQuizzesController.getFeedbackErrorMessage()
+            "No selected quiz",
+            myQuizzesController.getFeedbackErrorMessage()
     );
 
     // select a quiz
@@ -163,8 +162,8 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // cannot update quiz without selecting one first
     Assertions.assertEquals(
-        "No selected quiz",
-        myQuizzesController.getFeedbackErrorMessage()
+            "No selected quiz",
+            myQuizzesController.getFeedbackErrorMessage()
     );
 
     // click on a quiz

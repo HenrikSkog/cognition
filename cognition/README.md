@@ -20,10 +20,6 @@ quizzes and flashcards are stored persistently.
 
 ### Improvements and future functionality
 
-As a user, I want to view my streaks, in other words how many consecutive flashcards I have answered correctly. The
-flashcards can be grouped by priority, for example grouped by the hardest questions or grouped by the ones I have gotten
-most wrong.
-
 As a user, I want to search quizzes and flashcards for easier and more intuitive navigation.
 
 ## Mockup screenshots
