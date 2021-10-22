@@ -131,6 +131,12 @@ public class ViewQuizController extends LoggedInController {
         "Quiz", feedback);
   }
 
+  @FXML
+  public void handleLogout(ActionEvent event) {
+    changeToView(event, new LoginController(getCognitionStorage()),
+            "Login", feedback);
+  }
+
   /**
    * Sets the styling on feedback in the frontend.
    *

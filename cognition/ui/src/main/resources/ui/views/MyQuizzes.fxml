@@ -1,136 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: FCB751;"
-            stylesheets="@../../styles/dashboard.css" xmlns="http://javafx.com/javafx/15.0.1"
-            xmlns:fx="http://javafx.com/fxml/1">
-    <Label fx:id="pageId" text="MyQuizzes" visible="false" alignment="CENTER" prefHeight="27.0" prefWidth="485.0"/>
-    <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="98.0" prefWidth="903.0"
-          style="-fx-padding: 20;">
-        <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="136.0"
-              style="-fx-background-color: #fff; -fx-padding: 20; -fx-background-radius: 20 0 0 20;">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: FCB751;" stylesheets="@../../styles/dashboard.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <Label fx:id="pageId" alignment="CENTER" prefHeight="27.0" prefWidth="485.0" text="MyQuizzes" visible="false" />
+    <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="98.0" prefWidth="922.0" style="-fx-padding: 20;">
+        <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="136.0" style="-fx-background-color: #fff; -fx-padding: 20; -fx-background-radius: 20 0 0 20;">
             <ImageView fitHeight="33.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@../../img/logo.png"/>
+                <Image url="@../../img/logo.png" />
             </ImageView>
-            <Text fx:id="dashboardLogo" fill="#5c5353" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="logo"
-                  text="Cognition">
+            <Text fx:id="dashboardLogo" fill="#5c5353" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="logo" text="Cognition">
                 <HBox.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </HBox.margin>
                 <font>
-                    <Font name="System Bold" size="13.0"/>
+                    <Font name="System Bold" size="13.0" />
                 </font>
             </Text>
         </HBox>
         <HBox alignment="CENTER" prefHeight="73.0" prefWidth="490.0" style="-fx-background-color: #fff;">
             <children>
-                <Button fx:id="goToDashboardButton" mnemonicParsing="false" onAction="#handleDashboard"
-                        styleClass="nav_link" text="Home"/>
+                <Button fx:id="goToDashboardButton" mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link" text="Home" />
                 <Button mnemonicParsing="false" styleClass="nav_link" text="My quizzes">
                     <graphic>
-                        <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK"/>
+                        <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK" />
                     </graphic>
                 </Button>
-                <Button fx:id="createQuizButton" mnemonicParsing="false" onAction="#handleCreateQuiz"
-                        styleClass="nav_link" text="Create quiz">
+                <Button fx:id="createQuizButton" mnemonicParsing="false" onAction="#handleCreateQuiz" styleClass="nav_link" text="Create quiz">
                     <graphic>
-                        <FontAwesomeIconView fill="#626262" glyphName="PLUS"/>
-                    </graphic>
-                </Button>
-                <Button mnemonicParsing="false" styleClass="nav_link" text="Leaderboard">
-                    <graphic>
-                        <FontAwesomeIconView fill="#626262" glyphName="LIST_OL"/>
+                        <FontAwesomeIconView fill="#626262" glyphName="PLUS" />
                     </graphic>
                 </Button>
             </children>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="188.0"
-              style="-fx-background-color: #fff; -fx-padding: 15px; -fx-background-radius: 0 20 20 0;">
-            <Pane prefHeight="13.0" prefWidth="114.0">
-                <Text fill="#626262" layoutX="28.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                      styleClass="dropdown" text="Username"/>
-                <FontAwesomeIconView fill="#626262" glyphName="CHEVRON_DOWN" layoutX="88.0" layoutY="27.0"/>
-            </Pane>
-            <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#handleLogout" text="Sign out"/>
+        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="188.0" style="-fx-background-color: #fff; -fx-padding: 15px; -fx-background-radius: 0 20 20 0;">
+
+            <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#handleLogout" styleClass="nav_link" text="Sign out">
+                <graphic>
+                    <FontAwesomeIconView fill="#626262" glyphName="SIGN_OUT" />
+                </graphic></Button>
         </HBox>
     </HBox>
-    <VBox layoutX="74.0" layoutY="181.0" prefHeight="562.0" prefWidth="792.0"
-          style="-fx-background-color: ffffff; -fx-background-radius: 30;">
+    <VBox layoutX="92.0" layoutY="181.0" prefHeight="562.0" prefWidth="643.0" style="-fx-background-color: ffffff; -fx-background-radius: 30;">
 
-        <Label fx:id="feedback" alignment="CENTER" layoutX="33.0" layoutY="480.0" prefHeight="19.0" prefWidth="437.0"
-               textAlignment="CENTER" textFill="RED">
+        <Label fx:id="feedback" alignment="CENTER" layoutX="33.0" layoutY="480.0" prefHeight="19.0" prefWidth="437.0" textAlignment="CENTER" textFill="RED">
             <font>
-                <Font size="15.0"/>
+                <Font size="15.0" />
             </font>
         </Label>
         <Label fx:id="myQuizzesLabel" text="My Quizzes">
             <padding>
-                <Insets left="300.0"/>
+                <Insets left="300.0" />
             </padding>
             <font>
-                <Font name="Baloo Chettan Regular" size="39.0"/>
+                <Font name="Baloo Chettan Regular" size="39.0" />
             </font>
         </Label>
 
         <!-- TextField for searching for quizzes -->
-        <TextField fx:id="searchInput" layoutX="71.0" layoutY="250.0" prefHeight="57.0" prefWidth="367.0"
-                   promptText="Search for quiz..."
-                   style="-fx-border-radius: 6; -fx-border-color: FCB751; -fx-border-width: 2; -fx-background-color: FFFFFF;">
+        <TextField fx:id="searchInput" layoutX="71.0" layoutY="250.0" prefHeight="57.0" prefWidth="367.0" promptText="Search for quiz..." style="-fx-border-radius: 6; -fx-border-color: FCB751; -fx-border-width: 2; -fx-background-color: FFFFFF;">
             <font>
-                <Font size="18.0"/>
+                <Font size="18.0" />
             </font>
         </TextField>
 
-        <Pane maxWidth="40.0" prefHeight="12.0" prefWidth="40.0"
-              style="-fx-background-color: FCB751; -fx-background-radius: 2;">
+        <Pane maxWidth="40.0" prefHeight="12.0" prefWidth="40.0" style="-fx-background-color: FCB751; -fx-background-radius: 2;">
             <VBox.margin>
-                <Insets bottom="20.0" left="380.0" top="20.0"/>
+                <Insets bottom="20.0" left="380.0" top="20.0" />
             </VBox.margin>
         </Pane>
         <HBox prefHeight="20.0" prefWidth="200.0">
             <children>
-                <Button fx:id="startQuizButton" minHeight="35.0" mnemonicParsing="false"
-                        onAction="#handleStartQuiz"
-                        style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Start selected quiz"
-                        textFill="WHITE">
+                <Button fx:id="startQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleStartQuiz" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Start selected quiz" textFill="WHITE">
                     <HBox.margin>
-                        <Insets left="100.0"/>
+                        <Insets left="100.0" />
                     </HBox.margin>
                     <font>
-                        <Font name="System Font" size="15.0"/>
+                        <Font name="System Font" size="15.0" />
                     </font>
                 </Button>
-                <Button fx:id="updateQuizButton" minHeight="35.0" mnemonicParsing="false"
-                        onAction="#handleUpdateQuiz"
-                        style="-fx-background-color: FCB751 FCB751; -fx-background-radius: 6;"
-                        text="Update selected quiz" textFill="WHITE">
+                <Button fx:id="updateQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleUpdateQuiz" style="-fx-background-color: FCB751 FCB751; -fx-background-radius: 6;" text="Update selected quiz" textFill="WHITE">
                     <HBox.margin>
-                        <Insets left="100.0"/>
+                        <Insets left="100.0" />
                     </HBox.margin>
                     <font>
-                        <Font name="System Bold" size="15.0"/>
+                        <Font name="System Bold" size="15.0" />
                     </font>
                 </Button>
-                <Button fx:id="deleteQuizButton" minHeight="35.0" mnemonicParsing="false"
-                        onAction="#handleDeleteQuiz"
-                        style="-fx-background-color: FCB751 FCB751; -fx-border-radius: 6;" text="Delete selected quiz"
-                        textFill="WHITE">
+                <Button fx:id="deleteQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleDeleteQuiz" style="-fx-background-color: FCB751 FCB751; -fx-border-radius: 6;" text="Delete selected quiz" textFill="WHITE">
                     <HBox.margin>
-                        <Insets left="100.0"/>
+                        <Insets left="100.0" />
                     </HBox.margin>
                     <font>
-                        <Font name="System Bold" size="15.0"/>
+                        <Font name="System Bold" size="15.0" />
                     </font>
                 </Button>
             </children>
         </HBox>
-        <ListView fx:id="quizzesListView" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                  minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="793.0"/>
+        <ListView fx:id="quizzesListView" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="738.0" />
     </VBox>
 </AnchorPane>
