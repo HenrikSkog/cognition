@@ -51,7 +51,7 @@ public class UpdateQuizTest extends ApplicationTest {
 
         
     quizController = new QuizController(loggedInUser, cognitionStorage);
-    quizController.setQuiz(quiz);
+    quizController.setQuizBeingUpdated(quiz);
     loader.setController(quizController);
 
     scene = new Scene(loader.load());

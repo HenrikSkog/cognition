@@ -112,6 +112,12 @@ public class ViewQuizController extends LoggedInController {
   }
 
   @FXML
+  public void handleMyQuizzes(ActionEvent event) {
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+        "MyQuizzes", feedback);
+  }
+
+  @FXML
   public void handleCreateQuiz(ActionEvent event) {
     changeToView(event, new QuizController(getUser(), getCognitionStorage()),
             "Quiz", feedback);
