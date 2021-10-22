@@ -3,13 +3,11 @@ package ui.controllers;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
-import javafx.event.ActionEvent;
+import java.util.List;
 import javafx.fxml.FXML;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import json.CognitionStorage;
-import java.util.List;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -21,9 +19,6 @@ public class ViewQuizController extends LoggedInController {
   private int flashcardIndex = 0;
   private int correctAnswerCount = 0;
   private boolean hasFailedFlashcard = false;
-
-  @FXML
-  private Labeled feedback;
 
   @FXML
   private TextField answerInput;
@@ -86,13 +81,13 @@ public class ViewQuizController extends LoggedInController {
 
     if (answerInput.getText().equals("")) {
       setFeedbackErrorMode(true);
-      feedback.setText("Please provide an answer.");
+      setFeedbackText("Please provide an answer.");
       return;
     }
 
     if (!userAnswer.equals(correctAnswer)) {
       setFeedbackErrorMode(true);
-      feedback.setText("Incorrect! \n The correct answer was: " + correctAnswer + ".");
+      setFeedbackText("Incorrect! \n The correct answer was: " + correctAnswer + ".");
       hasFailedFlashcard = true;
       answerInput.setText("");
     } else {
@@ -100,41 +95,12 @@ public class ViewQuizController extends LoggedInController {
         correctAnswerCount++;
       }
       setFeedbackErrorMode(false);
-      feedback.setText("Correct answer!");
+      setFeedbackText("Correct answer!");
       answerInput.setText("");
 
       hasFailedFlashcard = false;
       nextFlashcard();
     }
-  }
-
-  /**
-   * Triggered when switching to the Dashboard view.
-   *
-   * @param event is the ActionEvent on button click.
-   */
-  @FXML
-  public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
-        "Dashboard", feedback);
-  }
-
-  @FXML
-  public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
-        "MyQuizzes", feedback);
-  }
-
-  @FXML
-  public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
-        "Quiz", feedback);
-  }
-
-  @FXML
-  public void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionStorage()),
-            "Login", feedback);
   }
 
   /**
@@ -144,9 +110,9 @@ public class ViewQuizController extends LoggedInController {
    */
   private void setFeedbackErrorMode(boolean mode) {
     if (mode) {
-      feedback.setStyle("-fx-text-fill: red");
+      getFeedback().setStyle("-fx-text-fill: red");
     } else {
-      feedback.setStyle("-fx-text-fill: green");
+      getFeedback().setStyle("-fx-text-fill: green");
     }
   }
 

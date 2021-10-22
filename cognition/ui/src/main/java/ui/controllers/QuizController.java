@@ -9,16 +9,13 @@ import java.util.List;
 import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import json.CognitionStorage;
 import ui.controllers.annotations.SuppressFBWarnings;
 
@@ -28,7 +25,6 @@ import ui.controllers.annotations.SuppressFBWarnings;
 public class QuizController extends LoggedInController {
   private final String feedbackSuccessMessage = "Successfully created quiz.";
   public ScrollPane flashcardPane;
-  public Labeled feedback;
   public Button storeQuizButton;
   public Text heading;
   public TextField name;
@@ -39,10 +35,6 @@ public class QuizController extends LoggedInController {
 
   public QuizController(User user, CognitionStorage cognitionStorage) {
     super(user, cognitionStorage);
-  }
-
-  public Quiz getQuizBeingUpdated() {
-    return quizBeingUpdated;
   }
 
   public void setQuizBeingUpdated(Quiz quizBeingUpdated) {
@@ -110,7 +102,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (upperChildContainer == null) {
-        feedback.setText(feedbackErrorMessage);
+        setFeedbackText(feedbackErrorMessage);
         return;
       }
 
@@ -121,7 +113,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (removeFlashcardButton == null) {
-        feedback.setText(feedbackErrorMessage);
+        setFeedbackText(feedbackErrorMessage);
         return;
       }
 
@@ -132,7 +124,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (flashcardNumberText == null) {
-        feedback.setText(feedbackErrorMessage);
+        setFeedbackText(feedbackErrorMessage);
         return;
       }
 
@@ -154,24 +146,7 @@ public class QuizController extends LoggedInController {
   public void addFlashcardNode(ActionEvent actionEvent) {
     createFlashcardNode(null);
 
-    feedback.setText("Added flashcard.");
-  }
-
-  @FXML
-  public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
-            "Dashboard", feedback);
-  }
-
-  @FXML
-  public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
-            "MyQuizzes", feedback);
-  }
-
-  @FXML
-  public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()), "Quiz", feedback);
+    setFeedbackText("Added flashcard.");
   }
 
   /**
@@ -250,13 +225,13 @@ public class QuizController extends LoggedInController {
 
     if (!Quiz.isValidName(quizName)) {
       feedbackErrorMessage = "The name of a quiz cannot be empty.";
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
       return;
     }
 
     if (!Quiz.isValidDescription(quizDescription)) {
       feedbackErrorMessage = "The description of a quiz cannot be empty.";
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
       return;
     }
 
@@ -272,7 +247,7 @@ public class QuizController extends LoggedInController {
       if (!Flashcard.isValidFront(flashcard.getFront())
               || !Flashcard.isValidAnswer(flashcard.getAnswer())) {
         feedbackErrorMessage = "Both front and answer in each flashcards cannot be empty.";
-        feedback.setText(feedbackErrorMessage);
+        setFeedbackText(feedbackErrorMessage);
         return;
       }
     }
@@ -292,10 +267,10 @@ public class QuizController extends LoggedInController {
 
     try {
       getCognitionStorage().update(getUser().getUuid(), getUser());
-      feedback.setText(feedbackSuccessMessage);
+      setFeedbackText(feedbackSuccessMessage);
     } catch (IOException e) {
       feedbackErrorMessage = "An error occurred when trying to create the quiz.";
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
     }
   }
 
@@ -310,7 +285,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (lowerChildContainer == null) {
-        feedback.setText("An error occurred when parsing the flashcards.");
+        setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
 
@@ -320,7 +295,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (frontContainer == null) {
-        feedback.setText("An error occurred when parsing the flashcards.");
+        setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
 
@@ -330,7 +305,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (frontInput == null) {
-        feedback.setText("An error occurred when parsing the flashcards.");
+        setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
 
@@ -340,7 +315,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (answerContainer == null) {
-        feedback.setText("An error occurred when parsing the flashcards.");
+        setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
 
@@ -350,7 +325,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (answerInput == null) {
-        feedback.setText("An error occurred when parsing the flashcards.");
+        setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
 
@@ -359,12 +334,12 @@ public class QuizController extends LoggedInController {
       String answer = answerInput.getText();
 
       if (!Flashcard.isValidFront(front)) {
-        feedback.setText("The front of the flashcard cannot be empty.");
+        setFeedbackText("The front of the flashcard cannot be empty.");
         return null;
       }
 
       if (!Flashcard.isValidFront(answer)) {
-        feedback.setText("The answer of the flashcard cannot be empty.");
+        setFeedbackText("The answer of the flashcard cannot be empty.");
         return null;
       }
 
@@ -376,27 +351,17 @@ public class QuizController extends LoggedInController {
   }
 
   /**
-   * Gets triggered when the "Sign Out" button is clicked.
+   * Handles how a switch to the same controller should be handled. If currently updating quiz, user
+   * is able to switch to create new quiz. Otherwise, it is not permitted.
    *
-   * @param event is the ActionEvent on button click.
+   * @param event is the given by javafx
    */
-  @FXML
-  public void handleLogout(ActionEvent event) {
-    // Load FXML view
-    FXMLLoader loader = getLoader("Login");
-
-    // Set state in controller
-    LoginController loginController = new LoginController(getCognitionStorage());
-    loader.setController(loginController);
-
-    // Switch stage
-    Stage stage = getStage(event);
-
-    try {
-      switchScene(stage, loader.load());
-    } catch (IOException e) {
-      feedback.setText("An error occurred when trying to log out.");
+  @Override
+  public void handleCreateQuiz(ActionEvent event) {
+    if (quizBeingUpdated == null) {
+      return;
     }
+    QuizController quizController = new QuizController(getUser(), getCognitionStorage());
+    changeToView(event, quizController, "Quiz");
   }
-
 }

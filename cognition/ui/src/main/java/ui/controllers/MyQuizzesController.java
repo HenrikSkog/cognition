@@ -22,9 +22,6 @@ import json.CognitionStorage;
 public class MyQuizzesController extends LoggedInController {
 
   @FXML
-  private Label feedback;
-
-  @FXML
   private ListView<Quiz> quizzesListView;
 
   @FXML
@@ -55,13 +52,15 @@ public class MyQuizzesController extends LoggedInController {
       int index = quizzesListView.getSelectionModel().getSelectedIndex();
 
       // Prevents IndexOutOfBoundsException if invalid element is selected
-      if (index != -1) this.selectedQuiz = quizzesListView.getItems().get(index);
+      if (index != -1) {
+        this.selectedQuiz = quizzesListView.getItems().get(index);
+      }
     });
 
   }
 
   /**
-   * Sets up list view cell factory so listview properly works using Quiz as type
+   * Sets up list view cell factory so listview properly works using Quiz as type.
    */
   private void setupListView() {
     quizzesListView.setCellFactory(new Callback<>() {
@@ -85,6 +84,13 @@ public class MyQuizzesController extends LoggedInController {
     });
   }
 
+  /**
+   * Compares the users quizzes with an input and returns the matching quizzes. A comparison
+   * functions by checking if a name contains the given input.
+   *
+   * @param input the string quizzes are matched up against
+   * @return an ObservableList with all the matching quizzes
+   */
   private ObservableList<Quiz> getQuizzes(String input) {
     var stream = getUser().getQuizzes().stream();
 
@@ -114,7 +120,7 @@ public class MyQuizzesController extends LoggedInController {
     );
     viewQuizController.setQuiz(selectedQuiz);
 
-    changeToView(event, viewQuizController, "ViewQuiz", feedback);
+    changeToView(event, viewQuizController, "ViewQuiz");
 
   }
 
@@ -133,13 +139,13 @@ public class MyQuizzesController extends LoggedInController {
     QuizController quizController = new QuizController(getUser(), getCognitionStorage());
     quizController.setQuizBeingUpdated(selectedQuiz);
 
-    changeToView(event, quizController, "Quiz", feedback);
+    changeToView(event, quizController, "Quiz");
   }
 
   private boolean quizIsNotSelected() {
     if (this.selectedQuiz == null) {
       feedbackErrorMessage = "No selected quiz";
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
       return true;
     }
     return false;
@@ -170,35 +176,15 @@ public class MyQuizzesController extends LoggedInController {
       getCognitionStorage().update(getUser().getUuid(), getUser());
 
     } catch (IOException e) {
-      feedback.setText("An error occurred when trying to delete selected quiz.");
+      setFeedbackText("An error occurred when trying to delete selected quiz.");
     }
-  }
-
-  @FXML
-  public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
-            "Quiz", feedback);
-  }
-
-  @FXML
-  public void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionStorage()),
-            "Login", feedback);
   }
 
   public String getFeedbackErrorMessage() {
     return feedbackErrorMessage;
   }
 
-  @FXML
-  public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
-            "Dashboard", feedback);
-  }
-
   public ListView getListView() {
     return quizzesListView;
   }
-
-
 }

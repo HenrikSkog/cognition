@@ -20,35 +20,13 @@ public class DashboardController extends LoggedInController {
   @FXML
   private Text cognitionDescription;
 
-  @FXML
-  private Label feedback;
-
   public DashboardController(User user, CognitionStorage cognitionStorage) {
     super(user, cognitionStorage);
   }
 
   @FXML
-  protected void initialize() {
+  public void initialize() {
     heading.setText("Welcome, " + Tools.capitalize(getUser().getUsername()));
-    
     cognitionDescription.setText("TODO: Add some descriptive text here.");
-  }
-
-  @FXML
-  public void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionStorage()),
-            "Login", feedback);
-  }
-
-  @FXML
-  public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
-            "Quiz", feedback);
-  }
-
-  @FXML
-  public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
-            "MyQuizzes", feedback);
   }
 }

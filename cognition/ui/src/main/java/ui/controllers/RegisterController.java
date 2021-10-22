@@ -119,7 +119,7 @@ public class RegisterController extends Controller {
   @FXML
   public void goToLogin(ActionEvent event) {
     changeToView(event, new LoginController(getCognitionStorage()),
-            "Login", feedback);
+            "Login");
   }
 
   /**

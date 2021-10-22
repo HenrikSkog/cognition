@@ -2,11 +2,12 @@ package ui.controllers;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Labeled;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import json.CognitionStorage;
 import ui.controllers.annotations.SuppressFBWarnings;
@@ -16,6 +17,10 @@ import ui.controllers.annotations.SuppressFBWarnings;
  * for all presentation layer controllers.
  */
 public abstract class Controller {
+
+  @FXML
+  private Label feedback;
+
   private CognitionStorage cognitionStorage;
 
   public Controller(CognitionStorage cognitionStorage) {
@@ -64,12 +69,10 @@ public abstract class Controller {
    * @param event is the ActionEvent on button click.
    * @param controller is the presentation logic Controller.
    * @param fxml is the String representation of the FXML filename.
-   * @param feedback is the FXML Node that provides the feedback to the user.
    */
   public void changeToView(ActionEvent event,
                            Controller controller,
-                           String fxml,
-                           Labeled feedback) {
+                           String fxml) {
     FXMLLoader loader = getLoader(fxml);
 
     loader.setController(controller);
@@ -89,5 +92,13 @@ public abstract class Controller {
 
   public void setCognitionStorage(CognitionStorage cognitionStorage) {
     this.cognitionStorage = cognitionStorage;
+  }
+
+  public Label getFeedback() {
+    return feedback;
+  }
+
+  public void setFeedbackText(String value) {
+    feedback.setText(value);
   }
 }

@@ -45,7 +45,9 @@
                                     <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK" />
                                 </graphic>
                             </Button>
-                            <Button fx:id="createQuizButtonNavbar" mnemonicParsing="false" styleClass="nav_link" text="Create quiz">
+                            <Button fx:id="createQuizButtonNavbar" onAction="#handleCreateQuiz"
+                                    mnemonicParsing="false"
+                                    styleClass="nav_link" text="Create quiz">
                                 <graphic>
                                     <FontAwesomeIconView fill="#626262" glyphName="PLUS" />
                                 </graphic>

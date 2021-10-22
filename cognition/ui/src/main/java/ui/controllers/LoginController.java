@@ -46,6 +46,33 @@ public class LoginController extends Controller {
   }
 
   /**
+   * Gets triggered when the user clicks to go to Dashboard view.
+   *
+   * @param event is the ActionEvent on button click.
+   * @param username is the username of the current user.
+   */
+  @FXML
+  public void goToDashboard(ActionEvent event, String username) {
+    User user;
+    try {
+      user = getCognitionStorage().readByUsername(username);
+    } catch (IOException e) {
+      feedbackErrorMessage = "An error occurred when reading the user from file";
+      feedback.setText(feedbackErrorMessage);
+      return;
+    }
+
+    changeToView(event, new DashboardController(user, getCognitionStorage()),
+        "Dashboard");
+  }
+
+  @FXML
+  public void goToRegister(ActionEvent event) {
+    changeToView(event, new RegisterController(getCognitionStorage()),
+        "Register");
+  }
+
+  /**
    * Validates the provided input.
    *
    * @param username is the String representation of the provided username
@@ -72,32 +99,6 @@ public class LoginController extends Controller {
 
     feedbackErrorMessage = "No user with that username and password could be found.";
     return false;
-  }
-
-  /**
-   * Gets triggered when the user clicks to go to Dashboard view.
-   *
-   * @param event is the ActionEvent on button click.
-   * @param username is the username of the current user.
-   */
-  public void goToDashboard(ActionEvent event, String username) {
-    User user;
-    try {
-      user = getCognitionStorage().readByUsername(username);
-    } catch (IOException e) {
-      feedbackErrorMessage = "An error occurred when reading the user from file";
-      feedback.setText(feedbackErrorMessage);
-      return;
-    }
-
-    changeToView(event, new DashboardController(user, getCognitionStorage()),
-            "Dashboard", feedback);
-  }
-
-  @FXML
-  public void goToRegister(ActionEvent event) {
-    changeToView(event, new RegisterController(getCognitionStorage()),
-            "Register", feedback);
   }
 
   /**
