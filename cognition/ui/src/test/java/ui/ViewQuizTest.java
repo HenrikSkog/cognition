@@ -42,10 +42,10 @@ public class ViewQuizTest extends ApplicationTest {
     cognitionStorage.create(loggedInUser);
 
     Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
-            "This is a test quiz used for development purposes");
+        "This is a test quiz used for development purposes");
     quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+        new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
 
     flashcards = quiz.getFlashcards();
 
@@ -105,7 +105,7 @@ public class ViewQuizTest extends ApplicationTest {
     clickOn("#submitAnswer");
 
     FxAssert.verifyThat("#feedback", LabeledMatchers
-            .hasText("Incorrect! \n The correct answer was: " + flashcards.get(0).getAnswer().toLowerCase() + "."));
+        .hasText("Incorrect! \n The correct answer was: " + flashcards.get(0).getAnswer().toLowerCase() + "."));
 
   }
 
@@ -114,10 +114,10 @@ public class ViewQuizTest extends ApplicationTest {
   void setQuizDoesNotThrow() {
 
     Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
-            "This is a test quiz used for development purposes");
+        "This is a test quiz used for development purposes");
     quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+        new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
 
     try {
       viewQuizController.setQuiz(quiz);
@@ -128,15 +128,29 @@ public class ViewQuizTest extends ApplicationTest {
   }
 
   @Test
-  @DisplayName("Loads next flashcard")
-  void loadsNextFlashcard() {
+  @DisplayName("Run quiz with wrong answers and give correct number of right answers")
+  void runQuizWithFails() {
+    // answer first question incorrectly
+    FxAssert.verifyThat("#flashcardText", TextMatchers.hasText("What is the capital of Spain?"));
 
-    FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcards.get(0).getFront()));
+    clickOn("#answerInput").write("Wrong answer");
+    clickOn("#submitAnswer");
 
+    // answer with the correct answer
     clickOn("#answerInput").write(flashcards.get(0).getAnswer());
     clickOn("#submitAnswer");
 
-    FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcards.get(1).getFront()));
+    // answer rest of flashcards correctly
+    for (Flashcard flashcard : flashcards.subList(1, flashcards.size())) {
+      clickOn("#answerInput").write(flashcard.getAnswer());
+      clickOn("#submitAnswer");
+    }
+
+    // assert that you got max - 1 correct answers
+    FxAssert.verifyThat("#flashcardText",
+        TextMatchers.hasText(
+            "End of quiz! " + "You got " + (flashcards.size() - 1) + " right " +
+                "out " + "of " + flashcards.size() + " possible."));
   }
 
   @Test
@@ -152,7 +166,7 @@ public class ViewQuizTest extends ApplicationTest {
     }
 
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(
-            "End of quiz! " + "You got " + flashcards.size() + " right out of " + flashcards.size() + " possible."));
+        "End of quiz! " + "You got " + flashcards.size() + " right out of " + flashcards.size() + " possible."));
   }
 
   @Test
