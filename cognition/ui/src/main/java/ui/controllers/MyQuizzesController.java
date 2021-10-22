@@ -89,7 +89,7 @@ public class MyQuizzesController extends LoggedInController {
     var stream = getUser().getQuizzes().stream();
 
     if (!input.equals("")) {
-      stream = stream.filter(quiz -> quiz.getName().contains(input));
+      stream = stream.filter(quiz -> quiz.getName().toLowerCase().contains(input.toLowerCase()));
     }
 
     return FXCollections.observableArrayList(stream.collect(Collectors.toList()));
