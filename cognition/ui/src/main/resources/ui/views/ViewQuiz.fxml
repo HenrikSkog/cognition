@@ -57,25 +57,15 @@
                                     <FontAwesomeIconView fill="#626262" glyphName="PLUS"/>
                                 </graphic>
                             </Button>
-                            <Button mnemonicParsing="false" styleClass="nav_link" text="Leaderboard">
-                                <graphic>
-                                    <FontAwesomeIconView fill="#626262" glyphName="LIST_OL"/>
-                                </graphic>
-                            </Button>
+
                         </children>
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="67.0" prefWidth="188.0"
                           style="-fx-background-color: #fff; -fx-padding: 15px; -fx-background-radius: 0 20 20 0;">
-                        <children>
-                            <Pane prefHeight="13.0" prefWidth="114.0">
-                                <children>
-                                    <Text fill="#626262" layoutX="28.0" layoutY="26.0" strokeType="OUTSIDE"
-                                          strokeWidth="0.0" styleClass="dropdown" text="Username"/>
-                                    <FontAwesomeIconView fill="#626262" glyphName="CHEVRON_DOWN" layoutX="88.0"
-                                                         layoutY="27.0"/>
-                                </children>
-                            </Pane>
-                        </children>
+                        <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#handleLogout" styleClass="nav_link" text="Sign out">
+                            <graphic>
+                                <FontAwesomeIconView fill="#626262" glyphName="SIGN_OUT" />
+                            </graphic></Button>
                     </HBox>
                 </children>
             </HBox>
