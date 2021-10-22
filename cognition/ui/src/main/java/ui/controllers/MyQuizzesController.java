@@ -3,7 +3,6 @@ package ui.controllers;
 import core.Quiz;
 import core.User;
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -93,8 +92,6 @@ public class MyQuizzesController extends LoggedInController {
       stream = stream.filter(quiz -> quiz.getName().contains(input));
     }
 
-//    List<String> quizzes = stream.map(Quiz::getName).collect(Collectors.toList());
-
     return FXCollections.observableArrayList(stream.collect(Collectors.toList()));
   }
 
@@ -134,7 +131,7 @@ public class MyQuizzesController extends LoggedInController {
 
     // Set state in controller
     QuizController quizController = new QuizController(getUser(), getCognitionStorage());
-    quizController.setQuiz(selectedQuiz);
+    quizController.setQuizBeingUpdated(selectedQuiz);
 
     changeToView(event, quizController, "Quiz", feedback);
   }

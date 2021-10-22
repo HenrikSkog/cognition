@@ -35,18 +35,18 @@ public class QuizController extends LoggedInController {
   public TextField description;
   private VBox flashcardPaneContainer = new VBox();
   private String feedbackErrorMessage = "";
-  private Quiz quiz = null;
+  private Quiz quizBeingUpdated = null;
 
   public QuizController(User user, CognitionStorage cognitionStorage) {
     super(user, cognitionStorage);
   }
 
-  public Quiz getQuiz() {
-    return quiz;
+  public Quiz getQuizBeingUpdated() {
+    return quizBeingUpdated;
   }
 
-  public void setQuiz(Quiz quiz) {
-    this.quiz = quiz;
+  public void setQuizBeingUpdated(Quiz quizBeingUpdated) {
+    this.quizBeingUpdated = quizBeingUpdated;
   }
 
   /**
@@ -54,17 +54,18 @@ public class QuizController extends LoggedInController {
    */
   @FXML
   public void initialize() {
-    if (quiz != null) {
-      // Set state if quiz is to be updated
-      name.setText(quiz.getName());
-      description.setText(quiz.getDescription());
+    if (quizBeingUpdated != null) {
+      // populate ui according to quiz being updated
+      name.setText(quizBeingUpdated.getName());
+      description.setText(quizBeingUpdated.getDescription());
       storeQuizButton.setText("Update quiz");
-      heading.setText("Update " + quiz.getName());
+      heading.setText("Update " + quizBeingUpdated.getName());
 
-      for (Flashcard flashcard : quiz.getFlashcards()) {
+      for (Flashcard flashcard : quizBeingUpdated.getFlashcards()) {
         createFlashcardNode(flashcard);
       }
     } else {
+      // new quiz -> start with one empty flashcard and empty name and description
       createFlashcardNode(null);
     }
   }
@@ -170,8 +171,7 @@ public class QuizController extends LoggedInController {
 
   @FXML
   public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
-            "Quiz", feedback);
+    changeToView(event, new QuizController(getUser(), getCognitionStorage()), "Quiz", feedback);
   }
 
   /**
@@ -243,6 +243,7 @@ public class QuizController extends LoggedInController {
    * @param actionEvent is the ActionEvent on button click.
    */
   @SuppressFBWarnings
+  @FXML
   public void handleStoreQuiz(ActionEvent actionEvent) {
     String quizName = name.getText();
     String quizDescription = description.getText();
@@ -275,17 +276,18 @@ public class QuizController extends LoggedInController {
         return;
       }
     }
+
     // If there is a quiz, update the existing quiz
-    if (quiz != null) {
-      quiz.setName(quizName);
-      quiz.setDescription(quizDescription);
-      quiz.setFlashcards(flashcards);
-      getUser().updateQuiz(quiz);
+    if (quizBeingUpdated != null) {
+      quizBeingUpdated.setName(quizName);
+      quizBeingUpdated.setDescription(quizDescription);
+      quizBeingUpdated.setFlashcards(flashcards);
+      getUser().updateQuiz(quizBeingUpdated);
     } else {
       // If quiz == null (does not exist), create a new one and add it
-      quiz = new Quiz(UUID.randomUUID().toString(), quizName, quizDescription);
-      quiz.addFlashcards(flashcards);
-      getUser().addQuiz(quiz);
+      Quiz newQuiz = new Quiz(UUID.randomUUID().toString(), quizName, quizDescription);
+      newQuiz.addFlashcards(flashcards);
+      getUser().addQuiz(newQuiz);
     }
 
     try {
