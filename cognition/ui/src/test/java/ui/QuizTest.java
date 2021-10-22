@@ -30,6 +30,7 @@ public class QuizTest extends ApplicationTest {
   private QuizController quizController;
   private CognitionStorage cognitionStorage;
 
+
   @AfterEach
   void tearDown() {
     clearUserStorage();
