@@ -15,6 +15,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import json.CognitionStorage;
 import ui.controllers.annotations.SuppressFBWarnings;
@@ -27,11 +30,13 @@ public class QuizController extends LoggedInController {
   public ScrollPane flashcardPane;
   public Button storeQuizButton;
   public Text heading;
+  public Label feedback;
   public TextField name;
   public TextField description;
   private VBox flashcardPaneContainer = new VBox();
   private String feedbackErrorMessage = "";
   private Quiz quizBeingUpdated = null;
+
 
   public QuizController(User user, CognitionStorage cognitionStorage) {
     super(user, cognitionStorage);
@@ -53,7 +58,9 @@ public class QuizController extends LoggedInController {
       storeQuizButton.setText("Update quiz");
       heading.setText("Update " + quizBeingUpdated.getName());
 
+
       for (Flashcard flashcard : quizBeingUpdated.getFlashcards()) {
+
         createFlashcardNode(flashcard);
       }
     } else {
@@ -90,6 +97,7 @@ public class QuizController extends LoggedInController {
    */
   @SuppressFBWarnings
   private void updateFlashcardNodes() {
+
     feedbackErrorMessage = "An error occurred when updating the flashcard inputs.";
 
     for (int i = 0; i < flashcardPaneContainer.getChildren().size(); i++) {
@@ -102,7 +110,9 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (upperChildContainer == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText(feedbackErrorMessage);
+
         return;
       }
 
@@ -113,7 +123,9 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (removeFlashcardButton == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText(feedbackErrorMessage);
+
         return;
       }
 
@@ -124,7 +136,9 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (flashcardNumberText == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText(feedbackErrorMessage);
+
         return;
       }
 
@@ -145,8 +159,20 @@ public class QuizController extends LoggedInController {
   @SuppressFBWarnings
   public void addFlashcardNode(ActionEvent actionEvent) {
     createFlashcardNode(null);
+    feedback.setTextFill(Color.GREEN);
+    feedback.setText("Added flashcard.");
+  }
 
-    setFeedbackText("Added flashcard.");
+  @FXML
+  public void handleDashboard(ActionEvent event) {
+    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
+            "Dashboard");
+  }
+
+  @FXML
+  public void handleMyQuizzes(ActionEvent event) {
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+            "MyQuizzes");
   }
 
   /**
@@ -160,51 +186,91 @@ public class QuizController extends LoggedInController {
     Text flashcardNumberText = new Text();
     flashcardNumberText.setId("flashcard-number-text");
     flashcardNumberText.setText(String.valueOf(nodeCount + 1));
+    flashcardNumberText.setFont(Font.font("Avenir Book", 20));;
 
     // Set "remove flashcard" button properties
     Button removeFlashcardButton = new Button();
-    removeFlashcardButton.setText("Remove");
+    removeFlashcardButton.setText("X");
     removeFlashcardButton.setId("remove-flashcard-button");
     removeFlashcardButton.setOnAction((event) -> removeFlashcardNode(nodeCount));
+    removeFlashcardButton.setFont(Font.font("Avenir Book", 16));
+    removeFlashcardButton.setStyle("-fx-background-color: #EE4040; -fx-background-radius: 10;");
+    removeFlashcardButton.setTextFill(Color.WHITE);
+
+
 
     HBox upperChildContainer = new HBox();
     // Add child elements to upper child container
     upperChildContainer.setId("upper-child-container");
     upperChildContainer.getChildren().addAll(flashcardNumberText, removeFlashcardButton);
+    upperChildContainer.setSpacing(690);
 
     // Populate front container
-    HBox frontContainer = new HBox();
+    VBox frontContainer = new VBox();
     frontContainer.setId("front-container");
     Label frontLabel = new Label();
     frontLabel.setText("Front");
+    frontLabel.setFont(Font.font("Avenir Book", 20));
     TextField frontInput = new TextField();
     frontInput.setId("front-input");
+    frontInput.setPrefWidth(340);
+    frontInput.setMaxWidth(340);
+    frontInput.setMaxHeight(Double.MAX_VALUE);
+    frontInput.setFont(Font.font("Avenir Book", 18));
     if (flashcard != null) {
       frontInput.setText(flashcard.getFront());
     }
-    frontContainer.getChildren().addAll(frontLabel, frontInput);
+    frontContainer.getChildren().addAll(frontInput, frontLabel);
 
     // Populate answer container
-    HBox answerContainer = new HBox();
+    VBox answerContainer = new VBox();
     answerContainer.setId("answer-container");
     Label answerLabel = new Label();
     answerLabel.setText("Answer");
+    answerLabel.setFont(Font.font("Avenir Book", 20));
     TextField answerInput = new TextField();
     answerInput.setId("answer-input");
+    answerInput.setPrefWidth(340);
+    answerInput.setMaxWidth(340);
+    answerInput.setMaxHeight(Double.MAX_VALUE);
+    answerInput.setFont(Font.font("Avenir Book", 18));
     if (flashcard != null) {
       answerInput.setText(flashcard.getAnswer());
     }
-    answerContainer.getChildren().addAll(answerLabel, answerInput);
+    answerContainer.getChildren().addAll(answerInput, answerLabel);
 
     HBox lowerChildContainer = new HBox();
     // Add child elements to lower child container
     lowerChildContainer.setId("lower-child-container");
     lowerChildContainer.getChildren().addAll(frontContainer, answerContainer);
+    lowerChildContainer.setSpacing(50);
+
+
+    Line division = new Line();
+    division.setStrokeWidth(2);
+    division.setStartX(0);
+    division.setEndX(740);
+    division.setStroke(Color.GRAY);
+
+    Line spacing = new Line();
+    spacing.setStrokeWidth(20);
+    spacing.setStroke(Color.TRANSPARENT);
+    spacing.setStartX(0);
+    spacing.setEndX(740);
+
+    Line spacing2 = new Line();
+    spacing2.setStroke(Color.TRANSPARENT);
+    spacing.setStartX(0);
+    spacing.setEndX(740);
+    spacing.setStrokeWidth(30);
+
+
 
     VBox parentContainer = new VBox();
     parentContainer.setId("parent-container");
     // Add child containers to parent container
-    parentContainer.getChildren().addAll(upperChildContainer, lowerChildContainer);
+    parentContainer.getChildren()
+                    .addAll(spacing, upperChildContainer, spacing2, lowerChildContainer, division);
 
     // Add dynamically generated content to view
     flashcardPaneContainer.getChildren().add(parentContainer);
@@ -224,12 +290,14 @@ public class QuizController extends LoggedInController {
     String quizDescription = description.getText();
 
     if (!Quiz.isValidName(quizName)) {
+      feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "The name of a quiz cannot be empty.";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
 
     if (!Quiz.isValidDescription(quizDescription)) {
+      feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "The description of a quiz cannot be empty.";
       setFeedbackText(feedbackErrorMessage);
       return;
@@ -246,6 +314,7 @@ public class QuizController extends LoggedInController {
     for (Flashcard flashcard : flashcards) {
       if (!Flashcard.isValidFront(flashcard.getFront())
               || !Flashcard.isValidAnswer(flashcard.getAnswer())) {
+        feedback.setTextFill(Color.RED);
         feedbackErrorMessage = "Both front and answer in each flashcards cannot be empty.";
         setFeedbackText(feedbackErrorMessage);
         return;
@@ -267,8 +336,11 @@ public class QuizController extends LoggedInController {
 
     try {
       getCognitionStorage().update(getUser().getUuid(), getUser());
+      feedback.setTextFill(Color.GREEN);
       setFeedbackText(feedbackSuccessMessage);
+
     } catch (IOException e) {
+      feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "An error occurred when trying to create the quiz.";
       setFeedbackText(feedbackErrorMessage);
     }
@@ -285,16 +357,20 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (lowerChildContainer == null) {
+
+        feedback.setTextFill(Color.RED);
         setFeedbackText("An error occurred when parsing the flashcards.");
+
         return null;
       }
 
-      HBox frontContainer = (HBox) lowerChildContainer.getChildren().stream()
+      VBox frontContainer = (VBox) lowerChildContainer.getChildren().stream()
               .filter(node -> node.getId() != null && node.getId().equals("front-container"))
               .findFirst()
               .orElse(null);
 
       if (frontContainer == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
@@ -305,16 +381,19 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (frontInput == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("An error occurred when parsing the flashcards.");
+
         return null;
       }
 
-      HBox answerContainer = (HBox) lowerChildContainer.getChildren().stream()
+      VBox answerContainer = (VBox) lowerChildContainer.getChildren().stream()
               .filter(node -> node.getId() != null && node.getId().equals("answer-container"))
               .findFirst()
               .orElse(null);
 
       if (answerContainer == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
@@ -325,6 +404,7 @@ public class QuizController extends LoggedInController {
               .orElse(null);
 
       if (answerInput == null) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("An error occurred when parsing the flashcards.");
         return null;
       }
@@ -334,11 +414,13 @@ public class QuizController extends LoggedInController {
       String answer = answerInput.getText();
 
       if (!Flashcard.isValidFront(front)) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("The front of the flashcard cannot be empty.");
         return null;
       }
 
       if (!Flashcard.isValidFront(answer)) {
+        feedback.setTextFill(Color.RED);
         setFeedbackText("The answer of the flashcard cannot be empty.");
         return null;
       }

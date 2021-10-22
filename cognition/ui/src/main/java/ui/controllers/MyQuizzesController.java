@@ -56,7 +56,6 @@ public class MyQuizzesController extends LoggedInController {
         this.selectedQuiz = quizzesListView.getItems().get(index);
       }
     });
-
   }
 
   /**
