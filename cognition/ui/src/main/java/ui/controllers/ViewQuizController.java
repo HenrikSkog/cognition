@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import json.CognitionStorage;
 
+
+
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
  */
