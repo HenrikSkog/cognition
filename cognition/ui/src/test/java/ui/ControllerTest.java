@@ -25,7 +25,7 @@ public class ControllerTest extends ApplicationTest {
   @Test
   @DisplayName("Can get loader based on FXML.")
   void canGetLoaderBasedOnFxml() {
-    FXMLLoader loader = controller.getLoader("LoginTest");
+    FXMLLoader loader = controller.getLoader("Login");
     Assertions.assertNotNull(loader);
   }
 }

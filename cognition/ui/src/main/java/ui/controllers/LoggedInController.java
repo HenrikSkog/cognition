@@ -1,6 +1,10 @@
 package ui.controllers;
 
 import core.User;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import json.CognitionStorage;
 
 /**
@@ -9,6 +13,7 @@ import json.CognitionStorage;
  * It extends Controller, as there's common functionality in these controllers.
  */
 public abstract class LoggedInController extends Controller {
+
   private User user;
 
   public LoggedInController(User user, CognitionStorage cognitionStorage) {
@@ -24,16 +29,27 @@ public abstract class LoggedInController extends Controller {
     this.user = user;
   }
 
-  /**
-   * Sets the state of the application.
-   *
-   * @param user is the current user.
-   * @param cognitionStorage is the current instance of the local storage.
-   */
-  public void setState(User user, CognitionStorage cognitionStorage) {
-    this.user = user;
+  @FXML
+  public void handleLogout(ActionEvent event) {
+    changeToView(event, new LoginController(getCognitionStorage()),
+        "Login");
+  }
 
-    // Controller class method
-    setCognitionStorage(cognitionStorage);
+  @FXML
+  public void handleDashboard(ActionEvent event) {
+    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
+        "Dashboard");
+  }
+
+  @FXML
+  public void handleMyQuizzes(ActionEvent event) {
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+        "MyQuizzes");
+  }
+
+  @FXML
+  public void handleCreateQuiz(ActionEvent event) {
+    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
+        "Quiz");
   }
 }

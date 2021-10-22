@@ -46,7 +46,8 @@
                         <children>
                             <Button fx:id="goHome" mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link"
                                     text="Home"/>
-                            <Button mnemonicParsing="false" styleClass="nav_link" text="My quizzes">
+                            <Button mnemonicParsing="false" styleClass="nav_link"
+                                    onAction="#handleMyQuizzes" text="My quizzes">
                                 <graphic>
                                     <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK"/>
                                 </graphic>
