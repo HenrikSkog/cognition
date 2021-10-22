@@ -3,13 +3,13 @@ package ui.controllers;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import json.CognitionStorage;
+import java.util.List;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -20,6 +20,7 @@ public class ViewQuizController extends LoggedInController {
   private List<Flashcard> flashcards;
   private int flashcardIndex = 0;
   private int correctAnswerCount = 0;
+  private boolean hasFailedFlashcard = false;
 
   @FXML
   private Labeled feedback;
@@ -59,14 +60,14 @@ public class ViewQuizController extends LoggedInController {
   public void nextFlashcard() {
     if (flashcardIndex == flashcards.size() - 1) {
       flashcardText.setText(
-              new StringBuilder()
-                      .append("End of quiz! ")
-                      .append("You got ")
-                      .append(correctAnswerCount)
-                      .append(" right out of ")
-                      .append(flashcards.size())
-                      .append(" possible.")
-                      .toString());
+          new StringBuilder()
+              .append("End of quiz! ")
+              .append("You got ")
+              .append(correctAnswerCount)
+              .append(" right out of ")
+              .append(flashcards.size())
+              .append(" possible.")
+              .toString());
       return;
     }
 
@@ -75,7 +76,8 @@ public class ViewQuizController extends LoggedInController {
   }
 
   /**
-   * Triggered when an answer for a flashcard is provided.
+   * Triggered when an answer for a flashcard is provided. Gives feedback based on if the answer
+   * was right or not, and increments the number of right answers accordingly.
    */
   @FXML
   public void checkAnswer() {
@@ -88,15 +90,21 @@ public class ViewQuizController extends LoggedInController {
       return;
     }
 
-    if (userAnswer.equals(correctAnswer)) {
+    if (!userAnswer.equals(correctAnswer)) {
+      setFeedbackErrorMode(true);
+      feedback.setText("Incorrect! \n The correct answer was: " + correctAnswer + ".");
+      hasFailedFlashcard = true;
+      answerInput.setText("");
+    } else {
+      if (!hasFailedFlashcard) {
+        correctAnswerCount++;
+      }
       setFeedbackErrorMode(false);
       feedback.setText("Correct answer!");
       answerInput.setText("");
-      correctAnswerCount++;
+
+      hasFailedFlashcard = false;
       nextFlashcard();
-    } else {
-      setFeedbackErrorMode(true);
-      feedback.setText("Incorrect! \n The correct answer was: " + correctAnswer + ".");
     }
   }
 
@@ -108,7 +116,7 @@ public class ViewQuizController extends LoggedInController {
   @FXML
   public void handleDashboard(ActionEvent event) {
     changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
-            "Dashboard", feedback);
+        "Dashboard", feedback);
   }
 
   @FXML
@@ -120,7 +128,7 @@ public class ViewQuizController extends LoggedInController {
   @FXML
   public void handleCreateQuiz(ActionEvent event) {
     changeToView(event, new QuizController(getUser(), getCognitionStorage()),
-            "Quiz", feedback);
+        "Quiz", feedback);
   }
 
   /**
