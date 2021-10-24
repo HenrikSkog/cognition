@@ -8,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -48,14 +47,11 @@ public class MyQuizzesController extends LoggedInController {
       quizzesListView.setItems(getQuizzes(newValue));
     });
 
-    quizzesListView.setOnMouseClicked(event -> {
-      int index = quizzesListView.getSelectionModel().getSelectedIndex();
-
-      // Prevents IndexOutOfBoundsException if invalid element is selected
-      if (index != -1) {
-        this.selectedQuiz = quizzesListView.getItems().get(index);
-      }
-    });
+    // Update selected quiz by what quiz is selected in the ui
+    quizzesListView.getSelectionModel().selectedItemProperty()
+        .addListener((observable, oldValue, newValue) -> {
+          this.selectedQuiz = newValue;
+        });
   }
 
   /**
