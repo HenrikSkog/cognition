@@ -15,8 +15,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import ui.controllers.ViewQuizController;
-import ui.controllers.annotations.SuppressFBWarnings;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,10 +40,10 @@ public class ViewQuizTest extends ApplicationTest {
     cognitionStorage.create(loggedInUser);
 
     Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
-        "This is a test quiz used for development purposes");
+            "This is a test quiz used for development purposes");
     quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-        new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
 
     flashcards = quiz.getFlashcards();
 
@@ -56,8 +54,7 @@ public class ViewQuizTest extends ApplicationTest {
     stage.setScene(scene);
     stage.show();
   }
-
-  @SuppressFBWarnings
+  
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
@@ -105,7 +102,7 @@ public class ViewQuizTest extends ApplicationTest {
     clickOn("#submitAnswer");
 
     FxAssert.verifyThat("#feedback", LabeledMatchers
-        .hasText("Incorrect! \n The correct answer was: " + flashcards.get(0).getAnswer().toLowerCase() + "."));
+            .hasText("Incorrect! \n The correct answer was: " + flashcards.get(0).getAnswer().toLowerCase() + "."));
 
   }
 
@@ -114,10 +111,10 @@ public class ViewQuizTest extends ApplicationTest {
   void setQuizDoesNotThrow() {
 
     Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
-        "This is a test quiz used for development purposes");
+            "This is a test quiz used for development purposes");
     quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-        new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
 
     try {
       viewQuizController.setQuiz(quiz);
@@ -148,9 +145,9 @@ public class ViewQuizTest extends ApplicationTest {
 
     // assert that you got max - 1 correct answers
     FxAssert.verifyThat("#flashcardText",
-        TextMatchers.hasText(
-            "End of quiz! " + "You got " + (flashcards.size() - 1) + " right " +
-                "out " + "of " + flashcards.size() + " possible."));
+            TextMatchers.hasText(
+                    "End of quiz! " + "You got " + (flashcards.size() - 1) + " right " +
+                            "out " + "of " + flashcards.size() + " possible."));
   }
 
   @Test
@@ -166,7 +163,7 @@ public class ViewQuizTest extends ApplicationTest {
     }
 
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(
-        "End of quiz! " + "You got " + flashcards.size() + " right out of " + flashcards.size() + " possible."));
+            "End of quiz! " + "You got " + flashcards.size() + " right out of " + flashcards.size() + " possible."));
   }
 
   @Test

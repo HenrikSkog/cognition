@@ -15,8 +15,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import ui.controllers.QuizController;
-import ui.controllers.annotations.SuppressFBWarnings;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,12 +35,12 @@ public class CreateQuizTest extends ApplicationTest {
     clearUserStorage();
   }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = getLoader("Quiz");
+  @Override
+  public void start(Stage stage) throws Exception {
+    FXMLLoader loader = getLoader("Quiz");
 
-        CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
-        this.cognitionStorage = cognitionStorage;
+    CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
+    this.cognitionStorage = cognitionStorage;
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged in user. Thus, we create a fake user here to emulate it
@@ -60,7 +58,6 @@ public class CreateQuizTest extends ApplicationTest {
     stage.show();
   }
 
-  @SuppressFBWarnings
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));

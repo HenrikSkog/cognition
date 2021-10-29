@@ -1,6 +1,5 @@
 package ui.controllers;
 
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import json.CognitionStorage;
-import ui.controllers.annotations.SuppressFBWarnings;
+import java.io.IOException;
 
 /**
  * Controller is an abstract class with the common functionality
@@ -41,10 +40,11 @@ public abstract class Controller {
    * @param fxml is the String representation of the FXML filename.
    * @return an FXMLLoader with the location set to the provided FXML file.
    */
-  @SuppressFBWarnings
   public FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("../views/" + fxml + ".fxml"));
+    // Using Controller.class, rather than this.getClass(),
+    // SpotBugs does not find a compile-time bug.
+    loader.setLocation(Controller.class.getResource("../views/" + fxml + ".fxml"));
     return loader;
   }
 
@@ -66,9 +66,9 @@ public abstract class Controller {
    * The method loads the FXML and sets the new controller,
    * then switches stage.
    *
-   * @param event is the ActionEvent on button click.
+   * @param event      is the ActionEvent on button click.
    * @param controller is the presentation logic Controller.
-   * @param fxml is the String representation of the FXML filename.
+   * @param fxml       is the String representation of the FXML filename.
    */
   public void changeToView(ActionEvent event,
                            Controller controller,
