@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.Objects;
-import java.util.UUID;
+
+import static core.tools.Tools.createUuid;
 
 public class FlashcardTest {
   private final String validName = "valid-name";
@@ -15,14 +15,14 @@ public class FlashcardTest {
 
   @BeforeEach
   void setUp() {
-    flashcard = new Flashcard(UUID.randomUUID().toString(), validName, validAnswer);
+    flashcard = new Flashcard(createUuid(), validName, validAnswer);
   }
 
   @Test
   @DisplayName("Can initialize flashcard.")
   void canInitializeFlashcard() {
     Flashcard emptyFlashcard = new Flashcard();
-    Flashcard flashcard = new Flashcard(UUID.randomUUID().toString(), "Valid front", "Valid answer");
+    Flashcard flashcard = new Flashcard(createUuid(), "Valid front", "Valid answer");
 
     Assertions.assertNotNull(emptyFlashcard);
     Assertions.assertNotNull(flashcard);
@@ -35,10 +35,10 @@ public class FlashcardTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> new Flashcard("illegal-UUID", "front", "answer"));
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new Flashcard(UUID.randomUUID().toString(), "", "answer"));
+            () -> new Flashcard(createUuid(), "", "answer"));
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new Flashcard(UUID.randomUUID().toString(), "front", ""));
+            () -> new Flashcard(createUuid(), "front", ""));
   }
 
   @Test

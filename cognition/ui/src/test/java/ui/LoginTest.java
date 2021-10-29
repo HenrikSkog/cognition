@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class LoginTest extends ApplicationTest {
@@ -28,7 +29,7 @@ public class LoginTest extends ApplicationTest {
     try {
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionStorage.create(new User(UUID.randomUUID().toString(), "placeholder", "placeholder"));
+      cognitionStorage.create(new User(createUuid(), "placeholder", "placeholder"));
     } catch (IOException e) {
       fail();
     }
@@ -79,7 +80,7 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Existing user can log in.")
   void existingUserCanLogIn() {
-    User user = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    User user = new User(createUuid(), validUsername, validPassword);
 
     // Create sample user
     try {

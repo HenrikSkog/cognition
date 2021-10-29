@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
+
 public class QuizTest {
   private final String validName = "valid-name";
   private final String validDescription = "valid-description";
@@ -16,14 +18,14 @@ public class QuizTest {
 
   @BeforeEach
   void setUp() {
-    quiz = new Quiz(UUID.randomUUID().toString(), validName, validDescription);
+    quiz = new Quiz(createUuid(), validName, validDescription);
   }
 
   @Test
   @DisplayName("Can initialize quiz.")
   void canInitializeQuiz() {
     Quiz emptyQuiz = new Quiz();
-    Quiz quiz = new Quiz(UUID.randomUUID().toString(), "name", "description");
+    Quiz quiz = new Quiz(createUuid(), "name", "description");
 
     Assertions.assertNotNull(emptyQuiz);
     Assertions.assertNotNull(quiz);
@@ -35,12 +37,12 @@ public class QuizTest {
   void illegalQuizThrows() {
     Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz("invalid-UUID", "name", "description"));
 
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz(UUID.randomUUID().toString(), "", ""));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz(createUuid(), "", ""));
 
     String invalidDescription = "*".repeat(Quiz.MAX_DESCRIPTION_LENGTH + 1);
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new Quiz(UUID.randomUUID().toString(), "name", invalidDescription));
+            () -> new Quiz(createUuid(), "name", invalidDescription));
   }
 
   @Test
@@ -49,7 +51,7 @@ public class QuizTest {
     List<Flashcard> flashcards = new ArrayList<>();
 
     for (int i = 0; i < 5; i++) {
-      flashcards.add(new Flashcard(UUID.randomUUID().toString(), "front-" + i, "answer-" + i));
+      flashcards.add(new Flashcard(createUuid(), "front-" + i, "answer-" + i));
     }
 
     quiz.addFlashcards(flashcards);
@@ -66,8 +68,8 @@ public class QuizTest {
 
     Assertions.assertTrue(didNotAdd);
 
-    quiz.setFlashcards(List.of(new Flashcard(UUID.randomUUID().toString(), "front-1", "answer-2"),
-            new Flashcard(UUID.randomUUID().toString(), "front-2", "answer-2")));
+    quiz.setFlashcards(List.of(new Flashcard(createUuid(), "front-1", "answer-2"),
+            new Flashcard(createUuid(), "front-2", "answer-2")));
 
     boolean addedTwoFlashcards = quiz.getFlashcards().size() == 2;
 
@@ -77,7 +79,7 @@ public class QuizTest {
   @Test
   @DisplayName("No duplicate flashcards.")
   void noDuplicateFlashcards() {
-    Flashcard flashcard = new Flashcard(UUID.randomUUID().toString(), "front", "answer");
+    Flashcard flashcard = new Flashcard(createUuid(), "front", "answer");
 
     // Add flashcard for the first time
     quiz.addFlashcard(flashcard);
@@ -97,7 +99,7 @@ public class QuizTest {
     // Flashcard should not have been added
     Assertions.assertEquals(0, quiz.getFlashcards().size());
 
-    quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "front", "answer"));
+    quiz.addFlashcard(new Flashcard(createUuid(), "front", "answer"));
 
     // Flashcard should have been added
     Assertions.assertEquals(1, quiz.getFlashcards().size());
@@ -106,9 +108,9 @@ public class QuizTest {
   @Test
   @DisplayName("Can remove flashcard.")
   void canRemoveFlashcard() {
-    Flashcard nonExistingFlashcard = new Flashcard(UUID.randomUUID().toString(), "non-existing-front",
+    Flashcard nonExistingFlashcard = new Flashcard(createUuid(), "non-existing-front",
             "non-existing-asnwer");
-    Flashcard existingFlashcard = new Flashcard(UUID.randomUUID().toString(), "existing-front", "existing-asnwer");
+    Flashcard existingFlashcard = new Flashcard(createUuid(), "existing-front", "existing-asnwer");
 
     // Add flashcard and verify number of flashcards
     quiz.addFlashcard(existingFlashcard);

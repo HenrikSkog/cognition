@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class RegisterTest extends ApplicationTest {
@@ -43,7 +44,7 @@ public class RegisterTest extends ApplicationTest {
 
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionStorage.create(new User(UUID.randomUUID().toString(), "placeholder", "placeholder"));
+      cognitionStorage.create(new User(createUuid(), "placeholder", "placeholder"));
     } catch (IOException e) {
       fail();
     }

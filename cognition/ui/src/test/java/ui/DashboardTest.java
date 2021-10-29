@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -43,7 +44,7 @@ public class DashboardTest extends ApplicationTest {
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    User loggedInUser = new User(createUuid(), validUsername, validPassword);
 
     cognitionStorage.create(loggedInUser);
     // in the app there is no logical way for Create Quiz to be accessed without a
@@ -109,7 +110,7 @@ public class DashboardTest extends ApplicationTest {
   @DisplayName("Can set currently active user.")
   void canSetCurrentlyActiveUser() {
     String username = "active-username";
-    User user = new User(UUID.randomUUID().toString(), username, "password");
+    User user = new User(createUuid(), username, "password");
 
     // Create sample user
     try {

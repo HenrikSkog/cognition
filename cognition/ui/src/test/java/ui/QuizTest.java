@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class QuizTest extends ApplicationTest {
@@ -44,7 +45,7 @@ public class QuizTest extends ApplicationTest {
 
     // In the app, there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    User loggedInUser = new User(createUuid(), validUsername, validPassword);
 
     cognitionStorage.create(loggedInUser);
 

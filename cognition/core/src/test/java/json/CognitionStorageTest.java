@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class CognitionStorageTest {
@@ -42,7 +43,7 @@ public class CognitionStorageTest {
   @Test
   @DisplayName("Can create user.")
   void canCreateUser() {
-    createUser(new User(UUID.randomUUID().toString(), "created-username", "created-password"));
+    createUser(new User(createUuid(), "created-username", "created-password"));
   }
 
   /**
@@ -56,7 +57,7 @@ public class CognitionStorageTest {
     for (int i = 0; i < NUMBER_OF_USERS; i++) {
       // Try to create a sample user
       try {
-        createUser(new User(UUID.randomUUID().toString(), "created-username-" + i, "created-password-" + i));
+        createUser(new User(createUuid(), "created-username-" + i, "created-password-" + i));
       } catch (JsonIOException e) {
         fail();
       }
@@ -165,7 +166,7 @@ public class CognitionStorageTest {
   void canReadUserByUsername() {
     String username = "test-username";
     String password = "test-password";
-    User user = new User(UUID.randomUUID().toString(), username, password);
+    User user = new User(createUuid(), username, password);
 
     try {
       cognitionStorage.create(user);
@@ -204,7 +205,7 @@ public class CognitionStorageTest {
   @DisplayName("Can read user.")
   void canReadUser() {
     // The identifier is used to determine if the read user is the correct one
-    String identifier = UUID.randomUUID().toString();
+    String identifier = createUuid();
 
     // Create sample user with given identifier
     createUser(new User(identifier, "read-username", "read-password"));
@@ -228,7 +229,7 @@ public class CognitionStorageTest {
   @DisplayName("Can update user.")
   void canUpdateUser() {
     // The identifier is used to determine if the updated user is the correct one
-    String identifier = UUID.randomUUID().toString();
+    String identifier = createUuid();
 
     // Create sample user with given identifier
     createUser(new User(identifier, "base-username", "base-password"));
@@ -244,7 +245,7 @@ public class CognitionStorageTest {
   @DisplayName("Can delete user.")
   void canDeleteUser() {
     // The identifier is used to determine if the updated user is the correct one
-    String identifier = UUID.randomUUID().toString();
+    String identifier = createUuid();
 
     // Create sample user with given identifier
     createUser(new User(identifier, "delete-username", "delete-password"));

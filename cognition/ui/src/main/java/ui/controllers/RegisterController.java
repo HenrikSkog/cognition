@@ -11,6 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import json.CognitionStorage;
 
+import static core.tools.Tools.createUuid;
+
 /**
  * RegisterController handles the presentation logic when registering a user.
  */
@@ -102,7 +104,7 @@ public class RegisterController extends Controller {
 
   private void registerUser(String username, String password) {
     try {
-      getCognitionStorage().create(new User(UUID.randomUUID().toString(), username, password));
+      getCognitionStorage().create(new User(createUuid(), username, password));
       setFeedbackErrorMode(false);
       feedback.setText(feedbackSuccessMessage);
     } catch (IOException e) {

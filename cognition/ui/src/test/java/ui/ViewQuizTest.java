@@ -17,8 +17,8 @@ import org.testfx.matcher.control.TextMatchers;
 import ui.controllers.ViewQuizController;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ViewQuizTest extends ApplicationTest {
@@ -35,15 +35,15 @@ public class ViewQuizTest extends ApplicationTest {
 
     CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    User loggedInUser = new User(createUuid(), validUsername, validPassword);
 
     cognitionStorage.create(loggedInUser);
 
-    Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
+    Quiz quiz = new Quiz(createUuid(), "Test quiz",
             "This is a test quiz used for development purposes");
-    quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
+    quiz.addFlashcard(new Flashcard(createUuid(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+            new Flashcard(createUuid(), "What is the largest desert in the world?", "Antarctica"));
 
     flashcards = quiz.getFlashcards();
 
@@ -54,7 +54,7 @@ public class ViewQuizTest extends ApplicationTest {
     stage.setScene(scene);
     stage.show();
   }
-  
+
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
@@ -110,11 +110,11 @@ public class ViewQuizTest extends ApplicationTest {
   @DisplayName("Set quiz does not throw")
   void setQuizDoesNotThrow() {
 
-    Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz",
+    Quiz quiz = new Quiz(createUuid(), "Test quiz",
             "This is a test quiz used for development purposes");
-    quiz.addFlashcard(new Flashcard(UUID.randomUUID().toString(), "What is the capital of Spain?", "Madrid"));
+    quiz.addFlashcard(new Flashcard(createUuid(), "What is the capital of Spain?", "Madrid"));
     quiz.addFlashcard(
-            new Flashcard(UUID.randomUUID().toString(), "What is the largest desert in the world?", "Antarctica"));
+            new Flashcard(createUuid(), "What is the largest desert in the world?", "Antarctica"));
 
     try {
       viewQuizController.setQuiz(quiz);
