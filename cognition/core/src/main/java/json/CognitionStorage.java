@@ -1,13 +1,19 @@
 package json;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import core.User;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.BiConsumer;
@@ -15,14 +21,29 @@ import java.util.function.BiConsumer;
 /**
  * CRUD (Create, Read, Update and Delete) for all local storage.
  */
-public class CognitionStorage extends Storage<User> {
+public class CognitionStorage {
 
-  public CognitionStorage() throws IOException {
-    super("cognition.json");
+  private final Gson gson = new Gson();
+  private String storagePath;
+
+  /**
+   * Creates a file if it does not already exist with the filename given.
+   *
+   * @param filename is the name of the file to be created.
+   * @throws IOException if an error occurs while directories for local storage. A
+   *                     potential exception is handled in the frontend.
+   */
+  public CognitionStorage(String filename) throws IOException {
+    if (filename != null) {
+      setStoragePath(filename);
+    }
+
+    // A potential exception is handled in the frontend.
+    createDirectoryIfNotExists();
   }
 
-  public CognitionStorage(String filename) throws IOException {
-    super(filename);
+  public CognitionStorage() throws IOException {
+    this("cognition.json");
   }
 
   /**
@@ -39,8 +60,14 @@ public class CognitionStorage extends Storage<User> {
     }
 
     try {
-      String content = Files.readString(Path.of(getStoragePath()), StandardCharsets.UTF_8);
-      return getGson().fromJson(content, new TypeToken<List<User>>() {
+
+      return getGson().fromJson(
+              /* Initialize JsonReader */
+              new JsonReader(new StringReader(
+                      /* StringReader parses the String data loaded from file. */
+                      Files.readString(Path.of(getStoragePath()), StandardCharsets.UTF_8)
+              )),
+              new TypeToken<List<User>>() {
       }.getType());
     } catch (IOException e) {
       throw new IOException(
@@ -78,7 +105,6 @@ public class CognitionStorage extends Storage<User> {
    *
    * @param instance is the user that should be written to file
    */
-  @Override
   public void create(User instance) throws IOException {
     List<User> newUsers;
 
@@ -96,7 +122,6 @@ public class CognitionStorage extends Storage<User> {
     writeToJson(newUsers);
   }
 
-  @Override
   public User read(String identifier) throws IOException, NullPointerException {
     List<User> users = readUsers();
 
@@ -165,7 +190,6 @@ public class CognitionStorage extends Storage<User> {
     throw new NoSuchElementException("No user with identifier \"" + identifier + "\" was found.");
   }
 
-  @Override
   public void update(String identifier, User instance) throws IOException {
     updateUser(identifier, (users, index) -> {
       // Remove old user
@@ -176,11 +200,56 @@ public class CognitionStorage extends Storage<User> {
     });
   }
 
-  @Override
   public void delete(String identifier) throws IOException {
     updateUser(identifier, ((users, integer) -> {
       // Remove old user
       users.remove((int) integer);
     }));
+  }
+
+  public String getStoragePath() {
+    return storagePath;
+  }
+
+  /**
+   * Sets the storage path of the JSON data.
+   *
+   * @param filename is the filename of the JSON data
+   */
+  public void setStoragePath(String filename) {
+    storagePath = String.valueOf(
+            Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", filename));
+  }
+
+  public Gson getGson() {
+    return gson;
+  }
+
+  /**
+   * Checks if the storage is empty.
+   *
+   * @return a boolean indicating if the storage is empty.
+   */
+  public boolean isEmpty() {
+    File file = new File(getStoragePath());
+
+    // file.length is 0 if file does not exist or has no content
+    return file.length() == 0;
+  }
+
+
+  /**
+   * Creates the directories required if they do not exist.
+   *
+   * @throws IOException if an error occurred when trying to create the
+   *                     directories
+   */
+  private void createDirectoryIfNotExists() throws IOException {
+    try {
+      Path path = Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition");
+      Files.createDirectories(path);
+    } catch (IOException e) {
+      throw new IOException("An error occurred when trying to create directory: " + storagePath);
+    }
   }
 }
