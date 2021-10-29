@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
+
 public class UserTest {
   private final String invalidUsername = "a";
   private final String invalidPassword = "b";
@@ -17,14 +19,14 @@ public class UserTest {
 
   @BeforeEach
   void setUp() {
-    user = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    user = new User(createUuid(), validUsername, validPassword);
   }
 
   @Test
   @DisplayName("Can initialize user.")
   void canInitializeUser() {
     User emptyUser = new User();
-    User user = new User(UUID.randomUUID().toString(), "username", "password");
+    User user = new User(createUuid(), "username", "password");
 
     Assertions.assertNotNull(emptyUser);
     Assertions.assertNotNull(user);
@@ -34,7 +36,7 @@ public class UserTest {
   @Test
   @DisplayName("No duplicate quizzes.")
   void noDuplicateQuizzes() {
-    Quiz quiz = new Quiz(UUID.randomUUID().toString(), "name", "description");
+    Quiz quiz = new Quiz(createUuid(), "name", "description");
 
     // Add quiz for the first time
     user.addQuiz(quiz);
@@ -54,7 +56,7 @@ public class UserTest {
     // Quiz should not have been added
     Assertions.assertEquals(0, user.getQuizzes().size());
 
-    user.addQuiz(new Quiz(UUID.randomUUID().toString(), "name", "description"));
+    user.addQuiz(new Quiz(createUuid(), "name", "description"));
 
     // Quiz should have been added
     Assertions.assertEquals(1, user.getQuizzes().size());
@@ -63,8 +65,8 @@ public class UserTest {
   @Test
   @DisplayName("Can remove quiz.")
   void canRemoveQuiz() {
-    Quiz nonExistingQuiz = new Quiz(UUID.randomUUID().toString(), "non-existing-name", "non-existing-description");
-    Quiz existingQuiz = new Quiz(UUID.randomUUID().toString(), "existing-name", "existing-description");
+    Quiz nonExistingQuiz = new Quiz(createUuid(), "non-existing-name", "non-existing-description");
+    Quiz existingQuiz = new Quiz(createUuid(), "existing-name", "existing-description");
 
     // Add flashcard and verify number of flashcards
     user.addQuiz(existingQuiz);
@@ -119,10 +121,10 @@ public class UserTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> new User("invalid-UUID", "username", "password"));
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new User(UUID.randomUUID().toString(), invalidUsername, validPassword));
+            () -> new User(createUuid(), invalidUsername, validPassword));
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new User(UUID.randomUUID().toString(), validUsername, invalidPassword));
+            () -> new User(createUuid(), validUsername, invalidPassword));
   }
 
   @Test
@@ -142,8 +144,8 @@ public class UserTest {
   @Test
   @DisplayName("Can compare with another User object.")
   void canCompareWithAnotherUserObject() {
-    User firstUser = new User(UUID.randomUUID().toString(), "first-username", "first-password");
-    User secondUser = new User(UUID.randomUUID().toString(), "second-username", "second-password");
+    User firstUser = new User(createUuid(), "first-username", "first-password");
+    User secondUser = new User(createUuid(), "second-username", "second-password");
 
     Assertions.assertEquals(firstUser, firstUser);
     Assertions.assertNotEquals(firstUser, secondUser);
@@ -155,8 +157,8 @@ public class UserTest {
   void canUpdateQuiz() {
     String updatedName = "updated-name";
 
-    User user = new User(UUID.randomUUID().toString(), "username", "password");
-    Quiz quizToUpdate = new Quiz(UUID.randomUUID().toString(), "name", "description");
+    User user = new User(createUuid(), "username", "password");
+    Quiz quizToUpdate = new Quiz(createUuid(), "name", "description");
 
     user.addQuiz(quizToUpdate);
 
