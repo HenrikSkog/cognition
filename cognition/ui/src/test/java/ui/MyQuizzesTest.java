@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class MyQuizzesTest extends ApplicationTest {
@@ -53,14 +54,14 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // logged in user and storage instances must be present for this view to function
     this.cognitionStorage = new CognitionStorage("cognitionTest.json");
-    this.loggedInUser = new User(UUID.randomUUID().toString(), validUsername, validPassword);
+    this.loggedInUser = new User(createUuid(), validUsername, validPassword);
 
     // create some test data. 10 quizzes
     for (int i = 0; i < 10; i++) {
-      Quiz quiz = new Quiz(UUID.randomUUID().toString(), "Test quiz "
+      Quiz quiz = new Quiz(createUuid(), "Test quiz "
               + i, "Test description " + i);
       for (int j = 0; j < 10; j++) {
-        Flashcard fc = new Flashcard(UUID.randomUUID().toString(), "Front"
+        Flashcard fc = new Flashcard(createUuid(), "Front"
                 + j, "Back" + j);
         quiz.addFlashcard(fc);
       }

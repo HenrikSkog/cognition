@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static core.tools.Tools.createUuid;
+
 /**
  * QuizController handles the presentation logic of creating and updating a quiz.
  */
@@ -329,7 +331,7 @@ public class QuizController extends LoggedInController {
       getUser().updateQuiz(quizBeingUpdated);
     } else {
       // If quiz == null (does not exist), create a new one and add it
-      Quiz newQuiz = new Quiz(UUID.randomUUID().toString(), quizName, quizDescription);
+      Quiz newQuiz = new Quiz(createUuid(), quizName, quizDescription);
       newQuiz.addFlashcards(flashcards);
       getUser().addQuiz(newQuiz);
     }
@@ -425,7 +427,7 @@ public class QuizController extends LoggedInController {
         return null;
       }
 
-      Flashcard flashcard = new Flashcard(UUID.randomUUID().toString(), front, answer);
+      Flashcard flashcard = new Flashcard(createUuid(), front, answer);
       flashcards.add(flashcard);
     }
 
