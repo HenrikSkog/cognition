@@ -51,8 +51,7 @@ public class LoginController extends Controller {
    * @param event is the ActionEvent on button click.
    * @param username is the username of the current user.
    */
-  @FXML
-  public void goToDashboard(ActionEvent event, String username) {
+  private void goToDashboard(ActionEvent event, String username) {
     User user;
     try {
       user = getCognitionStorage().readByUsername(username);
