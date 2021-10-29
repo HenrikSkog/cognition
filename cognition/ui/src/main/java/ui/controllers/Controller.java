@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import json.CognitionStorage;
+
 import java.io.IOException;
 
 /**
@@ -55,14 +56,15 @@ public abstract class Controller {
    * @param root  is the root of the loaded FXML
    * @throws IOException if an error occurs when switching scenes.
    */
-  public void switchScene(Stage stage, Parent root) throws IOException {
+  protected void switchScene(Stage stage, Parent root) throws IOException {
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
   }
 
   /**
-   * Changes from the current view to a provided view.
+   * Changes from the current view to a pr
+   * ovided view.
    * The method loads the FXML and sets the new controller,
    * then switches stage.
    *
@@ -70,7 +72,7 @@ public abstract class Controller {
    * @param controller is the presentation logic Controller.
    * @param fxml       is the String representation of the FXML filename.
    */
-  public void changeToView(ActionEvent event,
+  protected void changeToView(ActionEvent event,
                            Controller controller,
                            String fxml) {
     FXMLLoader loader = getLoader(fxml);
