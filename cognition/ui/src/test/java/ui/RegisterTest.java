@@ -12,7 +12,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import ui.controllers.RegisterController;
-import ui.controllers.annotations.SuppressFBWarnings;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,7 +70,6 @@ public class RegisterTest extends ApplicationTest {
     stage.show();
   }
 
-  @SuppressFBWarnings
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));

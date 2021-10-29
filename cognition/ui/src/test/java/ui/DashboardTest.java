@@ -1,7 +1,6 @@
 package ui;
 
 import core.User;
-import core.tools.Tools;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,10 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import org.testfx.matcher.control.TextMatchers;
 import ui.controllers.DashboardController;
-import ui.controllers.annotations.SuppressFBWarnings;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
@@ -39,11 +35,11 @@ public class DashboardTest extends ApplicationTest {
     clearUserStorage();
   }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = getLoader("Dashboard");
+  @Override
+  public void start(Stage stage) throws Exception {
+    FXMLLoader loader = getLoader("Dashboard");
 
-        this.cognitionStorage = new CognitionStorage("cognitionTest.json");
+    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged in user. Thus, we create a fake user here to emulate it
@@ -61,7 +57,6 @@ public class DashboardTest extends ApplicationTest {
     stage.show();
   }
 
-  @SuppressFBWarnings
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
@@ -80,35 +75,35 @@ public class DashboardTest extends ApplicationTest {
     Assertions.assertNotNull(cognitionStorage);
   }
 
-    @Test
-    @DisplayName("User can log out")
-    void userCanLogOut() {
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+  @Test
+  @DisplayName("User can log out")
+  void userCanLogOut() {
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
     clickOn("#signOutButton");
 
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
-    }
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
+  }
 
-    @Test
-    @DisplayName("Can switch to Create Quiz.")
-    void canSwitchToCreateQuiz() {
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+  @Test
+  @DisplayName("Can switch to Create Quiz.")
+  void canSwitchToCreateQuiz() {
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
     clickOn("#createQuizButton");
 
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
-    }
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
+  }
 
-    @Test
-    @DisplayName("Can switch to My Quizzes.")
-    void canSwitchToMyQuizzes() {
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+  @Test
+  @DisplayName("Can switch to My Quizzes.")
+  void canSwitchToMyQuizzes() {
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
 
     clickOn("#switchToMyQuizzesButton");
 
-        FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
-    }
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
+  }
 
   @Test
   @DisplayName("Can set currently active user.")

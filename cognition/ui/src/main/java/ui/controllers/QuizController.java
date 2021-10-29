@@ -3,10 +3,6 @@ package ui.controllers;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,19 +16,29 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import json.CognitionStorage;
-import ui.controllers.annotations.SuppressFBWarnings;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * QuizController handles the presentation logic of creating and updating a quiz.
  */
 public class QuizController extends LoggedInController {
-  private final String feedbackSuccessMessage = "Successfully created quiz.";
-  public ScrollPane flashcardPane;
-  public Button storeQuizButton;
-  public Text heading;
-  public Label feedback;
-  public TextField name;
-  public TextField description;
+  private final static String feedbackSuccessMessage = "Successfully created quiz.";
+  @FXML
+  private ScrollPane flashcardPane;
+  @FXML
+  private Button storeQuizButton;
+  @FXML
+  private Text heading;
+  @FXML
+  private Label feedback;
+  @FXML
+  private TextField name;
+  @FXML
+  private TextField description;
+  @FXML
   private VBox flashcardPaneContainer = new VBox();
   private String feedbackErrorMessage = "";
   private Quiz quizBeingUpdated = null;
@@ -72,7 +78,6 @@ public class QuizController extends LoggedInController {
   /**
    * Removes a Flashcard from the ScrollPane in the UI.
    */
-  @SuppressFBWarnings
   public void removeFlashcardNode(int nodeId) {
     flashcardPaneContainer.getChildren().remove(nodeId);
 
@@ -95,7 +100,6 @@ public class QuizController extends LoggedInController {
   /**
    * Updates view with new index values for relevant components.
    */
-  @SuppressFBWarnings
   private void updateFlashcardNodes() {
 
     feedbackErrorMessage = "An error occurred when updating the flashcard inputs.";
@@ -156,7 +160,6 @@ public class QuizController extends LoggedInController {
    *
    * @param actionEvent is the ActionEvent from the UI
    */
-  @SuppressFBWarnings
   public void addFlashcardNode(ActionEvent actionEvent) {
     createFlashcardNode(null);
     feedback.setTextFill(Color.GREEN);
@@ -178,7 +181,6 @@ public class QuizController extends LoggedInController {
   /**
    * Dynamically creates a Flashcard node to be used in the view.
    */
-  @SuppressFBWarnings
   private void createFlashcardNode(Flashcard flashcard) {
     int nodeCount = flashcardPaneContainer.getChildren().size();
 
@@ -186,7 +188,8 @@ public class QuizController extends LoggedInController {
     Text flashcardNumberText = new Text();
     flashcardNumberText.setId("flashcard-number-text");
     flashcardNumberText.setText(String.valueOf(nodeCount + 1));
-    flashcardNumberText.setFont(Font.font("Avenir Book", 20));;
+    flashcardNumberText.setFont(Font.font("Avenir Book", 20));
+    ;
 
     // Set "remove flashcard" button properties
     Button removeFlashcardButton = new Button();
@@ -196,7 +199,6 @@ public class QuizController extends LoggedInController {
     removeFlashcardButton.setFont(Font.font("Avenir Book", 16));
     removeFlashcardButton.setStyle("-fx-background-color: #EE4040; -fx-background-radius: 10;");
     removeFlashcardButton.setTextFill(Color.WHITE);
-
 
 
     HBox upperChildContainer = new HBox();
@@ -265,12 +267,11 @@ public class QuizController extends LoggedInController {
     spacing.setStrokeWidth(30);
 
 
-
     VBox parentContainer = new VBox();
     parentContainer.setId("parent-container");
     // Add child containers to parent container
     parentContainer.getChildren()
-                    .addAll(spacing, upperChildContainer, spacing2, lowerChildContainer, division);
+            .addAll(spacing, upperChildContainer, spacing2, lowerChildContainer, division);
 
     // Add dynamically generated content to view
     flashcardPaneContainer.getChildren().add(parentContainer);
@@ -283,7 +284,6 @@ public class QuizController extends LoggedInController {
    *
    * @param actionEvent is the ActionEvent on button click.
    */
-  @SuppressFBWarnings
   @FXML
   public void handleStoreQuiz(ActionEvent actionEvent) {
     String quizName = name.getText();
