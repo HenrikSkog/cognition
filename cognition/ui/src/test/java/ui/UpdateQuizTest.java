@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import ui.controllers.QuizController;
-import ui.controllers.annotations.SuppressFBWarnings;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,7 +58,6 @@ public class UpdateQuizTest extends ApplicationTest {
     stage.show();
   }
 
-  @SuppressFBWarnings
   private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
