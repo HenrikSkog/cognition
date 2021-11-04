@@ -7,18 +7,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import json.CognitionStorage;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+import rest.CognitionModel;
 import ui.controllers.MyQuizzesController;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.UUID;
 
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -26,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class MyQuizzesTest extends ApplicationTest {
   private Scene scene;
   private MyQuizzesController myQuizzesController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
   private User loggedInUser;
 
   private ListView<Quiz> listView;
@@ -35,26 +31,26 @@ public class MyQuizzesTest extends ApplicationTest {
   private final String validPassword = "valid-password";
 
 
-  @AfterEach
+  /*@AfterEach
   void tearDown() {
     clearStorage();
   }
 
   private void clearStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(cognitionStorage.getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();
     }
-  }
+  }*/
 
   @Override
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("MyQuizzes");
 
     // logged in user and storage instances must be present for this view to function
-    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
-    this.loggedInUser = new User(createUuid(), validUsername, validPassword);
+    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.loggedInUser = new User(validUsername, validPassword);
 
     // create some test data. 10 quizzes
     for (int i = 0; i < 10; i++) {
@@ -68,9 +64,9 @@ public class MyQuizzesTest extends ApplicationTest {
       loggedInUser.addQuiz(quiz);
     }
 
-    cognitionStorage.create(loggedInUser);
+    cognitionModel.create(loggedInUser);
 
-    myQuizzesController = new MyQuizzesController(loggedInUser, cognitionStorage);
+    myQuizzesController = new MyQuizzesController(loggedInUser, cognitionModel);
 
     loader.setController(myQuizzesController);
 

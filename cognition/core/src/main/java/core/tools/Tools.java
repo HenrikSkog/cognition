@@ -6,9 +6,6 @@ import java.util.UUID;
  * Class with static helper functions.
  */
 public class Tools {
-  public Tools() {
-  }
-
   public static String capitalize(String string) {
     return string.substring(0, 1).toUpperCase() + string.substring(1);
   }
@@ -21,5 +18,9 @@ public class Tools {
    */
   public static String createUuid() {
     return UUID.randomUUID().toString();
+  }
+
+  public static boolean isValidUuid(String uuid) {
+    return uuid.length() == 36 && uuid.split("-").length == 5;
   }
 }

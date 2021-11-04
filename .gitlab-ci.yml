@@ -21,14 +21,7 @@ build:
   stage: build
   # Cleans previous build, installs dependencies, runs all tests and checks that the project compiles
   script:
-    - mvn $API_CLI_OPTS clean install
-    - mvn $CORE_CLI_OPTS clean install
-    - mvn $UI_CLI_OPTS clean # GitLab doesn't support TestFX, so we cannot run these tests
+    - mvn $PARENT_CLI_OPTS clean install -DskipTests
+    - mvn $API_CLI_OPTS test
+    - mvn $CORE_CLI_OPTS test
     - mvn $PARENT_CLI_OPTS compile -e
-
-test:
-  stage: test
-  # This is strictly speaking unnecessary due to the script run above, but nice to have just in case.
-  script:
-    - mvn $API_CLI_OPTS clean test
-    - mvn $CORE_CLI_OPTS clean test

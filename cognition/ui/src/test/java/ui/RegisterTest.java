@@ -11,15 +11,14 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+import rest.CognitionModel;
 import ui.controllers.RegisterController;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class RegisterTest extends ApplicationTest {
@@ -32,20 +31,20 @@ public class RegisterTest extends ApplicationTest {
   private final String notMatchingPassword = "not-matching";
   private Scene scene;
   private RegisterController registerController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
   @BeforeEach
   void setUp() {
     // The few places in UI code that allegedly do not test the constructor are false,
     // in the way that the constructor is tested here and fails if it cannot be created successfully.
     try {
-      cognitionStorage = new CognitionStorage("cognitionTest.json");
-      registerController.setCognitionStorage(cognitionStorage);
+      cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+      registerController.setCognitionModel(cognitionModel);
 
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionStorage.create(new User(createUuid(), "placeholder", "placeholder"));
-    } catch (IOException e) {
+      cognitionModel.create(new User("placeholder", "placeholder"));
+    } catch (IOException | InterruptedException e) {
       fail();
     }
   }
@@ -59,10 +58,10 @@ public class RegisterTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Register");
 
-    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
+    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged-in user.
     // Thus, we create a fake user here to emulate it
-    this.registerController = new RegisterController(cognitionStorage);
+    this.registerController = new RegisterController(cognitionModel);
 
     loader.setController(registerController);
 
@@ -86,7 +85,7 @@ public class RegisterTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionStorage);
+    Assertions.assertNotNull(cognitionModel);
   }
 
   @Test
@@ -111,8 +110,8 @@ public class RegisterTest extends ApplicationTest {
     // Read locally stored users to find the inputted data
     List<User> users = new ArrayList<>();
     try {
-      users = cognitionStorage.readUsers();
-    } catch (IOException e) {
+      users = cognitionModel.readUsers();
+    } catch (IOException | InterruptedException e) {
       fail();
     }
 
@@ -218,7 +217,7 @@ public class RegisterTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();

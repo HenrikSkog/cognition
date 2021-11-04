@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.UUID;
 
 import static core.tools.Tools.createUuid;
@@ -19,14 +18,14 @@ public class UserTest {
 
   @BeforeEach
   void setUp() {
-    user = new User(createUuid(), validUsername, validPassword);
+    user = new User(validUsername, validPassword);
   }
 
   @Test
   @DisplayName("Can initialize user.")
   void canInitializeUser() {
     User emptyUser = new User();
-    User user = new User(createUuid(), "username", "password");
+    User user = new User("username", "password");
 
     Assertions.assertNotNull(emptyUser);
     Assertions.assertNotNull(user);
@@ -51,7 +50,7 @@ public class UserTest {
   @Test
   @DisplayName("Can add quiz.")
   void canAddQuiz() {
-    user.addQuiz(null);
+    Assertions.assertThrows(IllegalArgumentException.class, () -> user.addQuiz(null));
 
     // Quiz should not have been added
     Assertions.assertEquals(0, user.getQuizzes().size());
@@ -118,34 +117,18 @@ public class UserTest {
   @Test
   @DisplayName("Illegal User throws.")
   void illegalUserThrows() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new User("invalid-UUID", "username", "password"));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new User(invalidUsername, validPassword));
 
     Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new User(createUuid(), invalidUsername, validPassword));
-
-    Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new User(createUuid(), validUsername, invalidPassword));
-  }
-
-  @Test
-  @DisplayName("Displays correct toString.")
-  void displaysCorrectToString() {
-    String uuid = user.getUuid();
-    String username = user.getUsername();
-    String password = user.getPassword();
-    List<Quiz> quizzes = user.getQuizzes();
-
-    String expected = "User{" + "uuid='" + uuid + '\'' + ", username='" + username + '\'' + ", password='" + password
-            + '\'' + ", quizzes=" + quizzes + '}';
-
-    Assertions.assertEquals(expected, user.toString());
+            () -> new User(validUsername, invalidPassword));
   }
 
   @Test
   @DisplayName("Can compare with another User object.")
   void canCompareWithAnotherUserObject() {
-    User firstUser = new User(createUuid(), "first-username", "first-password");
-    User secondUser = new User(createUuid(), "second-username", "second-password");
+    User firstUser = new User("first-username", "first-password");
+    User secondUser = new User("second-username", "second-password");
 
     Assertions.assertEquals(firstUser, firstUser);
     Assertions.assertNotEquals(firstUser, secondUser);
@@ -157,8 +140,8 @@ public class UserTest {
   void canUpdateQuiz() {
     String updatedName = "updated-name";
 
-    User user = new User(createUuid(), "username", "password");
-    Quiz quizToUpdate = new Quiz(createUuid(), "name", "description");
+    User user = new User("username", "password");
+    Quiz quizToUpdate = new Quiz(UUID.randomUUID().toString(), "name", "description");
 
     user.addQuiz(quizToUpdate);
 

@@ -6,7 +6,6 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
+import rest.CognitionModel;
 import ui.controllers.ViewQuizController;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +33,11 @@ public class ViewQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("ViewQuiz");
 
-    CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
+    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(createUuid(), validUsername, validPassword);
+    User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionStorage.create(loggedInUser);
+    cognitionModel.create(loggedInUser);
 
     Quiz quiz = new Quiz(createUuid(), "Test quiz",
             "This is a test quiz used for development purposes");
@@ -47,7 +47,7 @@ public class ViewQuizTest extends ApplicationTest {
 
     flashcards = quiz.getFlashcards();
 
-    viewQuizController = new ViewQuizController(loggedInUser, quiz, cognitionStorage);
+    viewQuizController = new ViewQuizController(loggedInUser, quiz, cognitionModel);
     loader.setController(viewQuizController);
 
     scene = new Scene(loader.load());
@@ -191,5 +191,35 @@ public class ViewQuizTest extends ApplicationTest {
 
   }
 
+  @Test
+  @DisplayName("Dont show answer on first click")
+  void doNotShowAnswer(){
+    clickOn("#showAnswer");
+
+    FxAssert.verifyThat("#answerText", TextMatchers.hasText("Don't give up before trying!"));
+  }
+
+  @Test
+  @DisplayName("First click after trying gives answer")
+  void canShowAnswer(){
+    // click a first time to show the answer
+    clickOn("#answerInput").write("wrong-answer");
+    clickOn("#submitAnswer");
+    clickOn("#showAnswer");
+    FxAssert.verifyThat("#answerText", TextMatchers.hasText("The correct answer is: " + flashcards.get(0).getAnswer()));
+  }
+
+  @Test
+  @DisplayName("Unshow answer on second click")
+  void canUnShowAnswer(){
+    // click a first time to show the answer
+    clickOn("#answerInput").write("wrong-answer");
+    clickOn("#submitAnswer");
+    clickOn("#showAnswer");
+    // click a second time to hide it
+    clickOn("#showAnswer");
+    FxAssert.verifyThat("#answerText", TextMatchers.hasText(""));
+
+  }
 
 }

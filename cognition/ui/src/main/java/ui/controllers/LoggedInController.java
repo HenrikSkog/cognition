@@ -3,9 +3,7 @@ package ui.controllers;
 import core.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
-import json.CognitionStorage;
+import rest.CognitionModel;
 
 /**
  * LoggedInController holds state of the application when user
@@ -16,8 +14,8 @@ public abstract class LoggedInController extends Controller {
 
   private User user;
 
-  public LoggedInController(User user, CognitionStorage cognitionStorage) {
-    super(cognitionStorage);
+  public LoggedInController(User user, CognitionModel cognitionModel) {
+    super(cognitionModel);
     this.user = user;
   }
 
@@ -31,25 +29,25 @@ public abstract class LoggedInController extends Controller {
 
   @FXML
   public void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionStorage()),
+    changeToView(event, new LoginController(getCognitionModel()),
         "Login");
   }
 
   @FXML
   public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
+    changeToView(event, new DashboardController(getUser(), getCognitionModel()),
         "Dashboard");
   }
 
   @FXML
   public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionModel()),
         "MyQuizzes");
   }
 
   @FXML
   public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionStorage()),
+    changeToView(event, new QuizController(getUser(), getCognitionModel()),
         "Quiz");
   }
 }
