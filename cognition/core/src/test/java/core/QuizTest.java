@@ -35,14 +35,22 @@ public class QuizTest {
   @Test
   @DisplayName("Illegal Quiz throws.")
   void illegalQuizThrows() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz("invalid-UUID", "name", "description"));
+    Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new Quiz("invalid-UUID", "name", "description")
+    );
 
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new Quiz(createUuid(), "", ""));
+    Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new Quiz(createUuid(), "", "")
+    );
 
     String invalidDescription = "*".repeat(Quiz.MAX_DESCRIPTION_LENGTH + 1);
 
-    Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new Quiz(createUuid(), "name", invalidDescription));
+    Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new Quiz(createUuid(), "name", invalidDescription)
+    );
   }
 
   @Test

@@ -2,13 +2,11 @@ package ui.controllers;
 
 import core.User;
 import core.tools.Tools;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import json.CognitionStorage;
+import rest.CognitionModel;
 
 /**
  * DashboardController has the presentation logic for the DashBoard view.
@@ -21,8 +19,8 @@ public class DashboardController extends LoggedInController {
   @FXML
   private Text cognitionDescription;
 
-  public DashboardController(User user, CognitionStorage cognitionStorage) {
-    super(user, cognitionStorage);
+  public DashboardController(User user, CognitionModel cognitionModel) {
+    super(user, cognitionModel);
   }
 
 

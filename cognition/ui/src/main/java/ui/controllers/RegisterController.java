@@ -3,15 +3,13 @@ package ui.controllers;
 import core.User;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import json.CognitionStorage;
+import rest.CognitionModel;
 
-import static core.tools.Tools.createUuid;
 
 /**
  * RegisterController handles the presentation logic when registering a user.
@@ -33,8 +31,8 @@ public class RegisterController extends Controller {
   private Labeled feedback;
   private String feedbackErrorMessage;
 
-  public RegisterController(CognitionStorage cognitionStorage) {
-    super(cognitionStorage);
+  public RegisterController(CognitionModel cognitionModel) {
+    super(cognitionModel);
   }
 
   /**
@@ -83,8 +81,8 @@ public class RegisterController extends Controller {
 
     List<User> users = null;
     try {
-      users = getCognitionStorage().readUsers();
-    } catch (IOException e) {
+      users = getCognitionModel().readUsers();
+    } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading from local storage.";
       feedback.setText(feedbackErrorMessage);
     }
@@ -104,10 +102,11 @@ public class RegisterController extends Controller {
 
   private void registerUser(String username, String password) {
     try {
-      getCognitionStorage().create(new User(createUuid(), username, password));
+      User user = new User(username, password);
+      getCognitionModel().create(user);
       setFeedbackErrorMode(false);
       feedback.setText(feedbackSuccessMessage);
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       feedback.setText("An error occurred when writing to local storage.");
     }
 
@@ -120,7 +119,7 @@ public class RegisterController extends Controller {
    */
   @FXML
   public void goToLogin(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionStorage()),
+    changeToView(event, new LoginController(getCognitionModel()),
             "Login");
   }
 

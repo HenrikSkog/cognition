@@ -14,14 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+import rest.CognitionModel;
 import ui.controllers.QuizController;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class CreateQuizTest extends ApplicationTest {
@@ -29,7 +28,7 @@ public class CreateQuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
   @AfterEach
   void tearDown() {
@@ -40,16 +39,16 @@ public class CreateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
-    this.cognitionStorage = cognitionStorage;
+    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.cognitionModel = cognitionModel;
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(createUuid(), validUsername, validPassword);
+    User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionStorage.create(loggedInUser);
+    cognitionModel.create(loggedInUser);
 
-    quizController = new QuizController(loggedInUser, cognitionStorage);
+    quizController = new QuizController(loggedInUser, cognitionModel);
     // IMPORTANT: We do not set a quiz object here. Thus, we render the view like we
     // create a quiz.
     loader.setController(quizController);
@@ -84,8 +83,8 @@ public class CreateQuizTest extends ApplicationTest {
     List<Quiz> quizzes = new ArrayList<>();
 
     try {
-      quizzes = cognitionStorage.readByUsername(validUsername).getQuizzes();
-    } catch (IOException e) {
+      quizzes = cognitionModel.read(validUsername).getQuizzes();
+    } catch (IOException | InterruptedException e) {
       fail();
     }
 
@@ -136,7 +135,7 @@ public class CreateQuizTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();

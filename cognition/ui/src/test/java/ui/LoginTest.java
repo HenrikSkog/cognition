@@ -9,12 +9,11 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+import rest.CognitionModel;
 import ui.controllers.LoginController;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
-import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class LoginTest extends ApplicationTest {
@@ -22,15 +21,15 @@ public class LoginTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private LoginController loginController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
   @BeforeEach
   void setUp() {
     try {
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionStorage.create(new User(createUuid(), "placeholder", "placeholder"));
-    } catch (IOException e) {
+      cognitionModel.create(new User("placeholder", "placeholder"));
+    } catch (IOException | InterruptedException e) {
       fail();
     }
   }
@@ -44,9 +43,9 @@ public class LoginTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Login");
 
-    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
+    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-    this.loginController = new LoginController(cognitionStorage);
+    this.loginController = new LoginController(cognitionModel);
 
     loader.setController(loginController);
 
@@ -70,7 +69,7 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionStorage);
+    Assertions.assertNotNull(cognitionModel);
   }
 
   /**
@@ -80,12 +79,12 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Existing user can log in.")
   void existingUserCanLogIn() {
-    User user = new User(createUuid(), validUsername, validPassword);
+    User user = new User(validUsername, validPassword);
 
     // Create sample user
     try {
-      cognitionStorage.create(user);
-    } catch (IOException e) {
+      cognitionModel.create(user);
+    } catch (IOException | InterruptedException e) {
       fail();
     }
 
@@ -140,7 +139,7 @@ public class LoginTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();

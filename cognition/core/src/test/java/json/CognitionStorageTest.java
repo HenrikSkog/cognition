@@ -5,17 +5,15 @@ import core.Flashcard;
 import core.Quiz;
 import core.User;
 import org.junit.jupiter.api.*;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class CognitionStorageTest {
@@ -43,7 +41,7 @@ public class CognitionStorageTest {
   @Test
   @DisplayName("Can create user.")
   void canCreateUser() {
-    createUser(new User(createUuid(), "created-username", "created-password"));
+    createUser(new User("created-username", "created-password"));
   }
 
   /**
@@ -57,7 +55,7 @@ public class CognitionStorageTest {
     for (int i = 0; i < NUMBER_OF_USERS; i++) {
       // Try to create a sample user
       try {
-        createUser(new User(createUuid(), "created-username-" + i, "created-password-" + i));
+        createUser(new User("created-username-" + i, "created-password-" + i));
       } catch (JsonIOException e) {
         fail();
       }
@@ -74,15 +72,11 @@ public class CognitionStorageTest {
     int NUMBER_OF_QUIZZES = 1;
     int NUMBER_OF_FLASHCARDS_PER_QUIZ = 2;
 
-    // We use this seed when generating the ID in order to get a deterministic
-    // result
     String seed = "seed-used-for-testing";
     String id = UUID.nameUUIDFromBytes(seed.getBytes()).toString();
 
     // Manipulate userId to ensure that not all IDs are equal
-    String userId = id.replace(id.charAt(id.length() - 1), 'u');
-
-    User user = new User(userId, "username", "password");
+    User user = new User("username", "password");
 
     for (int i = 0; i < NUMBER_OF_QUIZZES; i++) {
       // Manipulate quizId to ensure that not all IDs are equal
@@ -114,7 +108,7 @@ public class CognitionStorageTest {
     // Read content of user storage as pure String
     String actual = "";
     try {
-      actual = Files.readString(Path.of(cognitionStorage.getStoragePath()));
+      actual = Files.readString(cognitionStorage.getStoragePath());
     } catch (IOException e) {
       fail();
     }
@@ -154,7 +148,6 @@ public class CognitionStorageTest {
                                ]
                            }
                        ],
-                       "uuid": "4efd2ea4-1598-3ec5-bc09-09ffc0u6251u",
                        "username": "username",
                        "password": "password"
                    }
@@ -166,7 +159,7 @@ public class CognitionStorageTest {
   void canReadUserByUsername() {
     String username = "test-username";
     String password = "test-password";
-    User user = new User(createUuid(), username, password);
+    User user = new User(username, password);
 
     try {
       cognitionStorage.create(user);
@@ -175,7 +168,7 @@ public class CognitionStorageTest {
     }
 
     try {
-      User parsedUser = cognitionStorage.readByUsername(username);
+      User parsedUser = cognitionStorage.read(username);
       Assertions.assertEquals(user, parsedUser);
     } catch (IOException e) {
       fail();
@@ -205,10 +198,10 @@ public class CognitionStorageTest {
   @DisplayName("Can read user.")
   void canReadUser() {
     // The identifier is used to determine if the read user is the correct one
-    String identifier = createUuid();
+    String identifier = "read-username";
 
     // Create sample user with given identifier
-    createUser(new User(identifier, "read-username", "read-password"));
+    createUser(new User("read-username", "read-password"));
 
     User user = new User();
 
@@ -229,29 +222,62 @@ public class CognitionStorageTest {
   @DisplayName("Can update user.")
   void canUpdateUser() {
     // The identifier is used to determine if the updated user is the correct one
-    String identifier = createUuid();
+    String identifier = "username";
 
     // Create sample user with given identifier
-    createUser(new User(identifier, "base-username", "base-password"));
+    createUser(new User(identifier, "base-password"));
 
     try {
-      cognitionStorage.update(identifier, new User(identifier, "new-username", "new-password"));
+      cognitionStorage.update(identifier, new User("new-username", "new-password"));
     } catch (IOException e) {
       fail();
     }
   }
 
   @Test
+  @DisplayName("When updating user: If local storage is empty, then throw.")
+  void whenUpdatingUser_ifLocalStorageIsEmpty_thenThrow() {
+    String username = "valid-username";
+    User user = new User(username, "valid-password");
+
+    Assertions.assertThrows(
+            NullPointerException.class,
+            () -> cognitionStorage.update(username, user)
+    );
+  }
+
+  @Test
+  @DisplayName("When updating user: If user does not exist, then throw.")
+  void whenUpdatingUser_ifUserDoesNotExist_thenThrow() {
+
+    User userToCreate = new User("user-to-store", "user-to-store-password");
+    String username = "non-existing-username";
+
+    // Setup test
+    try {
+      cognitionStorage.create(userToCreate);
+    } catch (IOException e) {
+      fail();
+    }
+
+    // Assertions
+    Assertions.assertThrows(
+            NoSuchElementException.class,
+            () -> cognitionStorage.update(username, new User(username, "non-existing-password"))
+    );
+  }
+
+  @Test
   @DisplayName("Can delete user.")
   void canDeleteUser() {
     // The identifier is used to determine if the updated user is the correct one
-    String identifier = createUuid();
+    String username = "delete-username";
 
     // Create sample user with given identifier
-    createUser(new User(identifier, "delete-username", "delete-password"));
+    createUser(new User(username, "delete-password"));
 
     try {
-      cognitionStorage.delete(identifier);
+      cognitionStorage.delete(username);
     } catch (IOException e) {
       fail();
     }
@@ -267,7 +293,7 @@ public class CognitionStorageTest {
     // Check if User object with given identifier really was deleted
     for (User user : users) {
       // There still exists a User object with the randomly generated identifier.
-      if (user.getUuid().equals(identifier)) {
+      if (user.getUsername().equals(username)) {
         fail();
       }
     }
@@ -299,7 +325,7 @@ public class CognitionStorageTest {
    * return type when user storage is empty.
    */
   private void clearStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(cognitionStorage.getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();
@@ -310,7 +336,7 @@ public class CognitionStorageTest {
   @DisplayName("Has correct storage path.")
   void hasCorrectStoragePath() {
     Assertions.assertEquals(
-            String.valueOf(Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", "cognitionTest.json")),
+            Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", "cognitionTest.json"),
             cognitionStorage.getStoragePath());
   }
 }

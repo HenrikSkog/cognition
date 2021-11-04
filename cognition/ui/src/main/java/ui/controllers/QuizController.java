@@ -3,6 +3,10 @@ package ui.controllers;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
+import core.tools.Tools;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,39 +19,39 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import json.CognitionStorage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import rest.CognitionModel;
 
-import static core.tools.Tools.createUuid;
 
 /**
  * QuizController handles the presentation logic of creating and updating a quiz.
  */
 public class QuizController extends LoggedInController {
-  private final static String feedbackSuccessMessage = "Successfully created quiz.";
+  private static final String feedbackSuccessMessage = "Successfully created quiz.";
+
   @FXML
   private ScrollPane flashcardPane;
+
   @FXML
   private Button storeQuizButton;
+
   @FXML
   private Text heading;
+
   @FXML
   private Label feedback;
+
   @FXML
   private TextField name;
+
   @FXML
   private TextField description;
-  @FXML
+
   private VBox flashcardPaneContainer = new VBox();
   private String feedbackErrorMessage = "";
   private Quiz quizBeingUpdated = null;
 
-
-  public QuizController(User user, CognitionStorage cognitionStorage) {
-    super(user, cognitionStorage);
+  public QuizController(User user, CognitionModel cognitionModel) {
+    super(user, cognitionModel);
   }
 
   public void setQuizBeingUpdated(Quiz quizBeingUpdated) {
@@ -170,13 +174,13 @@ public class QuizController extends LoggedInController {
 
   @FXML
   public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionStorage()),
+    changeToView(event, new DashboardController(getUser(), getCognitionModel()),
             "Dashboard");
   }
 
   @FXML
   public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionStorage()),
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionModel()),
             "MyQuizzes");
   }
 
@@ -331,17 +335,17 @@ public class QuizController extends LoggedInController {
       getUser().updateQuiz(quizBeingUpdated);
     } else {
       // If quiz == null (does not exist), create a new one and add it
-      Quiz newQuiz = new Quiz(createUuid(), quizName, quizDescription);
+      Quiz newQuiz = new Quiz(Tools.createUuid(), quizName, quizDescription);
       newQuiz.addFlashcards(flashcards);
       getUser().addQuiz(newQuiz);
     }
 
     try {
-      getCognitionStorage().update(getUser().getUuid(), getUser());
+      getCognitionModel().update(getUser());
       feedback.setTextFill(Color.GREEN);
-      setFeedbackText(feedbackSuccessMessage);
+      setFeedbackText(getFeedbackSuccessMessage());
 
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "An error occurred when trying to create the quiz.";
       setFeedbackText(feedbackErrorMessage);
@@ -427,7 +431,7 @@ public class QuizController extends LoggedInController {
         return null;
       }
 
-      Flashcard flashcard = new Flashcard(createUuid(), front, answer);
+      Flashcard flashcard = new Flashcard(Tools.createUuid(), front, answer);
       flashcards.add(flashcard);
     }
 
@@ -445,7 +449,7 @@ public class QuizController extends LoggedInController {
     if (quizBeingUpdated == null) {
       return;
     }
-    QuizController quizController = new QuizController(getUser(), getCognitionStorage());
+    QuizController quizController = new QuizController(getUser(), getCognitionModel());
     changeToView(event, quizController, "Quiz");
   }
 }

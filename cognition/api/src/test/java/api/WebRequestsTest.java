@@ -1,0 +1,314 @@
+package api;
+
+
+import com.google.gson.Gson;
+import core.Quiz;
+import core.User;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+/**
+ * WebRequestsTest tests querying the actual API and
+ * the REST controller logic behind the API.
+ * This class is treated more like an integration test, given the nature of the test methods.
+ */
+
+@SpringBootTest(classes = CognitionController.class)
+@AutoConfigureMockMvc
+@EnableWebMvc
+public class WebRequestsTest {
+
+  @Autowired
+  private MockMvc mvc;
+
+  private final Gson gson = new Gson();
+  private final String username = "valid-username";
+  private final String quizUuid = "9f6c96cc-6a70-46bc-8f69-31b2ebd661cd";
+  private final String invalidQuizUuid = "thisIsNotAUuid";
+
+  /*
+
+    Set state to indicate to CognitionController that
+    we are in test-mode, and therefore should use
+    the appropriate storage file.
+
+   */
+  static {
+    System.setProperty("webRequestTest", "true");
+  }
+
+
+  @Test
+  @DisplayName("Expect 200 when getting users.")
+  void expect200WhenGettingUsers() {
+    try {
+      this.mvc.perform(
+                      get("/users")
+                              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Expect 200 when getting user by username.")
+  void expect200WhenGettingUserByUsername() throws Exception {
+
+    initializeUser();
+
+    try {
+      this.mvc.perform(
+                      get("/users/" + username)
+                              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 200 when posting user.")
+  void expect200WhenPostingUser() throws Exception {
+
+    User user = new User(username, "valid-password");
+    String serialized = gson.toJson(user);
+
+    try {
+      this.mvc.perform(post("/users")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(serialized)
+      ).andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 409 when posting user with conflicting identifier")
+  void expect409WhenPostingUserWithConflictingIdentifier() throws Exception {
+
+    initializeUser();
+
+    User conflictingUser = new User(username, "valid-password");
+    String serialized = gson.toJson(conflictingUser);
+
+    try {
+      this.mvc.perform(post("/users")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(serialized)
+      ).andExpect(status().is4xxClientError());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 200 when updating user.")
+  void expect200WhenUpdatingUser() throws Exception {
+
+    initializeUser();
+
+    User user = new User(username, "new-password");
+    String serialized = gson.toJson(user);
+
+    try {
+      this.mvc.perform(
+                      put("/users")
+                              .contentType(MediaType.APPLICATION_JSON)
+                              .content(serialized))
+              .andDo(print())
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+  }
+
+  @Test
+  @DisplayName("Expect 200 when getting quizzes by username")
+  void expect200WhenGettingQuizzesByUsername() throws Exception {
+
+    initializeUser();
+
+    this.mvc.perform(get("/quizzes/" + username)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 200 when creating quiz by username")
+  void expect200WhenCreatingQuizByUsername() throws Exception {
+
+    initializeUser();
+
+    Quiz quiz = new Quiz(quizUuid, "Test quiz", "Test description for test quiz");
+    String serializedQuiz = gson.toJson(quiz);
+
+    try {
+      this.mvc.perform(post("/quiz/" + username)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(serializedQuiz)).andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 409 when creating quiz with conflicting UUID")
+  void expect409WhenCreatingQuizWithConflictingUuid() throws Exception {
+
+    initializeUser();
+    initializeQuiz();
+
+    Quiz quiz = new Quiz(quizUuid, "Test quiz", "Test description for test quiz");
+    String serializedQuiz = gson.toJson(quiz);
+
+    try {
+      this.mvc.perform(post("/quiz/" + username)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(serializedQuiz)).andExpect(status().is4xxClientError());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 200 when getting quiz by UUID")
+  void expect200WhenGettingQuizByUuid() throws Exception {
+
+    initializeUser();
+    initializeQuiz();
+
+    try {
+      this.mvc.perform(
+                      get("/quiz/" + quizUuid)
+                              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+  }
+
+  @Test
+  @DisplayName("Expect 404 when getting quiz by invalid UUID")
+  void expect404WhenGettingQuizByInvalidUuid() throws Exception {
+    initializeUser();
+    initializeQuiz();
+
+    try {
+      this.mvc.perform(
+                      get("/quiz/" + invalidQuizUuid)
+                              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().is4xxClientError());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+  }
+
+  @Test
+  @DisplayName("Expect 200 when updating quiz by UUID")
+  void expect200WhenUpdatingQuizByUuid() throws Exception {
+    initializeUser();
+    initializeQuiz();
+
+    Quiz quiz = new Quiz(quizUuid, "Updated quiz", "Updated description");
+    String serializedQuiz = gson.toJson(quiz);
+
+    try {
+      this.mvc.perform(
+                      put("/quiz")
+                              .contentType(MediaType.APPLICATION_JSON)
+                              .content(serializedQuiz))
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+  }
+
+  @Test
+  @DisplayName("Expect 200 when deleting quiz by UUID")
+  void expect200WhenDeletingQuizByUuid() throws Exception {
+
+    initializeUser();
+    initializeQuiz();
+
+    try {
+      this.mvc.perform(
+                      delete("/quiz/" + quizUuid)
+                              .contentType(MediaType.APPLICATION_JSON)
+              )
+              .andExpect(status().isOk());
+    } catch (Exception e) {
+      fail();
+    }
+
+    cleanUp();
+
+
+  }
+
+  private void initializeUser() throws Exception {
+
+    User user = new User(username, "valid-password");
+    String serialized = gson.toJson(user);
+
+    this.mvc.perform(post("/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serialized)
+    ).andExpect(status().isOk());
+  }
+
+  private void initializeQuiz() throws Exception {
+
+    Quiz quiz = new Quiz(quizUuid, "Test quiz", "Test description for test quiz");
+    String serializedQuiz = gson.toJson(quiz);
+
+    this.mvc.perform(post("/quiz/" + username)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(serializedQuiz)
+    ).andExpect(status().isOk());
+  }
+
+  private void cleanUp() throws Exception {
+    this.mvc.perform(delete("/users/" + username)).andExpect(status().isOk());
+  }
+}

@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import rest.CognitionModel;
 import ui.controllers.QuizController;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -28,7 +28,7 @@ public class UpdateQuizTest extends ApplicationTest {
   private final String validQuizDescription = "valid-quiz-description";
   private Scene scene;
   private QuizController quizController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
   @AfterEach
   void tearDown() {
@@ -39,18 +39,18 @@ public class UpdateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
            FXMLLoader loader = getLoader("Quiz");
 
-    this.cognitionStorage = new CognitionStorage("cognitionTest.json");
+    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
 
 
     // in the app there is no logical way for Create Quiz to be accessed without a
-    // logged in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(createUuid(), validUsername, validPassword);
+    // logged-in user. Thus, we create a fake user here to emulate it
+    User loggedInUser = new User(validUsername, validPassword);
     Quiz quiz = new Quiz(createUuid(), validQuizName, validQuizDescription);
     loggedInUser.addQuiz(quiz);
-    cognitionStorage.create(loggedInUser);
+    cognitionModel.create(loggedInUser);
 
         
-    quizController = new QuizController(loggedInUser, cognitionStorage);
+    quizController = new QuizController(loggedInUser, cognitionModel);
     quizController.setQuizBeingUpdated(quiz);
     loader.setController(quizController);
 
@@ -80,7 +80,7 @@ public class UpdateQuizTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();

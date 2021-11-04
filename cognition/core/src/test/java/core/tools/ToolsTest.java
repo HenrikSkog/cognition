@@ -2,27 +2,14 @@ package core.tools;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class ToolsTest {
-  @Test
-  @DisplayName("Test capitalize.")
-  void testCapitalize() {
-    String lowerCase = "string";
-    String expected = "String";
-
-    String actual = Tools.capitalize(lowerCase);
-
-    Assertions.assertEquals(expected, actual);
-  }
-
-  @Test
-  @DisplayName("Can initialize.")
-  void canInitialize() {
-    Tools tools = new Tools();
-
-    Assertions.assertNotNull(tools);
-
-    // If we reach this point, the class can be initialized
+  @ParameterizedTest
+  @CsvSource({"test,Test", "tEst,TEst", "javA,JavA"})
+  @DisplayName("Test capitalization.")
+  void testCapitalize(String input, String expected) {
+    Assertions.assertEquals(expected, Tools.capitalize(input));
   }
 }

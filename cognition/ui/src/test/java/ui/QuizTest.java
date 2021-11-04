@@ -14,13 +14,12 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
+import rest.CognitionModel;
 import ui.controllers.QuizController;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
-import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class QuizTest extends ApplicationTest {
@@ -28,7 +27,7 @@ public class QuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
 
   @AfterEach
@@ -40,16 +39,16 @@ public class QuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    CognitionStorage cognitionStorage = new CognitionStorage("cognitionTest.json");
-    this.cognitionStorage = cognitionStorage;
+    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.cognitionModel = cognitionModel;
 
     // In the app, there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(createUuid(), validUsername, validPassword);
+    User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionStorage.create(loggedInUser);
+    cognitionModel.create(loggedInUser);
 
-    quizController = new QuizController(loggedInUser, cognitionStorage);
+    quizController = new QuizController(loggedInUser, cognitionModel);
     loader.setController(quizController);
 
     scene = new Scene(loader.load());
@@ -72,7 +71,7 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionStorage);
+    Assertions.assertNotNull(cognitionModel);
   }
 
   @Test
@@ -163,7 +162,7 @@ public class QuizTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(cognitionStorage.getStoragePath())) {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
       fail();

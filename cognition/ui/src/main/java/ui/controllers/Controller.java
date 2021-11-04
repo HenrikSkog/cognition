@@ -1,5 +1,6 @@
 package ui.controllers;
 
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,9 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import json.CognitionStorage;
-
-import java.io.IOException;
+import rest.CognitionModel;
 
 /**
  * Controller is an abstract class with the common functionality
@@ -21,13 +20,10 @@ public abstract class Controller {
   @FXML
   private Label feedback;
 
-  private CognitionStorage cognitionStorage;
+  private CognitionModel cognitionModel;
 
-  public Controller(CognitionStorage cognitionStorage) {
-    this.cognitionStorage = cognitionStorage;
-  }
-
-  public Controller() {
+  public Controller(CognitionModel cognitionModel) {
+    this.cognitionModel = cognitionModel;
   }
 
   public Stage getStage(ActionEvent event) {
@@ -41,7 +37,7 @@ public abstract class Controller {
    * @param fxml is the String representation of the FXML filename.
    * @return an FXMLLoader with the location set to the provided FXML file.
    */
-  public FXMLLoader getLoader(String fxml) {
+  private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     // Using Controller.class, rather than this.getClass(),
     // SpotBugs does not find a compile-time bug.
@@ -56,15 +52,14 @@ public abstract class Controller {
    * @param root  is the root of the loaded FXML
    * @throws IOException if an error occurs when switching scenes.
    */
-  protected void switchScene(Stage stage, Parent root) throws IOException {
+  private void switchScene(Stage stage, Parent root) throws IOException {
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
   }
 
   /**
-   * Changes from the current view to a pr
-   * ovided view.
+   * Changes from the current view to a provided view.
    * The method loads the FXML and sets the new controller,
    * then switches stage.
    *
@@ -73,8 +68,8 @@ public abstract class Controller {
    * @param fxml       is the String representation of the FXML filename.
    */
   protected void changeToView(ActionEvent event,
-                           Controller controller,
-                           String fxml) {
+                              Controller controller,
+                              String fxml) {
     FXMLLoader loader = getLoader(fxml);
 
     loader.setController(controller);
@@ -84,23 +79,23 @@ public abstract class Controller {
     try {
       switchScene(stage, loader.load());
     } catch (IOException e) {
-      feedback.setText("An error occurred when trying to go to " + fxml + ".");
+      setFeedbackText("An error occurred when trying to go to " + fxml + ".");
     }
   }
 
-  public CognitionStorage getCognitionStorage() {
-    return cognitionStorage;
+  public CognitionModel getCognitionModel() {
+    return cognitionModel;
   }
 
-  public void setCognitionStorage(CognitionStorage cognitionStorage) {
-    this.cognitionStorage = cognitionStorage;
+  public void setCognitionModel(CognitionModel cognitionModel) {
+    this.cognitionModel = cognitionModel;
   }
 
-  public Label getFeedback() {
-    return feedback;
-  }
-
-  public void setFeedbackText(String value) {
+  protected void setFeedbackText(String value) {
     feedback.setText(value);
+  }
+
+  protected void setFeedbackStyle(String value) {
+    feedback.setStyle(value);
   }
 }

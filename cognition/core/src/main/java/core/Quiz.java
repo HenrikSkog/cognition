@@ -1,10 +1,9 @@
 package core;
 
 
-import core.validators.Validator;
+import core.tools.Tools;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * The class Quiz - Creates a new Quiz object that stores a name, a description
@@ -43,12 +42,16 @@ public class Quiz {
   }
 
   /**
-   * Loops through all provided flashcards and runds them through the singular
+   * Loops through all provided flashcards and runs them through the singular
    * addFlashcard method.
    *
    * @param flashcards is the provided list of flashcards
    */
   public void addFlashcards(List<Flashcard> flashcards) {
+    if (flashcards == null) {
+      throw new IllegalArgumentException("Flashcards cannot be null");
+    }
+
     for (Flashcard flashcard : flashcards) {
       addFlashcard(flashcard);
     }
@@ -59,7 +62,7 @@ public class Quiz {
   }
 
   private void setUuid(String uuid) {
-    if (!Validator.isValidUuid(uuid)) {
+    if (!Tools.isValidUuid(uuid)) {
       throw new IllegalArgumentException();
     }
 
@@ -122,7 +125,7 @@ public class Quiz {
   }
 
   public List<Flashcard> getFlashcards() {
-    return flashcards;
+    return new ArrayList<>(flashcards);
   }
 
 
