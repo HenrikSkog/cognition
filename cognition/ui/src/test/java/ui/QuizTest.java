@@ -16,11 +16,11 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import rest.CognitionModel;
 import ui.controllers.QuizController;
-
 import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class QuizTest extends ApplicationTest {
   private final String validUsername = "valid-username";
@@ -77,7 +77,9 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Initial render displays flashcard nodes.")
   void initialRenderDisplaysFlashcardNodes() {
+    waitForFxEvents();
     FxAssert.verifyThat("#flashcard-number-text", TextMatchers.hasText("1"));
+    waitForFxEvents();
   }
 
   @Test
@@ -86,11 +88,13 @@ public class QuizTest extends ApplicationTest {
     int initialNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
 
     clickOn("#remove-flashcard-button");
+    waitForFxEvents();
 
     int currentNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
 
     boolean nodeCountDecreasedOnButtonClick = (currentNodeCount == initialNodeCount - 1);
 
+    waitForFxEvents();
     Assertions.assertTrue(nodeCountDecreasedOnButtonClick);
   }
 
@@ -100,20 +104,23 @@ public class QuizTest extends ApplicationTest {
     int initialNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
 
     clickOn("#addFlashcardButton");
+    waitForFxEvents();
 
     int currentNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
 
     boolean nodeCountIncreasedOnButtonClick = (currentNodeCount == initialNodeCount + 1);
 
-
+    waitForFxEvents();
     Assertions.assertTrue(nodeCountIncreasedOnButtonClick);
   }
 
   @Test
   @DisplayName("Can switch to Dashboard.")
   void canSwitchToDashboard() {
+    waitForFxEvents();
     clickOn("#goToDashboardButton");
 
+    waitForFxEvents();
     // Check that we loaded Dashboard view
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
   }
@@ -122,14 +129,20 @@ public class QuizTest extends ApplicationTest {
   @DisplayName("Invalid input gives correct feedback.")
   void invalidInputGivesCorrectFeedback() {
     // Invalid input
+    waitForFxEvents();
     clickOn("#front-input").write("front");
+    waitForFxEvents();
     clickOn("#answer-input").write("answer");
+    waitForFxEvents();
     verifyInputData("", "description", true);
 
+    waitForFxEvents();
     clearInputData("#name");
+    waitForFxEvents();
     clearInputData("#description");
 
     // Description can be empty
+    waitForFxEvents();
     verifyInputData("name", "", false);
   }
 
@@ -146,14 +159,18 @@ public class QuizTest extends ApplicationTest {
    */
   private void verifyInputData(String name, String description, boolean isErrorMessage) {
     // Input data into UI
+    waitForFxEvents();
     clickOn("#name").write(name);
+    waitForFxEvents();
     clickOn("#description").write(description);
+    waitForFxEvents();
     clickOn("#storeQuizButton");
 
     String feedback = isErrorMessage ? quizController.getFeedbackErrorMessage()
             : quizController.getFeedbackSuccessMessage();
 
     // Validate that user got correct feedback in UI
+    waitForFxEvents();
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
   }
 

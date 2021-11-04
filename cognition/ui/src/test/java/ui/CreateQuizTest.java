@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class CreateQuizTest extends ApplicationTest {
   private final String validUsername = "valid-username";
@@ -75,10 +76,13 @@ public class CreateQuizTest extends ApplicationTest {
 
     // Add flashcard
     clickOn("#front-input").write(front);
+    waitForFxEvents();
     clickOn("#answer-input").write(answer);
+    waitForFxEvents();
 
     // Create quiz
     verifyInputData("name", "description", false);
+    waitForFxEvents();
 
     List<Quiz> quizzes = new ArrayList<>();
 
@@ -107,6 +111,7 @@ public class CreateQuizTest extends ApplicationTest {
       }
     }
 
+    waitForFxEvents();
     Assertions.assertTrue(quizWasStored);
   }
 
@@ -120,14 +125,18 @@ public class CreateQuizTest extends ApplicationTest {
   private void verifyInputData(String name, String description, boolean isErrorMessage) {
     // Input data into UI
     clickOn("#name").write(name);
+    waitForFxEvents();
     clickOn("#description").write(description);
+    waitForFxEvents();
     clickOn("#storeQuizButton");
+    waitForFxEvents();
 
     String feedback = isErrorMessage ? quizController.getFeedbackErrorMessage()
             : quizController.getFeedbackSuccessMessage();
 
     // Validate that user got correct feedback in UI
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
+    waitForFxEvents();
   }
 
   /**

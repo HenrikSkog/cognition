@@ -107,11 +107,7 @@ public class CognitionModel {
             .build();
 
 
-    HttpResponse<String> result = client.send(request,
-            HttpResponse.BodyHandlers.ofString());
-
-    System.out.println(result);
-
+    client.send(request, HttpResponse.BodyHandlers.ofString());
   }
 
   /**
