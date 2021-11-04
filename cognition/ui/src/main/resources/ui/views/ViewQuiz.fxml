@@ -42,10 +42,8 @@
                     <HBox alignment="CENTER" prefHeight="73.0" prefWidth="490.0" style="-fx-background-color: #fff;">
                         <children>
 
-                            <Button fx:id="goHome" mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link"
-                                    text="Home"/>
-                            <Button mnemonicParsing="false" styleClass="nav_link"
-                                    onAction="#handleMyQuizzes" text="My quizzes">
+                            <Button fx:id="goHome" mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link" text="Home" />
+                            <Button mnemonicParsing="false" onAction="#handleMyQuizzes" styleClass="nav_link" text="My quizzes">
 
                                 <graphic>
                                     <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK" />
@@ -141,7 +139,19 @@
                                                 <Font name="Verdana" size="16.0" />
                                              </font>
                                           </Text>
-                                          <Pane layoutX="-1.0" layoutY="-5.0" prefHeight="68.0" prefWidth="488.0" style="-fx-background-color: FCB751; -fx-background-radius: 10 10 0 0;" />
+                                          <Pane layoutX="-1.0" layoutY="-5.0" prefHeight="68.0" prefWidth="488.0" style="-fx-background-color: FCB751; -fx-background-radius: 10 10 0 0;">
+                                             <children>
+                                                <Button fx:id="showAnswer" layoutX="331.0" layoutY="16.0" mnemonicParsing="false" onAction="#showAnswer" prefHeight="36.0" prefWidth="142.0" style="-fx-background-color: BC86F7;" text="Show answer" textFill="WHITE">
+                                                   <font>
+                                                      <Font name="Verdana Bold" size="14.0" />
+                                                   </font>
+                                                </Button>
+                                                <Text fx:id="answerText" layoutX="17.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="308.294658369923">
+                                                   <font>
+                                                      <Font name="Avenir Book" size="16.0" />
+                                                   </font>
+                                                </Text>
+                                             </children></Pane>
                                                       <Label fx:id="feedback" layoutX="46.0" layoutY="262.0" prefHeight="32.0" prefWidth="413.0">
                                              <font>
                                                 <Font name="Avenir Book" size="20.0" />
@@ -149,7 +159,7 @@
                                           </Label>
                                                         <Text fx:id="flashcardText" layoutX="39.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="420.85453385820426">
                                              <font>
-                                                <Font name="Avenir Book" size="35.0" />
+                                                <Font name="Avenir Book" size="20.0" />
                                              </font>
                                           </Text>
                                                     </children>

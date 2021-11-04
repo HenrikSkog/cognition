@@ -7,9 +7,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import json.CognitionStorage;
-
-
+import rest.CognitionModel;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -34,8 +32,11 @@ public class ViewQuizController extends LoggedInController {
   @FXML
   private Text description;
 
-  public ViewQuizController(User user, Quiz quiz, CognitionStorage cognitionStorage) {
-    super(user, cognitionStorage);
+  @FXML
+  private Text answerText;
+
+  public ViewQuizController(User user, Quiz quiz, CognitionModel cognitionModel) {
+    super(user, cognitionModel);
     this.quiz = quiz;
   }
 
@@ -57,19 +58,21 @@ public class ViewQuizController extends LoggedInController {
   public void nextFlashcard() {
     if (flashcardIndex == flashcards.size() - 1) {
       flashcardText.setText(
-          new StringBuilder()
-              .append("End of quiz! ")
-              .append("You got ")
-              .append(correctAnswerCount)
-              .append(" right out of ")
-              .append(flashcards.size())
-              .append(" possible.")
-              .toString());
+              new StringBuilder()
+                      .append("End of quiz! ")
+                      .append("You got ")
+                      .append(correctAnswerCount)
+                      .append(" right out of ")
+                      .append(flashcards.size())
+                      .append(" possible.")
+                      .toString());
+      setAnswerText("");
       return;
     }
 
     flashcardIndex++;
     flashcardText.setText(flashcards.get(flashcardIndex).getFront());
+    setAnswerText("");
   }
 
   /**
@@ -112,13 +115,35 @@ public class ViewQuizController extends LoggedInController {
    */
   private void setFeedbackErrorMode(boolean mode) {
     if (mode) {
-      getFeedback().setStyle("-fx-text-fill: red");
+      setFeedbackStyle("-fx-text-fill: red");
     } else {
-      getFeedback().setStyle("-fx-text-fill: green");
+      setFeedbackStyle("-fx-text-fill: green");
     }
   }
 
   public void setQuiz(Quiz quiz) {
     this.quiz = quiz;
   }
+
+
+  @FXML
+  private void showAnswer() {
+    String invalidText = "Don't give up before trying!";
+    if (hasFailedFlashcard) {
+      String correctAnswer = flashcards.get(flashcardIndex).getAnswer();
+      if (answerText.getText().equals("") || answerText.getText().equals(invalidText)) {
+        setAnswerText("The correct answer is: " + correctAnswer);
+      } else {
+        setAnswerText("");
+      }
+    } else {
+      setAnswerText(invalidText);
+    }
+  }
+
+
+  private void setAnswerText(String text) {
+    this.answerText.setText(text);
+  }
+
 }

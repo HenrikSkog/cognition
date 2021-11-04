@@ -1,6 +1,6 @@
 package core;
 
-import core.validators.Validator;
+import core.tools.Tools;
 import java.util.Objects;
 
 /**
@@ -45,7 +45,7 @@ public class Flashcard {
   }
 
   private void setUuid(String uuid) {
-    if (!Validator.isValidUuid(uuid)) {
+    if (!Tools.isValidUuid(uuid)) {
       throw new IllegalArgumentException();
     }
 
@@ -96,13 +96,12 @@ public class Flashcard {
     }
 
     Flashcard flashcard = (Flashcard) o;
-    return Objects.equals(uuid, flashcard.uuid) && Objects.equals(front, flashcard.front)
-        && Objects.equals(answer, flashcard.answer);
+    return Objects.equals(uuid, flashcard.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(uuid, front, answer);
+    return Objects.hash(uuid);
   }
 
   @Override

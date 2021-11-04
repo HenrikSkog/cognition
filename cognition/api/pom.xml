@@ -26,28 +26,31 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.5.4</version>
+            <version>2.5.5</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.5.4</version>
+            <version>2.5.5</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>it1901.gr2103</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-core</artifactId>
+            <version>3.5.4</version>
         </dependency>
     </dependencies>
 
@@ -57,7 +60,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.4</version>
-
             </plugin>
 
             <plugin>

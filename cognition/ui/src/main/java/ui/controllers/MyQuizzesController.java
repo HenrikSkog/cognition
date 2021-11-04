@@ -11,8 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.util.Callback;
-import json.CognitionStorage;
+import rest.CognitionModel;
 
 /**
  * MyQuizzesController is responsible for handling the
@@ -29,8 +28,8 @@ public class MyQuizzesController extends LoggedInController {
   private Quiz selectedQuiz;
   private String feedbackErrorMessage;
 
-  public MyQuizzesController(User user, CognitionStorage cognitionStorage) {
-    super(user, cognitionStorage);
+  public MyQuizzesController(User user, CognitionModel cognitionModel) {
+    super(user, cognitionModel);
   }
 
   /**
@@ -49,32 +48,24 @@ public class MyQuizzesController extends LoggedInController {
 
     // Update selected quiz by what quiz is selected in the ui
     quizzesListView.getSelectionModel().selectedItemProperty()
-        .addListener((observable, oldValue, newValue) -> {
-          this.selectedQuiz = newValue;
-        });
+        .addListener((observable, oldValue, newValue) -> this.selectedQuiz = newValue);
   }
 
   /**
    * Sets up list view cell factory so listview properly works using Quiz as type.
    */
   private void setupListView() {
-    quizzesListView.setCellFactory(new Callback<>() {
+    quizzesListView.setCellFactory(quizListView -> new ListCell<>() {
       @Override
-      public ListCell<Quiz> call(ListView<Quiz> param) {
-        return new ListCell<>() {
+      protected void updateItem(Quiz item, boolean empty) {
+        super.updateItem(item, empty);
 
-          @Override
-          protected void updateItem(Quiz item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty || item == null) {
-              setText(null);
-              setGraphic(null);
-            } else {
-              setText(item.getName());
-            }
-          }
-        };
+        if (empty || item == null) {
+          setText(null);
+          setGraphic(null);
+        } else {
+          setText(item.getName());
+        }
       }
     });
   }
@@ -111,7 +102,7 @@ public class MyQuizzesController extends LoggedInController {
     ViewQuizController viewQuizController = new ViewQuizController(
             getUser(),
             selectedQuiz,
-            getCognitionStorage()
+            getCognitionModel()
     );
     viewQuizController.setQuiz(selectedQuiz);
 
@@ -131,7 +122,7 @@ public class MyQuizzesController extends LoggedInController {
     }
 
     // Set state in controller
-    QuizController quizController = new QuizController(getUser(), getCognitionStorage());
+    QuizController quizController = new QuizController(getUser(), getCognitionModel());
     quizController.setQuizBeingUpdated(selectedQuiz);
 
     changeToView(event, quizController, "Quiz");
@@ -168,9 +159,9 @@ public class MyQuizzesController extends LoggedInController {
 
     // update local storage state
     try {
-      getCognitionStorage().update(getUser().getUuid(), getUser());
+      getCognitionModel().update(getUser());
 
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       setFeedbackText("An error occurred when trying to delete selected quiz.");
     }
   }

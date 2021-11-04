@@ -1,6 +1,5 @@
 package core;
 
-import core.validators.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +9,6 @@ import java.util.Objects;
  */
 public class User {
   private final List<Quiz> quizzes = new ArrayList<>();
-  private String uuid;
   private String username;
   private String password;
 
@@ -20,12 +18,10 @@ public class User {
   /**
    * Initialize user fields.
    *
-   * @param uuid     user id
    * @param username username
    * @param password password
    */
-  public User(String uuid, String username, String password) {
-    setUuid(uuid);
+  public User(String username, String password) {
     setUsername(username);
     setPassword(password);
   }
@@ -39,7 +35,7 @@ public class User {
   }
 
   public List<Quiz> getQuizzes() {
-    return quizzes;
+    return new ArrayList<>(quizzes);
   }
 
   /**
@@ -70,30 +66,12 @@ public class User {
     }
 
     User user = (User) o;
-    return Objects.equals(uuid, user.uuid) && Objects.equals(username, user.username)
-            && Objects.equals(password, user.password) && Objects.equals(quizzes, user.quizzes);
+    return Objects.equals(username, user.username);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(uuid, username, password, quizzes);
-  }
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  /**
-   * Sets user id.
-   *
-   * @param uuid new id
-   */
-  private void setUuid(String uuid) {
-    if (!Validator.isValidUuid(uuid)) {
-      throw new IllegalArgumentException();
-    }
-
-    this.uuid = uuid;
+    return Objects.hash(username);
   }
 
   public String getUsername() {
@@ -137,7 +115,7 @@ public class User {
    */
   public void addQuiz(Quiz quiz) {
     if (quiz == null) {
-      return;
+      throw new IllegalArgumentException("Quiz cannot be null");
     }
 
     if (!quizzes.contains(quiz)) {
@@ -152,8 +130,10 @@ public class User {
 
   @Override
   public String toString() {
-    return "User{" + "uuid='" + uuid + '\'' + ", username='" + username + '\''
-            + ", password='" + password + '\''
-            + ", quizzes=" + quizzes + '}';
+    return "User{"
+        + "quizzes=" + quizzes
+        + ", username='" + username + '\''
+        + ", password='" + password + '\''
+        + '}';
   }
 }

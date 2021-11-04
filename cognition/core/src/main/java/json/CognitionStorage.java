@@ -5,7 +5,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import core.User;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,7 +23,7 @@ import java.util.function.BiConsumer;
 public class CognitionStorage {
 
   private final Gson gson = new Gson();
-  private String storagePath;
+  private Path storagePath;
 
   /**
    * Creates a file if it does not already exist with the filename given.
@@ -34,9 +33,11 @@ public class CognitionStorage {
    *                     potential exception is handled in the frontend.
    */
   public CognitionStorage(String filename) throws IOException {
-    if (filename != null) {
-      setStoragePath(filename);
+    if (filename == null) {
+      throw new IllegalArgumentException("Filename cannot be null");
     }
+
+    setStoragePath(filename);
 
     // A potential exception is handled in the frontend.
     createDirectoryIfNotExists();
@@ -65,10 +66,9 @@ public class CognitionStorage {
               /* Initialize JsonReader */
               new JsonReader(new StringReader(
                       /* StringReader parses the String data loaded from file. */
-                      Files.readString(Path.of(getStoragePath()), StandardCharsets.UTF_8)
+                      Files.readString(getStoragePath(), StandardCharsets.UTF_8)
               )),
-              new TypeToken<List<User>>() {
-      }.getType());
+              new TypeToken<List<User>>() {}.getType());
     } catch (IOException e) {
       throw new IOException(
               getStoragePath()
@@ -86,7 +86,8 @@ public class CognitionStorage {
    *                         content.
    */
   private void writeToJson(List<User> users) throws JsonIOException, IOException {
-    try (FileWriter writer = new FileWriter(getStoragePath(), StandardCharsets.UTF_8)) {
+    try (FileWriter writer = new FileWriter(
+            String.valueOf(getStoragePath()), StandardCharsets.UTF_8)) {
       try {
         getGson().toJson(users, writer);
       } catch (JsonIOException e) {
@@ -104,6 +105,7 @@ public class CognitionStorage {
    * local storage file. Users are stored in an array.
    *
    * @param instance is the user that should be written to file
+   * @throws IOException if there is an error reading from local storage
    */
   public void create(User instance) throws IOException {
     List<User> newUsers;
@@ -122,18 +124,6 @@ public class CognitionStorage {
     writeToJson(newUsers);
   }
 
-  public User read(String identifier) throws IOException, NullPointerException {
-    List<User> users = readUsers();
-
-    if (users == null) {
-      throw new NullPointerException("No users in local storage.");
-    }
-
-    // Filters based on id and returns null if no match was found
-    return users.stream().filter(user -> user.getUuid().equals(identifier))
-            .findFirst().orElse(null);
-  }
-
   /**
    * Takes in a username as a parameter and returns the corresponding user
    * from local storage, if there is a match.
@@ -143,7 +133,7 @@ public class CognitionStorage {
    * @throws IOException          if the file path in readUsers() is invalid
    * @throws NullPointerException if there are no users in storage
    */
-  public User readByUsername(String username) throws IOException, NullPointerException {
+  public User read(String username) throws IOException, NullPointerException {
     List<User> users = readUsers();
 
     if (users == null) {
@@ -156,18 +146,18 @@ public class CognitionStorage {
   }
 
   /**
-   * Finds a user based on an identifier and lets a consumer modify the user list
+   * Finds a user based on an username and lets a consumer modify the user list
    * based on it. Writes the new user list to file.
    *
-   * @param identifier user that should be taken action upon
-   * @param action     consumer that specifies the action
+   * @param username user that should be taken action upon
+   * @param action   consumer that specifies the action
    * @throws IOException            if an error occurred when trying to read the
    *                                User from local storage
    * @throws NullPointerException   if no users exist in local storage
-   * @throws NoSuchElementException if no user with the given identifier was
+   * @throws NoSuchElementException if no user with the given username was
    *                                found.
    */
-  private void updateUser(String identifier, BiConsumer<List<User>, Integer> action)
+  private void updateUser(String username, BiConsumer<List<User>, Integer> action)
           throws IOException, NullPointerException, NoSuchElementException {
     List<User> users = readUsers();
 
@@ -177,7 +167,7 @@ public class CognitionStorage {
 
     for (int i = 0; i < users.size(); i++) {
       User user = users.get(i);
-      if (user.getUuid().equals(identifier)) {
+      if (user.getUsername().equals(username)) {
         // Accept the provided action, passed in as parameter
         action.accept(users, i);
 
@@ -186,12 +176,19 @@ public class CognitionStorage {
       }
     }
 
-    // If loop is finished, no user with the given identifier was found
-    throw new NoSuchElementException("No user with identifier \"" + identifier + "\" was found.");
+    // If loop is finished, no user with the given username was found
+    throw new NoSuchElementException("No user with username \"" + username + "\" was found.");
   }
 
-  public void update(String identifier, User instance) throws IOException {
-    updateUser(identifier, (users, index) -> {
+  /**
+   * Updates a user.
+   *
+   * @param username is the users username
+   * @throws IOException if an error occurred when trying to read the
+   *                     User from local storage
+   */
+  public void update(String username, User instance) throws IOException {
+    updateUser(username, (users, index) -> {
       // Remove old user
       users.remove((int) index);
 
@@ -200,14 +197,21 @@ public class CognitionStorage {
     });
   }
 
-  public void delete(String identifier) throws IOException {
-    updateUser(identifier, ((users, integer) -> {
+  /**
+   * Deletes a user.
+   *
+   * @param username is the users username
+   * @throws IOException if an error occurred when trying to read the
+   *                     User from local storage
+   */
+  public void delete(String username) throws IOException {
+    updateUser(username, ((users, integer) -> {
       // Remove old user
-      users.remove((int) integer);
+      users.remove(integer.intValue());
     }));
   }
 
-  public String getStoragePath() {
+  public Path getStoragePath() {
     return storagePath;
   }
 
@@ -217,8 +221,8 @@ public class CognitionStorage {
    * @param filename is the filename of the JSON data
    */
   public void setStoragePath(String filename) {
-    storagePath = String.valueOf(
-            Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition", filename));
+    storagePath = Paths.get(System.getProperty("user.home"),
+            "it1901-gr2103", "cognition", filename);
   }
 
   public Gson getGson() {
@@ -231,7 +235,7 @@ public class CognitionStorage {
    * @return a boolean indicating if the storage is empty.
    */
   public boolean isEmpty() {
-    File file = new File(getStoragePath());
+    File file = new File(String.valueOf(getStoragePath()));
 
     // file.length is 0 if file does not exist or has no content
     return file.length() == 0;
@@ -246,8 +250,15 @@ public class CognitionStorage {
    */
   private void createDirectoryIfNotExists() throws IOException {
     try {
-      Path path = Paths.get(System.getProperty("user.home"), "it1901-gr2103", "cognition");
-      Files.createDirectories(path);
+      String stringPath = String.valueOf(getStoragePath());
+
+      int lastDividerIndex = System.getProperty("os.name").contains("Windows")
+              ? stringPath.lastIndexOf("\\")
+              : stringPath.lastIndexOf("/");
+
+      String dirPath = stringPath.substring(0, lastDividerIndex);
+      
+      Files.createDirectories(Path.of(dirPath));
     } catch (IOException e) {
       throw new IOException("An error occurred when trying to create directory: " + storagePath);
     }

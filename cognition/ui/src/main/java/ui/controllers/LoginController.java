@@ -5,27 +5,29 @@ import java.io.IOException;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Labeled;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import json.CognitionStorage;
+import rest.CognitionModel;
+
+
 
 /**
  * LoginController is responsible for the presentation logic in the Login view.
  */
 public class LoginController extends Controller {
-
-  @FXML
-  private Labeled feedback;
   @FXML
   private TextField usernameInput;
   @FXML
   private PasswordField passwordInput;
 
+  @FXML
+  private Button loginButton;
+
   private String feedbackErrorMessage = "No user with that username and password could be found.";
 
-  public LoginController(CognitionStorage cognitionStorage) {
-    super(cognitionStorage);
+  public LoginController(CognitionModel cognitionModel) {
+    super(cognitionModel);
   }
 
   /**
@@ -41,34 +43,34 @@ public class LoginController extends Controller {
     if (isValidLogin(username, password)) {
       goToDashboard(event, username);
     } else {
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
     }
   }
 
   /**
    * Gets triggered when the user clicks to go to Dashboard view.
    *
-   * @param event is the ActionEvent on button click.
+   * @param event    is the ActionEvent on button click.
    * @param username is the username of the current user.
    */
   private void goToDashboard(ActionEvent event, String username) {
     User user;
     try {
-      user = getCognitionStorage().readByUsername(username);
-    } catch (IOException e) {
+      user = getCognitionModel().read(username);
+    } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading the user from file";
-      feedback.setText(feedbackErrorMessage);
+      setFeedbackText(feedbackErrorMessage);
       return;
     }
 
-    changeToView(event, new DashboardController(user, getCognitionStorage()),
-        "Dashboard");
+    changeToView(event, new DashboardController(user, getCognitionModel()),
+            "Dashboard");
   }
 
   @FXML
   public void goToRegister(ActionEvent event) {
-    changeToView(event, new RegisterController(getCognitionStorage()),
-        "Register");
+    changeToView(event, new RegisterController(getCognitionModel()),
+            "Register");
   }
 
   /**
@@ -82,8 +84,8 @@ public class LoginController extends Controller {
     List<User> users;
 
     try {
-      users = getCognitionStorage().readUsers();
-    } catch (IOException e) {
+      users = getCognitionModel().readUsers();
+    } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when loading local storage.";
       return false;
     }
