@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import json.CognitionStorage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +17,12 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import rest.CognitionModel;
 import ui.controllers.MyQuizzesController;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class MyQuizzesTest extends ApplicationTest {
   private Scene scene;
@@ -31,18 +36,10 @@ public class MyQuizzesTest extends ApplicationTest {
   private final String validPassword = "valid-password";
 
 
-  /*@AfterEach
+  @AfterEach
   void tearDown() {
     clearStorage();
   }
-
-  private void clearStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(cognitionStorage.getStoragePath()))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
-  }*/
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -96,6 +93,8 @@ public class MyQuizzesTest extends ApplicationTest {
       fail("No items in list");
     }
 
+    waitForFxEvents();
+
     // assert listview has all quizzes that user object has
     for (int i = 0; i < listView.getItems().size(); i++) {
       Assertions.assertEquals(
@@ -110,6 +109,7 @@ public class MyQuizzesTest extends ApplicationTest {
   void canDeleteQuiz() {
     //try to delete quiz without selecting one, should not work and give feedback to user
     clickOn("#deleteQuizButton");
+    waitForFxEvents();
 
     // Validate that user got correct feedback in UI
     Assertions.assertEquals(
@@ -119,12 +119,15 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // click on item in list -> click on delete button
     clickOn("#quizzesListView");
+    waitForFxEvents();
 
     // delete selected quiz
     clickOn("#deleteQuizButton");
+    waitForFxEvents();
 
     //  -> make sure number of items are 10 - 1 = 9
     Assertions.assertEquals(9, listView.getItems().size());
+    waitForFxEvents();
   }
 
   @Test
@@ -132,21 +135,26 @@ public class MyQuizzesTest extends ApplicationTest {
   public void canStartQuiz() {
     // click on start quiz without selecting quiz first
     clickOn("#startQuizButton");
+    waitForFxEvents();
 
     // cannot start quiz without selecting one first
     Assertions.assertEquals(
             "No selected quiz",
             myQuizzesController.getFeedbackErrorMessage()
     );
+    waitForFxEvents();
 
     // select a quiz
     clickOn("#quizzesListView");
+    waitForFxEvents();
 
     // start quiz
     clickOn("#startQuizButton");
+    waitForFxEvents();
 
     // make sure right view is loaded
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("ViewQuiz"));
+    waitForFxEvents();
   }
 
   @Test
@@ -154,45 +162,65 @@ public class MyQuizzesTest extends ApplicationTest {
   public void canUpdateQuiz() {
     // click on update wihout selecting quiz
     clickOn("#updateQuizButton");
+    waitForFxEvents();
 
     // cannot update quiz without selecting one first
     Assertions.assertEquals(
             "No selected quiz",
             myQuizzesController.getFeedbackErrorMessage()
     );
+    waitForFxEvents();
 
     // click on a quiz
     clickOn("#quizzesListView");
+    waitForFxEvents();
 
     // try to update quiz
     clickOn("#updateQuizButton");
+    waitForFxEvents();
 
     // assert that right view is loaded
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
+    waitForFxEvents();
   }
 
   @Test
   @DisplayName("Can navigate to Dashboard")
   void canNavigateToDashboard() {
     clickOn("#goToDashboardButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#signOutButton", LabeledMatchers.hasText("Sign out"));
+    waitForFxEvents();
   }
 
   @Test
   @DisplayName("Can navigate to Create Quiz")
   void canNavigateToCreateQuiz() {
     clickOn("#createQuizButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
+    waitForFxEvents();
   }
 
   @Test
   @DisplayName("Can log out")
   void canLogOut() {
     clickOn("#signOutButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
+    waitForFxEvents();
   }
 
+  private void clearStorage() {
+    try (FileWriter writer = new FileWriter(String.valueOf(
+            new CognitionStorage("cognitionTest.json").getStoragePath())
+    )) {
+      writer.write("");
+    } catch (IOException e) {
+      fail();
+    }
+  }
 }
