@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class UpdateQuizTest extends ApplicationTest {
   private final String validUsername = "valid-username";
@@ -68,10 +69,14 @@ public class UpdateQuizTest extends ApplicationTest {
   @Test
   @DisplayName("Updating quiz displays correct nodes.")
   void updatingQuizDisplaysCorrectNodes() {
+    waitForFxEvents();
     TextField nameTextField = (TextField) scene.lookup("#name");
+    waitForFxEvents();
     TextField descriptionTextField = (TextField) scene.lookup("#description");
 
+    waitForFxEvents();
     Assertions.assertEquals(validQuizName, nameTextField.getText());
+    waitForFxEvents();
     Assertions.assertEquals(validQuizDescription, descriptionTextField.getText());
   }
 

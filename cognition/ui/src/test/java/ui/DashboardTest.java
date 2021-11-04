@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 /**
  * DashboardTest tests that all functionality works as intended
@@ -79,30 +80,39 @@ public class DashboardTest extends ApplicationTest {
   @DisplayName("User can log out")
   void userCanLogOut() {
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+    waitForFxEvents();
 
     clickOn("#signOutButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
+    waitForFxEvents();
   }
 
   @Test
   @DisplayName("Can switch to Create Quiz.")
   void canSwitchToCreateQuiz() {
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+    waitForFxEvents();
 
     clickOn("#createQuizButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Quiz"));
+    waitForFxEvents();
   }
 
   @Test
   @DisplayName("Can switch to My Quizzes.")
   void canSwitchToMyQuizzes() {
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+    waitForFxEvents();
 
     clickOn("#switchToMyQuizzesButton");
+    waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
+    waitForFxEvents();
   }
 
   @Test

@@ -13,13 +13,13 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import rest.CognitionModel;
 import ui.controllers.RegisterController;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class RegisterTest extends ApplicationTest {
   // Sample input for test
@@ -92,12 +92,15 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Can go to login view.")
   void canGoToLoginView() {
     // Check that the Register view has loaded correctly
+    waitForFxEvents();
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Register"));
 
     // Click to switch view
+    waitForFxEvents();
     clickOn("#switchToLoginButton");
 
     // Check that the Login view was loaded correctly
+    waitForFxEvents();
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
   }
 
@@ -105,6 +108,7 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Valid register passes.")
   void validRegisterPasses() {
     // Correct input yield success message
+    waitForFxEvents();
     verifyInputData(validUsername, validPassword, validPassword, false);
 
     // Read locally stored users to find the inputted data
@@ -126,12 +130,14 @@ public class RegisterTest extends ApplicationTest {
       }
     }
 
+    waitForFxEvents();
     Assertions.assertTrue(userWasStored);
   }
 
   @Test
   @DisplayName("All input fields are required.")
   void allInputFieldsAreRequired() {
+    waitForFxEvents();
     verifyInputData("", "", "", true);
   }
 
@@ -139,14 +145,21 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Duplicate user gives error message.")
   void duplicateUserGivesErrorMessage() {
     // Create a local user
+    waitForFxEvents();
+    TestFxHelper.sleep(2);
     verifyInputData(validUsername, validPassword, validPassword, false);
 
     // Clear input before entering the same data again
+    waitForFxEvents();
     clearInputField("#usernameInput");
+    waitForFxEvents();
     clearInputField("#passwordInput");
+    waitForFxEvents();
     clearInputField("#passwordRepeatInput");
 
     // Create a local user
+    waitForFxEvents();
+    TestFxHelper.sleep(2);
     verifyInputData(validUsername, validPassword, validPassword, true);
   }
 
@@ -172,6 +185,7 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Invalid username gives error message.")
   void invalidUsernameGivesErrorMessage() {
     // Invalid username
+    waitForFxEvents();
     verifyInputData(invalidUsername, validPassword, validPassword, true);
   }
 
@@ -179,6 +193,7 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Invalid password gives error message.")
   void invalidPasswordGivesErrorMessage() {
     // Invalid password
+    waitForFxEvents();
     verifyInputData(validUsername, invalidPassword, invalidPassword, true);
   }
 
@@ -186,6 +201,7 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Non-matching password gives error message.")
   void nonMatchingPasswordGivesErrorMessage() {
     // Passwords do not match
+    waitForFxEvents();
     verifyInputData(validUsername, validPassword, notMatchingPassword, true);
   }
 
@@ -200,15 +216,20 @@ public class RegisterTest extends ApplicationTest {
    */
   private void verifyInputData(String username, String password, String repeatPassword, boolean isErrorMessage) {
     // Input data into UI
+    waitForFxEvents();
     clickOn("#usernameInput").write(username);
+    waitForFxEvents();
     clickOn("#passwordInput").write(password);
+    waitForFxEvents();
     clickOn("#passwordRepeatInput").write(repeatPassword);
+    waitForFxEvents();
     clickOn("#registerButton");
 
     String feedback = isErrorMessage ? registerController.getFeedbackErrorMessage()
             : registerController.getFeedbackSuccessMessage();
 
     // Validate that user got correct feedback in UI
+    waitForFxEvents();
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
   }
 

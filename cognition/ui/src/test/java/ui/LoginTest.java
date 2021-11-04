@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static ui.TestFxHelper.waitForFxEvents;
 
 public class LoginTest extends ApplicationTest {
   private final String validUsername = "valid-user";
@@ -89,11 +90,15 @@ public class LoginTest extends ApplicationTest {
     }
 
     clickOn("#usernameInput").write(validUsername);
+    waitForFxEvents();
     clickOn("#passwordInput").write(validPassword);
+    waitForFxEvents();
     clickOn("#loginButton");
+    waitForFxEvents();
 
     // Check that we loaded Dashboard view
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
+    waitForFxEvents();
   }
 
   @Test
@@ -101,12 +106,15 @@ public class LoginTest extends ApplicationTest {
   void canGoToRegisterView() {
     // Check that the Login view was loaded correctly
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
+    waitForFxEvents();
 
     // Click to switch view
     clickOn("#goToRegisterButton");
+    waitForFxEvents();
 
     // Check that the Register view has loaded correctly
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Register"));
+    waitForFxEvents();
   }
 
   @Test
@@ -127,11 +135,15 @@ public class LoginTest extends ApplicationTest {
   private void verifyInputData(String username, String password, String feedback) {
     // Input data into UI
     clickOn("#usernameInput").write(username);
+    waitForFxEvents();
     clickOn("#passwordInput").write(password);
+    waitForFxEvents();
     clickOn("#loginButton");
+    waitForFxEvents();
 
     // Validate that user got correct feedback in UI
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
+    waitForFxEvents();
   }
 
   /**
@@ -139,7 +151,10 @@ public class LoginTest extends ApplicationTest {
    * return type when user storage is empty.
    */
   private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
+    try (FileWriter writer = new FileWriter(
+            String.valueOf(
+                    new CognitionStorage("cognitionTest.json").getStoragePath()
+            ))) {
       writer.write("");
     } catch (IOException e) {
       fail();
