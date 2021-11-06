@@ -30,19 +30,54 @@ Developed by:
 
 ## Running the application
 
-Make sure you have Maven installed and can successfully use `mvn` in your terminal. Launching the application using
-Gitpod should automatically solve this issue for you.
+Make sure you have Maven installed and can successfully use `mvn` in your terminal. Launching the application using Gitpod should automatically solve this issue for you. If you are on Mac or Linux, simply open the terminal and write `brew install maven` if you do not have Maven installed locally yet.
 
-```shell
-# Navigate to the cognition directory
+### Important to note
+
+Before running the application, let's add some context as to why we have 2 solutions. When testing the application, the `ui` requires a running Spring Boot server (port `3000`). The same goes for running the application; the `ui` requires a running Spring Boot server (port `8000`). This causes the number of commands in the command line to increase drastically. Hence, we added a [`Makefile`](./cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life for the current developers and "future" developer (the one grading this project).
+
+### Using `make` **(recommended)**
+
+```sh
+# Navigate to the cognition directory.
 cd cognition
 
-# Install dependencies and run all tests
-mvn clean install
+# Install dependencies, start application server, and start client application.
+# Alternatively, "make app" does the same.
+make
 
-# Run Spring Boot server (after running mvn install)
-mvn spring-boot:run -f api/pom.xml
+# Install dependencies, start test server, and run tests for all modules.
+make test
 
-# Run frontend (after running mvn install)
-mvn javafx:run -f ui/pom.xml
+# Print the available targets.
+make help
 ```
+
+**`make test` and `make app` are all that is needed to run tests and the Cognition application.**
+
+Please see the [`Makefile`](./cognition/Makefile) for more information on the targets we have made.
+
+### Using `mvn`
+
+```shell
+# Navigate to the cognition directory.
+cd cognition
+
+# Install dependencies without running tests.
+# Required to run before tests to ensure all dependencies are loaded.
+mvn clean install -DskipTests
+
+# Start Spring Boot on port for testing.
+cd api && mvn spring-boot:run -Dspring-boot.run.arguments=testmode
+
+# Run tests for all Maven modules.
+cd cognition && mvn test
+
+# Start Spring Boot server on port for application logic.
+cd api && mvn spring-boot:run
+
+# Run the client application.
+cd ui && mvn javafx:run
+```
+
+**As seen in the commands above, the `make` option is clearly quicker and more pleasant for the developer.**
