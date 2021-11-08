@@ -1,14 +1,25 @@
 package ui.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import core.Flashcard;
+import core.Quiz;
 import core.User;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+
+import core.tools.Tools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ui.RemoteCognitionAccess;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -100,10 +111,21 @@ public class RegisterController extends Controller {
 
   }
 
+  /**
+   * Registers a new user. Also assigns some default quizzes to the new user.
+   * @param username is the users username
+   * @param password is the users password
+   */
   private void registerUser(String username, String password) {
     try {
       User user = new User(username, password);
+
+      // Every new user gets assigned some default quizzes
+      List<Quiz> quizzes = createDefaultQuizzes();
+      quizzes.forEach(user::addQuiz);
+
       getCognitionAccess().create(user);
+
       setFeedbackErrorMode(false);
       feedback.setText(feedbackSuccessMessage);
     } catch (IOException | InterruptedException e) {
@@ -155,5 +177,18 @@ public class RegisterController extends Controller {
 
   @FXML
   protected void initialize() {
+  }
+
+  public static List<Quiz> createDefaultQuizzes() {
+    Quiz triviaQuiz = new Quiz(Tools.createUuid(), "Cognition intro quiz",
+        "A quiz to introduce new users to the funcitonality of cognition");
+    List<Flashcard> flashcards = new ArrayList<>();
+    flashcards.add(new Flashcard(Tools.createUuid(), "What are the supreme tools for creating " +
+        "user interfaces?", "java with javafx"));
+    flashcards.add(new Flashcard(Tools.createUuid(), "What is the 3rd letter of the alphabet?",
+        "c"));
+    flashcards.add(new Flashcard(Tools.createUuid(), " What is the chemical formula for water? ", "H2O"));
+    triviaQuiz.addFlashcards(flashcards);
+    return new ArrayList<Quiz>(List.of(triviaQuiz));
   }
 }

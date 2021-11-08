@@ -1,5 +1,6 @@
 package ui;
 
+import core.Quiz;
 import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -132,6 +133,33 @@ public class RegisterTest extends ApplicationTest {
     waitForFxEvents();
     Assertions.assertTrue(userWasStored);
   }
+
+  @Test
+  @DisplayName("Default quizzes are added")
+  void defaultQuizzes() {
+  // Correct input yield success message
+  waitForFxEvents();
+  verifyInputData(validUsername, validPassword, validPassword, false);
+
+  // Read locally stored users to find the inputted data
+  List<User> users = new ArrayList<>();
+  try {
+    users = remoteCognitionAccess.readUsers();
+  } catch (IOException | InterruptedException e) {
+    fail();
+  }
+
+  User user = users.stream()
+      .filter(u -> u.getUsername().equals(validUsername))
+      .findFirst()
+      .orElse(null);
+
+  Assertions.assertNotNull(user);
+
+  List<Quiz> correctQuizzes = RegisterController.createDefaultQuizzes();
+
+  Assertions.assertEquals(correctQuizzes.size(), user.getQuizzes().size());
+}
 
   @Test
   @DisplayName("All input fields are required.")
