@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import rest.CognitionModel;
 import ui.controllers.QuizController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class CreateQuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
   @AfterEach
   void tearDown() {
@@ -40,16 +39,16 @@ public class CreateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
-    this.cognitionModel = cognitionModel;
+    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = remoteCognitionAccess;
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionModel.create(loggedInUser);
+    remoteCognitionAccess.create(loggedInUser);
 
-    quizController = new QuizController(loggedInUser, cognitionModel);
+    quizController = new QuizController(loggedInUser, remoteCognitionAccess);
     // IMPORTANT: We do not set a quiz object here. Thus, we render the view like we
     // create a quiz.
     loader.setController(quizController);
@@ -87,7 +86,7 @@ public class CreateQuizTest extends ApplicationTest {
     List<Quiz> quizzes = new ArrayList<>();
 
     try {
-      quizzes = cognitionModel.read(validUsername).getQuizzes();
+      quizzes = remoteCognitionAccess.read(validUsername).getQuizzes();
     } catch (IOException | InterruptedException e) {
       fail();
     }

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import rest.CognitionModel;
 import ui.controllers.MyQuizzesController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,7 +26,7 @@ import static ui.TestFxHelper.waitForFxEvents;
 public class MyQuizzesTest extends ApplicationTest {
   private Scene scene;
   private MyQuizzesController myQuizzesController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
   private User loggedInUser;
 
   private ListView<Quiz> listView;
@@ -46,7 +45,7 @@ public class MyQuizzesTest extends ApplicationTest {
     FXMLLoader loader = getLoader("MyQuizzes");
 
     // logged in user and storage instances must be present for this view to function
-    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     this.loggedInUser = new User(validUsername, validPassword);
 
     // create some test data. 10 quizzes
@@ -61,9 +60,9 @@ public class MyQuizzesTest extends ApplicationTest {
       loggedInUser.addQuiz(quiz);
     }
 
-    cognitionModel.create(loggedInUser);
+    remoteCognitionAccess.create(loggedInUser);
 
-    myQuizzesController = new MyQuizzesController(loggedInUser, cognitionModel);
+    myQuizzesController = new MyQuizzesController(loggedInUser, remoteCognitionAccess);
 
     loader.setController(myQuizzesController);
 

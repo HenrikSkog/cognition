@@ -9,7 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 /**
  * Controller is an abstract class with the common functionality
@@ -20,10 +20,10 @@ public abstract class Controller {
   @FXML
   private Label feedback;
 
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
-  public Controller(CognitionModel cognitionModel) {
-    this.cognitionModel = cognitionModel;
+  public Controller(RemoteCognitionAccess remoteCognitionAccess) {
+    this.remoteCognitionAccess = remoteCognitionAccess;
   }
 
   public Stage getStage(ActionEvent event) {
@@ -83,12 +83,12 @@ public abstract class Controller {
     }
   }
 
-  public CognitionModel getCognitionModel() {
-    return cognitionModel;
+  public RemoteCognitionAccess getCognitionAccess() {
+    return remoteCognitionAccess;
   }
 
-  public void setCognitionModel(CognitionModel cognitionModel) {
-    this.cognitionModel = cognitionModel;
+  public void setCognitionAccess(RemoteCognitionAccess remoteCognitionAccess) {
+    this.remoteCognitionAccess = remoteCognitionAccess;
   }
 
   protected void setFeedbackText(String value) {

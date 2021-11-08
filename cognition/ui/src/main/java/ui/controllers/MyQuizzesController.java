@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 /**
  * MyQuizzesController is responsible for handling the
@@ -28,8 +28,8 @@ public class MyQuizzesController extends LoggedInController {
   private Quiz selectedQuiz;
   private String feedbackErrorMessage;
 
-  public MyQuizzesController(User user, CognitionModel cognitionModel) {
-    super(user, cognitionModel);
+  public MyQuizzesController(User user, RemoteCognitionAccess remoteCognitionAccess) {
+    super(user, remoteCognitionAccess);
   }
 
   /**
@@ -102,7 +102,7 @@ public class MyQuizzesController extends LoggedInController {
     ViewQuizController viewQuizController = new ViewQuizController(
             getUser(),
             selectedQuiz,
-            getCognitionModel()
+            getCognitionAccess()
     );
     viewQuizController.setQuiz(selectedQuiz);
 
@@ -122,7 +122,7 @@ public class MyQuizzesController extends LoggedInController {
     }
 
     // Set state in controller
-    QuizController quizController = new QuizController(getUser(), getCognitionModel());
+    QuizController quizController = new QuizController(getUser(), getCognitionAccess());
     quizController.setQuizBeingUpdated(selectedQuiz);
 
     changeToView(event, quizController, "Quiz");
@@ -159,7 +159,7 @@ public class MyQuizzesController extends LoggedInController {
 
     // update local storage state
     try {
-      getCognitionModel().update(getUser());
+      getCognitionAccess().update(getUser());
 
     } catch (IOException | InterruptedException e) {
       setFeedbackText("An error occurred when trying to delete selected quiz.");
