@@ -180,15 +180,15 @@ public class RegisterController extends Controller {
   }
 
   public static List<Quiz> createDefaultQuizzes() {
-    Quiz triviaQuiz = new Quiz(Tools.createUuid(), "Cognition intro quiz",
-        "A quiz to introduce new users to the funcitonality of cognition");
+    Quiz triviaQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
+        "A quiz to introduce you to the functionality of Cognition");
     List<Flashcard> flashcards = new ArrayList<>();
-    flashcards.add(new Flashcard(Tools.createUuid(), "What are the supreme tools for creating " +
-        "user interfaces?", "java with javafx"));
     flashcards.add(new Flashcard(Tools.createUuid(), "What is the 3rd letter of the alphabet?",
         "c"));
-    flashcards.add(new Flashcard(Tools.createUuid(), " What is the chemical formula for water? ", "H2O"));
+    flashcards.add(new Flashcard(Tools.createUuid(), "What is the chemical formula for water? ", "H2O"));
+    flashcards.add(new Flashcard(Tools.createUuid(), "How tall is Mount Everest? (m)", "8849"));
     triviaQuiz.addFlashcards(flashcards);
+
     return new ArrayList<Quiz>(List.of(triviaQuiz));
   }
 }
