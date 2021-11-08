@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import rest.CognitionModel;
 import ui.controllers.LoginController;
 
 /**
@@ -32,9 +31,8 @@ public class App extends Application {
     // This logic also, most importantly,
     // separates persistent storage between application logic and unit and
     // end-to-end tests.
-    CognitionModel cognitionModel = new CognitionModel();
     loader.setController(
-            new LoginController(cognitionModel)
+            new LoginController(new RemoteCognitionAccess())
     );
 
     Parent root = loader.load();

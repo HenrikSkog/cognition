@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import rest.CognitionModel;
 import ui.controllers.DashboardController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class DashboardTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private DashboardController dashboardController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
   @AfterEach
   void tearDown() {
@@ -40,16 +39,16 @@ public class DashboardTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Dashboard");
 
-    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionModel.create(loggedInUser);
+    remoteCognitionAccess.create(loggedInUser);
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
-    this.dashboardController = new DashboardController(loggedInUser, cognitionModel);
+    this.dashboardController = new DashboardController(loggedInUser, remoteCognitionAccess);
 
     loader.setController(dashboardController);
 
@@ -73,7 +72,7 @@ public class DashboardTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionModel);
+    Assertions.assertNotNull(remoteCognitionAccess);
   }
 
   @Test
@@ -123,7 +122,7 @@ public class DashboardTest extends ApplicationTest {
 
     // Create sample user
     try {
-      cognitionModel.create(user);
+      remoteCognitionAccess.create(user);
     } catch (IOException | InterruptedException e) {
       fail();
     }

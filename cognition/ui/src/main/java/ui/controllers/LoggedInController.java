@@ -3,7 +3,7 @@ package ui.controllers;
 import core.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 /**
  * LoggedInController holds state of the application when user
@@ -14,8 +14,8 @@ public abstract class LoggedInController extends Controller {
 
   private User user;
 
-  public LoggedInController(User user, CognitionModel cognitionModel) {
-    super(cognitionModel);
+  public LoggedInController(User user, RemoteCognitionAccess remoteCognitionAccess) {
+    super(remoteCognitionAccess);
     this.user = user;
   }
 
@@ -29,25 +29,25 @@ public abstract class LoggedInController extends Controller {
 
   @FXML
   public void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionModel()),
+    changeToView(event, new LoginController(getCognitionAccess()),
         "Login");
   }
 
   @FXML
   public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionModel()),
+    changeToView(event, new DashboardController(getUser(), getCognitionAccess()),
         "Dashboard");
   }
 
   @FXML
   public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionModel()),
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()),
         "MyQuizzes");
   }
 
   @FXML
   public void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionModel()),
+    changeToView(event, new QuizController(getUser(), getCognitionAccess()),
         "Quiz");
   }
 }

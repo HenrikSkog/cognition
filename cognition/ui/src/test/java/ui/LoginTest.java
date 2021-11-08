@@ -9,7 +9,6 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import rest.CognitionModel;
 import ui.controllers.LoginController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,14 +21,14 @@ public class LoginTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private LoginController loginController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
   @BeforeEach
   void setUp() {
     try {
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionModel.create(new User("placeholder", "placeholder"));
+      remoteCognitionAccess.create(new User("placeholder", "placeholder"));
     } catch (IOException | InterruptedException e) {
       fail();
     }
@@ -44,9 +43,9 @@ public class LoginTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Login");
 
-    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
-    this.loginController = new LoginController(cognitionModel);
+    this.loginController = new LoginController(remoteCognitionAccess);
 
     loader.setController(loginController);
 
@@ -70,7 +69,7 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionModel);
+    Assertions.assertNotNull(remoteCognitionAccess);
   }
 
   /**
@@ -84,7 +83,7 @@ public class LoginTest extends ApplicationTest {
 
     // Create sample user
     try {
-      cognitionModel.create(user);
+      remoteCognitionAccess.create(user);
     } catch (IOException | InterruptedException e) {
       fail();
     }

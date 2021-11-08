@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 
 /**
@@ -50,8 +50,8 @@ public class QuizController extends LoggedInController {
   private String feedbackErrorMessage = "";
   private Quiz quizBeingUpdated = null;
 
-  public QuizController(User user, CognitionModel cognitionModel) {
-    super(user, cognitionModel);
+  public QuizController(User user, RemoteCognitionAccess remoteCognitionAccess) {
+    super(user, remoteCognitionAccess);
   }
 
   public void setQuizBeingUpdated(Quiz quizBeingUpdated) {
@@ -174,13 +174,13 @@ public class QuizController extends LoggedInController {
 
   @FXML
   public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionModel()),
+    changeToView(event, new DashboardController(getUser(), getCognitionAccess()),
             "Dashboard");
   }
 
   @FXML
   public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionModel()),
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()),
             "MyQuizzes");
   }
 
@@ -341,7 +341,7 @@ public class QuizController extends LoggedInController {
     }
 
     try {
-      getCognitionModel().update(getUser());
+      getCognitionAccess().update(getUser());
       feedback.setTextFill(Color.GREEN);
       setFeedbackText(getFeedbackSuccessMessage());
 
@@ -449,7 +449,7 @@ public class QuizController extends LoggedInController {
     if (quizBeingUpdated == null) {
       return;
     }
-    QuizController quizController = new QuizController(getUser(), getCognitionModel());
+    QuizController quizController = new QuizController(getUser(), getCognitionAccess());
     changeToView(event, quizController, "Quiz");
   }
 }

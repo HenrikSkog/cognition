@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 
 
@@ -26,8 +26,8 @@ public class LoginController extends Controller {
 
   private String feedbackErrorMessage = "No user with that username and password could be found.";
 
-  public LoginController(CognitionModel cognitionModel) {
-    super(cognitionModel);
+  public LoginController(RemoteCognitionAccess remoteCognitionAccess) {
+    super(remoteCognitionAccess);
   }
 
   /**
@@ -56,20 +56,20 @@ public class LoginController extends Controller {
   private void goToDashboard(ActionEvent event, String username) {
     User user;
     try {
-      user = getCognitionModel().read(username);
+      user = getCognitionAccess().read(username);
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading the user from file";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
 
-    changeToView(event, new DashboardController(user, getCognitionModel()),
+    changeToView(event, new DashboardController(user, getCognitionAccess()),
             "Dashboard");
   }
 
   @FXML
   public void goToRegister(ActionEvent event) {
-    changeToView(event, new RegisterController(getCognitionModel()),
+    changeToView(event, new RegisterController(getCognitionAccess()),
             "Register");
   }
 
@@ -84,7 +84,7 @@ public class LoginController extends Controller {
     List<User> users;
 
     try {
-      users = getCognitionModel().readUsers();
+      users = getCognitionAccess().readUsers();
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when loading local storage.";
       return false;

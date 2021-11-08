@@ -14,7 +14,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import rest.CognitionModel;
 import ui.controllers.QuizController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class QuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
 
   @AfterEach
@@ -39,16 +38,16 @@ public class QuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
-    this.cognitionModel = cognitionModel;
+    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = remoteCognitionAccess;
 
     // In the app, there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionModel.create(loggedInUser);
+    remoteCognitionAccess.create(loggedInUser);
 
-    quizController = new QuizController(loggedInUser, cognitionModel);
+    quizController = new QuizController(loggedInUser, remoteCognitionAccess);
     loader.setController(quizController);
 
     scene = new Scene(loader.load());
@@ -71,7 +70,7 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionModel);
+    Assertions.assertNotNull(remoteCognitionAccess);
   }
 
   @Test
