@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 
 /**
@@ -31,8 +31,8 @@ public class RegisterController extends Controller {
   private Labeled feedback;
   private String feedbackErrorMessage;
 
-  public RegisterController(CognitionModel cognitionModel) {
-    super(cognitionModel);
+  public RegisterController(RemoteCognitionAccess remoteCognitionAccess) {
+    super(remoteCognitionAccess);
   }
 
   /**
@@ -81,7 +81,7 @@ public class RegisterController extends Controller {
 
     List<User> users = null;
     try {
-      users = getCognitionModel().readUsers();
+      users = getCognitionAccess().readUsers();
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading from local storage.";
       feedback.setText(feedbackErrorMessage);
@@ -103,7 +103,7 @@ public class RegisterController extends Controller {
   private void registerUser(String username, String password) {
     try {
       User user = new User(username, password);
-      getCognitionModel().create(user);
+      getCognitionAccess().create(user);
       setFeedbackErrorMode(false);
       feedback.setText(feedbackSuccessMessage);
     } catch (IOException | InterruptedException e) {
@@ -119,7 +119,7 @@ public class RegisterController extends Controller {
    */
   @FXML
   public void goToLogin(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionModel()),
+    changeToView(event, new LoginController(getCognitionAccess()),
             "Login");
   }
 

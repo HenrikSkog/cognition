@@ -1,4 +1,4 @@
-package rest;
+package ui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,17 +16,17 @@ import java.util.List;
  * A REST Controller that creates a bridge between
  * the backend REST API and the frontend.
  */
-public class CognitionModel {
+public class RemoteCognitionAccess {
 
   private String baseUri = "http://localhost:";
   private final Gson gson = new Gson();
   private final HttpClient client = HttpClient.newHttpClient();
 
-  public CognitionModel() {
+  public RemoteCognitionAccess() {
     this(8080);
   }
 
-  public CognitionModel(int port) {
+  public RemoteCognitionAccess(int port) {
     baseUri += String.valueOf(port);
   }
 

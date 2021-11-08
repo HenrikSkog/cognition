@@ -13,7 +13,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import rest.CognitionModel;
 import ui.controllers.ViewQuizController;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,11 @@ public class ViewQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("ViewQuiz");
 
-    CognitionModel cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    cognitionModel.create(loggedInUser);
+    remoteCognitionAccess.create(loggedInUser);
 
     Quiz quiz = new Quiz(createUuid(), "Test quiz",
             "This is a test quiz used for development purposes");
@@ -48,7 +47,7 @@ public class ViewQuizTest extends ApplicationTest {
 
     flashcards = quiz.getFlashcards();
 
-    viewQuizController = new ViewQuizController(loggedInUser, quiz, cognitionModel);
+    viewQuizController = new ViewQuizController(loggedInUser, quiz, remoteCognitionAccess);
     loader.setController(viewQuizController);
 
     scene = new Scene(loader.load());

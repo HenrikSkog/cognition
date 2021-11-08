@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import rest.CognitionModel;
 import ui.controllers.RegisterController;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,19 +30,19 @@ public class RegisterTest extends ApplicationTest {
   private final String notMatchingPassword = "not-matching";
   private Scene scene;
   private RegisterController registerController;
-  private CognitionModel cognitionModel;
+  private RemoteCognitionAccess remoteCognitionAccess;
 
   @BeforeEach
   void setUp() {
     // The few places in UI code that allegedly do not test the constructor are false,
     // in the way that the constructor is tested here and fails if it cannot be created successfully.
     try {
-      cognitionModel = new CognitionModel(AppTest.TEST_PORT);
-      registerController.setCognitionModel(cognitionModel);
+      remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
+      registerController.setCognitionAccess(remoteCognitionAccess);
 
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
-      cognitionModel.create(new User("placeholder", "placeholder"));
+      remoteCognitionAccess.create(new User("placeholder", "placeholder"));
     } catch (IOException | InterruptedException e) {
       fail();
     }
@@ -58,10 +57,10 @@ public class RegisterTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Register");
 
-    this.cognitionModel = new CognitionModel(AppTest.TEST_PORT);
+    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     // in the app there is no logical way for Create Quiz to be accessed without a logged-in user.
     // Thus, we create a fake user here to emulate it
-    this.registerController = new RegisterController(cognitionModel);
+    this.registerController = new RegisterController(remoteCognitionAccess);
 
     loader.setController(registerController);
 
@@ -85,7 +84,7 @@ public class RegisterTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(cognitionModel);
+    Assertions.assertNotNull(remoteCognitionAccess);
   }
 
   @Test
@@ -114,7 +113,7 @@ public class RegisterTest extends ApplicationTest {
     // Read locally stored users to find the inputted data
     List<User> users = new ArrayList<>();
     try {
-      users = cognitionModel.readUsers();
+      users = remoteCognitionAccess.readUsers();
     } catch (IOException | InterruptedException e) {
       fail();
     }

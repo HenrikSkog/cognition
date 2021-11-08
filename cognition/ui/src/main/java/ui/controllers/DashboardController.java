@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 /**
  * DashboardController has the presentation logic for the DashBoard view.
@@ -19,8 +19,8 @@ public class DashboardController extends LoggedInController {
   @FXML
   private Text cognitionDescription;
 
-  public DashboardController(User user, CognitionModel cognitionModel) {
-    super(user, cognitionModel);
+  public DashboardController(User user, RemoteCognitionAccess remoteCognitionAccess) {
+    super(user, remoteCognitionAccess);
   }
 
 

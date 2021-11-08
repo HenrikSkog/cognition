@@ -7,7 +7,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import rest.CognitionModel;
+import ui.RemoteCognitionAccess;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -35,8 +35,8 @@ public class ViewQuizController extends LoggedInController {
   @FXML
   private Text answerText;
 
-  public ViewQuizController(User user, Quiz quiz, CognitionModel cognitionModel) {
-    super(user, cognitionModel);
+  public ViewQuizController(User user, Quiz quiz, RemoteCognitionAccess remoteCognitionAccess) {
+    super(user, remoteCognitionAccess);
     this.quiz = quiz;
   }
 
