@@ -25,68 +25,11 @@ launch the application using Gitpod.
 
 Each developer is encouraged to use their IDE of choice, as long as all functionality also supports using Gitpod.
 
-## Milestones
+## Contributing
 
-The group will use milestones on GitLab to monitor our sprints, and thus link issues to each sprint. Each sprint lasts 1
-week.
+[Click here](../../CONTRIBUTING.md) to read more about contributing to the code base.
 
-Milestones that span over a longer period of time will also be created in order to keep an overview of the main
-deliverables ("Gruppeinnlevering 1", "Gruppeinnlevering 2", etc...).
-
-## Issue tracking
-
-### Templates
-
-The group have set up GitLab issue templates to streamline the process of creating a new issue. A reference guide can be
-found using [this link](https://docs.gitlab.com/ee/user/project/description_templates.html).
-
-An issue can either be a [**Feature Request**](../../.gitlab/issue_templates/Feature.md), a [**Bug**](../../.gitlab/issue_templates/Bug.md) or **Uncategorized**. Please inspect the raw Markdown code when viewing
-these templates.
-
-The issue templates are adapted to resemble an informal user story.
-
-### Labels
-
-Each issue is assigned one or multiple labels. An overview of our custom project labels can be found
-in `Issues -> Labels` on GitLab. The labels serve to prioritze, scope and categorize the issues.
-
-### Connecting issues to merge requests
-
-An issue should always be closed by a merge request, unless the issue is obviously not connected to part of the code
-base.
-
-### GitLab boards
-
-An overview of the state of an issue (backlog, in proress, done, etc...) can be found in `Issues -> Boards`.
-
-### Scope of an issue
-
-An issue should not be too large. The group seeks to scope issue to a maximum work length of 12 hours. If the issue must
-be larger than that, the issue must have a checklist of subtasks.
-
-#### Example
-
-Issue name: **#10 - Setup frontend**
-
-- [x] Add dependencies
-- [ ] Make controllers
-- [ ] etc...
-
-## Branches and merge requests
-
-### Naming
-
-Branch names should be clear and concise, and be marked with the id number of the issue it resolves.
-Example: `#10-feat-frontend`.
-
-### Description
-
-The description of a merge request includes a **Changelog / Summary** of the new functionality added. Optionally, a
-short description about how to test the new functionality can be added in order to help the code reviewer.
-
-### Squash and merge
-
-Before merging, the commits in the branch to merge must be squashed. This cleans up the Git timeline.
+This documentation includes running the application with GitPod, milestones, issue tracking and templates, labels, commits, GitLab boards, branches and merge requests.
 
 ## User Interface
 

@@ -36,7 +36,7 @@ Make sure you have Maven installed and can successfully use `mvn` in your termin
 
 Before running the application, let's add some context as to why we have 2 solutions. When testing the application, the `ui` requires a running Spring Boot server (port `3000`). The same goes for running the application; the `ui` requires a running Spring Boot server (port `8000`). This causes the number of commands in the command line to increase drastically. Hence, we added a [`Makefile`](./cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life for the current developers and "future" developer (the one grading this project).
 
-### Using `make` **(recommended)**
+### Using `make` with `mvn` under the hood **(recommended)**
 
 ```sh
 # Navigate to the cognition directory.
