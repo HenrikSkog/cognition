@@ -124,6 +124,11 @@ public class Quiz {
     this.description = description;
   }
 
+  /**
+   * Gets a copy of the flashcards.
+   *
+   * @return a copy of the flashcards.
+   */
   public List<Flashcard> getFlashcards() {
     return new ArrayList<>(flashcards);
   }
