@@ -2,8 +2,6 @@ package ui.controllers;
 
 import core.Quiz;
 import core.User;
-import java.io.IOException;
-import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +10,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import ui.RemoteCognitionAccess;
+import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * MyQuizzesController is responsible for handling the
@@ -48,7 +48,7 @@ public class MyQuizzesController extends LoggedInController {
 
     // Update selected quiz by what quiz is selected in the ui
     quizzesListView.getSelectionModel().selectedItemProperty()
-        .addListener((observable, oldValue, newValue) -> this.selectedQuiz = newValue);
+            .addListener((observable, oldValue, newValue) -> this.selectedQuiz = newValue);
   }
 
   /**
@@ -170,7 +170,7 @@ public class MyQuizzesController extends LoggedInController {
     return feedbackErrorMessage;
   }
 
-  public ListView getListView() {
-    return quizzesListView;
+  public ListView<Quiz> getListView() {
+    return new ListView<Quiz>(quizzesListView.getItems());
   }
 }

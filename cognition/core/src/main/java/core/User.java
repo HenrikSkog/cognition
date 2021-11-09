@@ -34,6 +34,11 @@ public class User {
     return password != null && password.length() >= 6;
   }
 
+  /**
+   * Gets a copy of the quizzes.
+   *
+   * @return a copy of the quizzes.
+   */
   public List<Quiz> getQuizzes() {
     return new ArrayList<>(quizzes);
   }
@@ -131,9 +136,9 @@ public class User {
   @Override
   public String toString() {
     return "User{"
-        + "quizzes=" + quizzes
-        + ", username='" + username + '\''
-        + ", password='" + password + '\''
-        + '}';
+            + "quizzes=" + quizzes
+            + ", username='" + username + '\''
+            + ", password='" + password + '\''
+            + '}';
   }
 }
