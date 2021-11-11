@@ -17,12 +17,15 @@
 
 <AnchorPane prefHeight="745.0" prefWidth="922.0" style="-fx-background-color: FCB751;" stylesheets="@../../styles/myQuizzes.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <Label fx:id="pageId" alignment="CENTER" prefHeight="27.0" prefWidth="485.0" text="MyQuizzes" visible="false" />
-    <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="98.0" prefWidth="903.0" style="-fx-padding: 20;">
-
+    <!-- Navigation bar -->
+    <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="113.0" prefWidth="922.0" style="-fx-padding: 20;">
+        <!-- Cognition Logo -->
         <HBox alignment="CENTER_LEFT" prefHeight="57.0" prefWidth="136.0" style="-fx-background-color: #fff; -fx-padding: 20; -fx-background-radius: 20 0 0 20;">
+            <!-- Logo Image -->
             <ImageView fitHeight="33.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@../../img/logo.png" />
             </ImageView>
+            <!-- Logo Text-->
             <Text fx:id="dashboardLogo" fill="#5c5353" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="logo" text="Cognition">
                 <HBox.margin>
                     <Insets left="5.0" />
@@ -32,14 +35,18 @@
                 </font>
             </Text>
         </HBox>
+        <!-- Navbar links -->
         <HBox alignment="CENTER" prefHeight="73.0" prefWidth="490.0" style="-fx-background-color: #fff;">
             <children>
+                <!-- Go to Dashboard view (Dashboard.fxml) -->
                 <Button fx:id="goToDashboardButton" mnemonicParsing="false" onAction="#handleDashboard" styleClass="nav_link" text="Home" />
+                <!-- Go to My Quizzes view (MyQuizzes.fxml) -->
                 <Button mnemonicParsing="false" styleClass="nav_link" text="My quizzes">
                     <graphic>
                         <FontAwesomeIconView fill="#626262" glyphName="BOOKMARK" />
                     </graphic>
                 </Button>
+                <!-- Go to Create Quizzes view  (Quiz.fxml)-->
                 <Button fx:id="createQuizButton" mnemonicParsing="false" onAction="#handleCreateQuiz" styleClass="nav_link" text="Create quiz">
                     <graphic>
                         <FontAwesomeIconView fill="#626262" glyphName="PLUS" />
@@ -47,6 +54,7 @@
                 </Button>
             </children>
         </HBox>
+        <!-- Logout / go to Login & Register view (Login.fxml)-->
         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="188.0" style="-fx-background-color: #fff; -fx-padding: 15px; -fx-background-radius: 0 20 20 0;">
 
             <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#handleLogout" styleClass="nav_link" text="Sign out">
@@ -82,8 +90,11 @@
                 <Insets bottom="20.0" left="380.0" top="20.0" />
             </VBox.margin>
         </Pane>
+
+        <!-- Container for buttons -->
         <HBox prefHeight="20.0" prefWidth="200.0">
             <children>
+                <!-- Button that starts quiz (changes view to ViewQuiz.fmxl)-->
                 <Button fx:id="startQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleStartQuiz" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Start selected quiz" textFill="WHITE">
                     <HBox.margin>
                         <Insets left="100.0" />
@@ -92,6 +103,7 @@
                         <Font name="Avenir Book" size="15.0" />
                     </font>
                 </Button>
+                <!-- Button that updates quiz (changes view to Quiz.fxml and fill inputs with the data from selected quiz ) -->
                 <Button fx:id="updateQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleUpdateQuiz" style="-fx-background-color: FCB751 FCB751; -fx-background-radius: 6;" text="Update selected quiz" textFill="WHITE">
                     <HBox.margin>
                         <Insets left="60.0" right="80.0" />
@@ -100,7 +112,7 @@
                         <Font name="Avenir Book" size="15.0" />
                     </font>
                 </Button>
-
+                <!-- Button that deletes selected quiz-->
                 <Button fx:id="deleteQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleDeleteQuiz" style="-fx-background-color: FCB751 FCB751; -fx-border-radius: 6;" text="Delete selected quiz" textFill="WHITE">
 
                     <HBox.margin>
@@ -112,8 +124,9 @@
                 </Button>
             </children>
         </HBox>
-   
-   
+        <!-- END OF: button container -->
+
+        <!-- Feedback label -->
         <Label fx:id="feedback" alignment="CENTER" layoutX="33.0" layoutY="480.0" prefHeight="30.0" prefWidth="161.0" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Avenir Book" size="20.0" />
@@ -122,7 +135,7 @@
             <Insets left="45.0" top="15.0" />
          </VBox.margin>
         </Label>
-
+        <!-- ListView of all quizzes connected to user (the quizzes are added in the controller)-->
         <ListView fx:id="quizzesListView" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="703.0" style="-fx-background-radius: 10 10 0 0;">
          <VBox.margin>
             <Insets left="45.0" />

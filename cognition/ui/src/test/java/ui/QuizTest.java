@@ -116,7 +116,7 @@ public class QuizTest extends ApplicationTest {
   @DisplayName("Can switch to Dashboard.")
   void canSwitchToDashboard() {
     waitForFxEvents();
-    clickOn("#goToDashboardButton");
+    clickOn("#goHome");
 
     waitForFxEvents();
     // Check that we loaded Dashboard view

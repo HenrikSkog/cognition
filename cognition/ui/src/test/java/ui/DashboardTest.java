@@ -107,7 +107,7 @@ public class DashboardTest extends ApplicationTest {
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Dashboard"));
     waitForFxEvents();
 
-    clickOn("#switchToMyQuizzesButton");
+    clickOn("#goToMyQuizzes");
     waitForFxEvents();
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
