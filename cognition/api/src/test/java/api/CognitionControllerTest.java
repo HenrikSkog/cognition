@@ -5,7 +5,7 @@ import core.Quiz;
 import core.User;
 import json.CognitionStorage;
 import org.junit.jupiter.api.*;
-
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ui.controllers;
+package ui;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -9,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import ui.RemoteCognitionAccess;
 
 /**
  * Controller is an abstract class with the common functionality
@@ -26,7 +25,7 @@ public abstract class Controller {
     this.remoteCognitionAccess = remoteCognitionAccess;
   }
 
-  public Stage getStage(ActionEvent event) {
+  private Stage getStage(ActionEvent event) {
     Node node = (Node) event.getSource();
     return (Stage) node.getScene().getWindow();
   }
@@ -41,7 +40,7 @@ public abstract class Controller {
     FXMLLoader loader = new FXMLLoader();
     // Using Controller.class, rather than this.getClass(),
     // SpotBugs does not find a compile-time bug.
-    loader.setLocation(Controller.class.getResource("../views/" + fxml + ".fxml"));
+    loader.setLocation(Controller.class.getResource("views/" + fxml + ".fxml"));
     return loader;
   }
 
@@ -83,12 +82,8 @@ public abstract class Controller {
     }
   }
 
-  public RemoteCognitionAccess getCognitionAccess() {
+  protected RemoteCognitionAccess getCognitionAccess() {
     return remoteCognitionAccess;
-  }
-
-  public void setCognitionAccess(RemoteCognitionAccess remoteCognitionAccess) {
-    this.remoteCognitionAccess = remoteCognitionAccess;
   }
 
   protected void setFeedbackText(String value) {

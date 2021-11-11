@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import ui.controllers.LoginController;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -44,7 +44,6 @@ public class LoginTest extends ApplicationTest {
     FXMLLoader loader = getLoader("Login");
 
     this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
     this.loginController = new LoginController(remoteCognitionAccess);
 
     loader.setController(loginController);

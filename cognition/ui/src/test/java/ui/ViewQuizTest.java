@@ -13,7 +13,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import ui.controllers.ViewQuizController;
 import java.util.ArrayList;
 import java.util.List;
 
