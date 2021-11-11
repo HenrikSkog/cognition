@@ -1,25 +1,17 @@
-package ui.controllers;
+package ui;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
 import core.tools.Tools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ui.RemoteCognitionAccess;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -113,6 +105,7 @@ public class RegisterController extends Controller {
 
   /**
    * Registers a new user. Also assigns some default quizzes to the new user.
+   *
    * @param username is the users username
    * @param password is the users password
    */
@@ -120,9 +113,9 @@ public class RegisterController extends Controller {
     try {
       User user = new User(username, password);
 
-      // Every new user gets assigned some default quizzes
-      List<Quiz> quizzes = createDefaultQuizzes();
-      quizzes.forEach(user::addQuiz);
+      // Every new user gets assigned a default quiz
+      Quiz introductionQuiz = createDefaultQuiz();
+      user.addQuiz(introductionQuiz);
 
       getCognitionAccess().create(user);
 
@@ -179,16 +172,16 @@ public class RegisterController extends Controller {
   protected void initialize() {
   }
 
-  public static List<Quiz> createDefaultQuizzes() {
-    Quiz triviaQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
-        "A quiz to introduce you to the functionality of Cognition");
+  public static Quiz createDefaultQuiz() {
+    Quiz introductionQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
+            "A quiz to introduce you to the functionality of Cognition");
     List<Flashcard> flashcards = new ArrayList<>();
     flashcards.add(new Flashcard(Tools.createUuid(), "What is the 3rd letter of the alphabet?",
-        "c"));
+            "c"));
     flashcards.add(new Flashcard(Tools.createUuid(), "What is the chemical formula for water? ", "H2O"));
     flashcards.add(new Flashcard(Tools.createUuid(), "How tall is Mount Everest? (m)", "8849"));
-    triviaQuiz.addFlashcards(flashcards);
+    introductionQuiz.addFlashcards(flashcards);
 
-    return new ArrayList<Quiz>(List.of(triviaQuiz));
+    return introductionQuiz;
   }
 }

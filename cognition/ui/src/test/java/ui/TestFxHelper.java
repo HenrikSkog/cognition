@@ -20,7 +20,7 @@ class TestFxHelper {
 
   protected static void sleep(int seconds) {
     try {
-      TimeUnit.SECONDS.sleep(2);
+      TimeUnit.SECONDS.sleep(seconds);
     } catch (InterruptedException e) {
       fail();
     }

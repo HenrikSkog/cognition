@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import ui.controllers.MyQuizzesController;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -28,8 +27,6 @@ public class MyQuizzesTest extends ApplicationTest {
   private MyQuizzesController myQuizzesController;
   private RemoteCognitionAccess remoteCognitionAccess;
   private User loggedInUser;
-
-  private ListView<Quiz> listView;
 
   private final String validUsername = "valid-username";
   private final String validPassword = "valid-password";
@@ -69,8 +66,6 @@ public class MyQuizzesTest extends ApplicationTest {
     scene = new Scene(loader.load());
     stage.setScene(scene);
     stage.show();
-
-    this.listView = myQuizzesController.getListView();
   }
 
   private FXMLLoader getLoader(String fxml) {
@@ -88,6 +83,8 @@ public class MyQuizzesTest extends ApplicationTest {
   @Test
   @DisplayName("Can display quizzes")
   public void canDisplayQuizzes() {
+    ListView<Quiz> listView = findListView();
+
     if (listView.getItems().size() == 0) {
       fail("No items in list");
     }
@@ -123,6 +120,8 @@ public class MyQuizzesTest extends ApplicationTest {
     // delete selected quiz
     clickOn("#deleteQuizButton");
     waitForFxEvents();
+
+    ListView<Quiz> listView = findListView();
 
     //  -> make sure number of items are 10 - 1 = 9
     Assertions.assertEquals(9, listView.getItems().size());
@@ -221,5 +220,9 @@ public class MyQuizzesTest extends ApplicationTest {
     } catch (IOException e) {
       fail();
     }
+  }
+
+  private ListView<Quiz> findListView() {
+    return lookup("#quizzesListView").query();
   }
 }

@@ -16,7 +16,7 @@ There are, however, some disadvantages to a 3-tier application. It is possible t
 
 ## Interaction between UI controllers
 
-![Interaction between UI controllers](img/ui_controllers.png)
+![Interaction between UI controllers](../plantuml/release2/img/ui_controllers.png)
 
 Some of our controller have quite a bit of shared logic. Thus, we have abstracted this logic away from each extending controller, and rather put all shared logic in abstract controller classes (e.g. `Controller`, `LoggedInController`).
 
@@ -28,13 +28,13 @@ This decreases the amount of repeating code in our code base and ensures we abid
 
 ## Current architecture (deliverable 2)
 
-![Modular Cognition Architecture](img/modular_cognition_3.png)
+![Modular Cognition Architecture](../plantuml/release2/img/modular_cognition_3.png)
 
 The user interface module (`ui`) consists of a presentation layer that communicates with the `core` module, specifically the core logic layer (`core` package). This layer communicates with the persistence layer (`json` package) and then sends the information back to the `ui`.
 
 ## Future architecture
 
-![Modular Cognition Architecture with REST API](img/rest_cognition.png)
+![Modular Cognition Architecture with REST API](../plantuml/release2/img/rest_cognition.png)
 
 The intended future architectural style of the Cognition application is a REST application. REST (_Representational State Transfer_) applications use web services to communicate between the client and the REST server. Some constraints of this type of architectural style are statelessness, cacheability, and layered system. The communication between the client and the server is done with standard HTTP methods (e.g., `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`).
 
@@ -46,12 +46,12 @@ An overview of the user flow between UI controllers can be found below.
 
 ### Login Sequence
 
-![Login Sequence](img/login_sequence.png)
+![Login Sequence](../plantuml/release2/img/login_sequence.png)
 
 ### Dashboard Sequence
 
-![Dashboard Sequence](img/dashboard_controller.png)
+![Dashboard Sequence](../plantuml/release2/img/dashboard_controller.png)
 
 ### MyQuizzes Sequence
 
-![MyQuizzes Sequence](img/myquizzes_controller.png)
+![MyQuizzes Sequence](../plantuml/release2/img/myquizzes_controller.png)

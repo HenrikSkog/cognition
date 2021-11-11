@@ -4,6 +4,7 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import json.CognitionStorage;
 import org.junit.jupiter.api.AfterEach;
@@ -14,10 +15,8 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import ui.controllers.QuizController;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
@@ -84,12 +83,12 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Can remove flashcard.")
   void canRemoveFlashcard() {
-    int initialNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
+    int initialNodeCount = getFlashcardPaneContainerChildrenCount();
 
     clickOn("#remove-flashcard-button");
     waitForFxEvents();
 
-    int currentNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
+    int currentNodeCount = getFlashcardPaneContainerChildrenCount();
 
     boolean nodeCountDecreasedOnButtonClick = (currentNodeCount == initialNodeCount - 1);
 
@@ -100,12 +99,12 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Can add flashcard.")
   void canAddFlashcard() {
-    int initialNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
+    int initialNodeCount = getFlashcardPaneContainerChildrenCount();
 
     clickOn("#addFlashcardButton");
     waitForFxEvents();
 
-    int currentNodeCount = quizController.getFlashcardPaneContainer().getChildren().size();
+    int currentNodeCount = getFlashcardPaneContainerChildrenCount();
 
     boolean nodeCountIncreasedOnButtonClick = (currentNodeCount == initialNodeCount + 1);
 
@@ -183,5 +182,10 @@ public class QuizTest extends ApplicationTest {
     } catch (IOException e) {
       fail();
     }
+  }
+
+  private int getFlashcardPaneContainerChildrenCount() {
+    VBox container = lookup("#flashcardPaneContainer").query();
+    return container.getChildren().size();
   }
 }

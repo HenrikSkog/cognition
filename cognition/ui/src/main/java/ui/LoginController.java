@@ -1,15 +1,14 @@
-package ui.controllers;
+package ui;
 
 import core.User;
-import java.io.IOException;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ui.RemoteCognitionAccess;
 
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -36,7 +35,7 @@ public class LoginController extends Controller {
    * @param event is the ActionEvent on button click.
    */
   @FXML
-  public void handleLogin(ActionEvent event) {
+  private void handleLogin(ActionEvent event) {
     String username = usernameInput.getText().toLowerCase();
     String password = passwordInput.getText();
 
@@ -68,7 +67,7 @@ public class LoginController extends Controller {
   }
 
   @FXML
-  public void goToRegister(ActionEvent event) {
+  private void goToRegister(ActionEvent event) {
     changeToView(event, new RegisterController(getCognitionAccess()),
             "Register");
   }

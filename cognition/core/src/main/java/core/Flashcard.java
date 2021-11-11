@@ -61,7 +61,7 @@ public class Flashcard {
    *
    * @param front new front value
    */
-  public void setFront(String front) {
+  private void setFront(String front) {
     if (!Flashcard.isValidFront(front)) {
       throw new IllegalArgumentException();
     }
@@ -78,7 +78,7 @@ public class Flashcard {
    *
    * @param answer new answer value
    */
-  public void setAnswer(String answer) {
+  private void setAnswer(String answer) {
     if (!Flashcard.isValidAnswer(answer)) {
       throw new IllegalArgumentException();
     }

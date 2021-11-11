@@ -41,7 +41,7 @@ public class CognitionController {
      * or the RestApplication's testMode flag is set, use the test
      * storage file: cognitionTest.json.
      */
-    if (isTest || RestApplication.testMode) {
+    if (isTest || RestApplication.isTestMode()) {
       setCognitionStorage(new CognitionStorage("cognitionTest.json"));
     } else {
       setCognitionStorage(new CognitionStorage());

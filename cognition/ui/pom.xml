@@ -16,7 +16,7 @@
         <dependency>
             <groupId>it1901.gr2103</groupId>
             <artifactId>core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- JavaFX FXML -->
@@ -42,13 +42,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-
-
         <!-- Test with TextFX -->
         <dependency>
             <groupId>org.testfx</groupId>
@@ -80,6 +73,57 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>fontawesome</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openjfx</groupId>
+                        <artifactId>javafx-maven-plugin</artifactId>
+                        <version>0.0.6</version>
+                        <configuration>
+                            <mainClass>de.jensd.fx.glyphs.fontawesome.demo.FontAwesomeIconsDemoApp</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>documentapp</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openjfx</groupId>
+                        <artifactId>javafx-maven-plugin</artifactId>
+                        <version>0.0.6</version>
+                        <configuration>
+                            <mainClass>cognition.ui/cognition.ui.App</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>remoteapp</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openjfx</groupId>
+                        <artifactId>javafx-maven-plugin</artifactId>
+                        <version>0.0.6</version>
+                        <configuration>
+                            <mainClass>cognition.ui/cognition.ui.RemoteCognitionAccess</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+    </profiles>
+
+
     <build>
         <plugins>
             <plugin>
@@ -91,6 +135,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                       @{argLine} --add-opens ui/ui=ALL-UNNAMED --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    </argLine>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -102,8 +151,34 @@
                         <option>--enable-preview</option>
                     </options>
                     <mainClass>ui.App</mainClass>
+                    <!-- configuration for jlink -->
+                    <compress>2</compress>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <stripDebug>true</stripDebug>
+                    <noManPages>true</noManPages>
+                    <launcher>cognition</launcher>
+                    <jlinkImageName>cognition</jlinkImageName>
+                    <jlinkZipName>cognition</jlinkZipName>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <name>Cognition</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>it1901</vendor>
+                    <destination>target/dist</destination>
+                    <module>cognition.ui/cognition.ui.App</module>
+                    <runtimeImage>target/cognition</runtimeImage>
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
+                </configuration>
+            </plugin>
+
 
             <!-- Run the checkstyle code quality tool -->
             <plugin>
@@ -122,6 +197,7 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
 
     </build>
