@@ -10,4 +10,5 @@ module ui {
   requires de.jensd.fx.glyphs.fontawesome;
 
   opens ui to javafx.graphics, javafx.fxml;
+
 }
