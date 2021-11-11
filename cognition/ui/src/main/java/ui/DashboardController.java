@@ -1,4 +1,4 @@
-package ui.controllers;
+package ui;
 
 import core.User;
 import core.tools.Tools;
@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import ui.RemoteCognitionAccess;
 
 /**
  * DashboardController has the presentation logic for the DashBoard view.

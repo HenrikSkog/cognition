@@ -1,4 +1,4 @@
-package ui.controllers;
+package ui;
 
 import core.Quiz;
 import core.User;
@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import ui.RemoteCognitionAccess;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class MyQuizzesController extends LoggedInController {
    * Renders the initial view.
    */
   @FXML
-  public void initialize() {
+  private void initialize() {
     // Initially render ListView
     quizzesListView.setItems(getQuizzes(""));
     setupListView();
@@ -93,7 +92,7 @@ public class MyQuizzesController extends LoggedInController {
    * @param event is the ActionEvent on button click.
    */
   @FXML
-  public void handleStartQuiz(ActionEvent event) {
+  private void handleStartQuiz(ActionEvent event) {
     if (quizIsNotSelected()) {
       return;
     }
@@ -116,7 +115,7 @@ public class MyQuizzesController extends LoggedInController {
    * @param event is the ActionEvent on button click.
    */
   @FXML
-  public void handleUpdateQuiz(ActionEvent event) {
+  private void handleUpdateQuiz(ActionEvent event) {
     if (quizIsNotSelected()) {
       return;
     }
@@ -143,7 +142,7 @@ public class MyQuizzesController extends LoggedInController {
    * @param actionEvent is the ActionEvent on button click.
    */
   @FXML
-  public void handleDeleteQuiz(ActionEvent actionEvent) {
+  private void handleDeleteQuiz(ActionEvent actionEvent) {
     if (quizIsNotSelected()) {
       return;
     }
@@ -157,7 +156,7 @@ public class MyQuizzesController extends LoggedInController {
     ObservableList<Quiz> quizzes = quizzesListView.getItems();
     quizzesListView.setItems(quizzes);
 
-    // update local storage state
+    // update the local storage state
     try {
       getCognitionAccess().update(getUser());
 
@@ -168,9 +167,5 @@ public class MyQuizzesController extends LoggedInController {
 
   public String getFeedbackErrorMessage() {
     return feedbackErrorMessage;
-  }
-
-  public ListView<Quiz> getListView() {
-    return new ListView<Quiz>(quizzesListView.getItems());
   }
 }

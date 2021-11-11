@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import ui.controllers.DashboardController;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -112,30 +112,6 @@ public class DashboardTest extends ApplicationTest {
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
     waitForFxEvents();
-  }
-
-  @Test
-  @DisplayName("Can set currently active user.")
-  void canSetCurrentlyActiveUser() {
-    String username = "active-username";
-    User user = new User(username, "password");
-
-    // Create sample user
-    try {
-      remoteCognitionAccess.create(user);
-    } catch (IOException | InterruptedException e) {
-      fail();
-    }
-
-    // Set active user
-    try {
-      dashboardController.setUser(user);
-    } catch (NullPointerException e) {
-      fail();
-    }
-
-    // Check that the currently active user is the one we just set as active user
-    Assertions.assertEquals(user, dashboardController.getUser());
   }
 
   /**

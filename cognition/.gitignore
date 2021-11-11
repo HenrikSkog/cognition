@@ -26,3 +26,9 @@ hs_err_pid*
 # Custom ignores
 target
 
+# Ignore all asciidoctor generated files that is not HTTP requests
+curl-request*
+httpie-request*
+request-body*
+response-body*
+

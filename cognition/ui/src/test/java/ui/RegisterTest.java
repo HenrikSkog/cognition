@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import ui.controllers.RegisterController;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,12 +35,7 @@ public class RegisterTest extends ApplicationTest {
 
   @BeforeEach
   void setUp() {
-    // The few places in UI code that allegedly do not test the constructor are false,
-    // in the way that the constructor is tested here and fails if it cannot be created successfully.
     try {
-      remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-      registerController.setCognitionAccess(remoteCognitionAccess);
-
       // Add a user, such that storage is not empty. Empty storage is tested in core
       // module.
       remoteCognitionAccess.create(new User("placeholder", "placeholder"));
@@ -58,9 +53,9 @@ public class RegisterTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Register");
 
+    // The few places in UI code that allegedly do not test the constructor are false,
+    // in the way that the constructor is tested here and fails if it cannot be created successfully.
     this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    // in the app there is no logical way for Create Quiz to be accessed without a logged-in user.
-    // Thus, we create a fake user here to emulate it
     this.registerController = new RegisterController(remoteCognitionAccess);
 
     loader.setController(registerController);
@@ -156,9 +151,11 @@ public class RegisterTest extends ApplicationTest {
 
   Assertions.assertNotNull(user);
 
-  List<Quiz> correctQuizzes = RegisterController.createDefaultQuizzes();
 
-  Assertions.assertEquals(correctQuizzes.size(), user.getQuizzes().size());
+  Quiz correctQuiz = RegisterController.createDefaultQuiz();
+
+  // Assert this quiz has been added to the newly registered user
+  Assertions.assertEquals(user.getQuizzes().get(0).getName(), correctQuiz.getName());
 }
 
   @Test

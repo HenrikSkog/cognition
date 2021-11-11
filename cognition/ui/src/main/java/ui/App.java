@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ui.controllers.LoginController;
 
 /**
  * Launches the JavaFX application.
@@ -49,7 +48,7 @@ public class App extends Application {
    * @param fxml is the String representation of the FXML filename.
    * @return an instance of the FXMLLoader with the set location based on provided FXML filename.
    */
-  public FXMLLoader getLoader(String fxml) {
+  private FXMLLoader getLoader(String fxml) {
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("views/" + fxml + ".fxml"));
     return loader;

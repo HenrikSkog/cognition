@@ -1,4 +1,4 @@
-package ui.controllers;
+package ui;
 
 import core.Flashcard;
 import core.Quiz;
@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import ui.RemoteCognitionAccess;
 
 
 /**
@@ -52,6 +51,7 @@ public class QuizController extends LoggedInController {
 
   public QuizController(User user, RemoteCognitionAccess remoteCognitionAccess) {
     super(user, remoteCognitionAccess);
+    flashcardPaneContainer.setId("flashcardPaneContainer");
   }
 
   public void setQuizBeingUpdated(Quiz quizBeingUpdated) {
@@ -62,7 +62,7 @@ public class QuizController extends LoggedInController {
    * Renders the initial view.
    */
   @FXML
-  public void initialize() {
+  private void initialize() {
     if (quizBeingUpdated != null) {
       // populate ui according to quiz being updated
       name.setText(quizBeingUpdated.getName());
@@ -84,7 +84,7 @@ public class QuizController extends LoggedInController {
   /**
    * Removes a Flashcard from the ScrollPane in the UI.
    */
-  public void removeFlashcardNode(int nodeId) {
+  private void removeFlashcardNode(int nodeId) {
     flashcardPaneContainer.getChildren().remove(nodeId);
 
     // Update view
@@ -97,10 +97,6 @@ public class QuizController extends LoggedInController {
 
   public String getFeedbackSuccessMessage() {
     return feedbackSuccessMessage;
-  }
-
-  public VBox getFlashcardPaneContainer() {
-    return flashcardPaneContainer;
   }
 
   /**
@@ -166,22 +162,11 @@ public class QuizController extends LoggedInController {
    *
    * @param actionEvent is the ActionEvent from the UI
    */
-  public void addFlashcardNode(ActionEvent actionEvent) {
+  @FXML
+  private void addFlashcardNode(ActionEvent actionEvent) {
     createFlashcardNode(null);
     feedback.setTextFill(Color.GREEN);
     feedback.setText("Added flashcard.");
-  }
-
-  @FXML
-  public void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionAccess()),
-            "Dashboard");
-  }
-
-  @FXML
-  public void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()),
-            "MyQuizzes");
   }
 
   /**
@@ -291,7 +276,7 @@ public class QuizController extends LoggedInController {
    * @param actionEvent is the ActionEvent on button click.
    */
   @FXML
-  public void handleStoreQuiz(ActionEvent actionEvent) {
+  private void handleStoreQuiz(ActionEvent actionEvent) {
     String quizName = name.getText();
     String quizDescription = description.getText();
 
@@ -445,7 +430,7 @@ public class QuizController extends LoggedInController {
    * @param event is the given by javafx
    */
   @Override
-  public void handleCreateQuiz(ActionEvent event) {
+  protected void handleCreateQuiz(ActionEvent event) {
     if (quizBeingUpdated == null) {
       return;
     }

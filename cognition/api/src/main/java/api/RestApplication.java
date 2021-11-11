@@ -11,9 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class RestApplication {
-  static int PORT = 8080;
-  public static final String BASE_URI = "http://localhost";
-  static boolean testMode = false;
+  private static int PORT = 8080;
+  private static boolean testMode = false;
 
 
   /**
@@ -44,4 +43,7 @@ public class RestApplication {
     RestApplication.testMode = testMode;
   }
 
+  public static boolean isTestMode() {
+    return testMode;
+  }
 }

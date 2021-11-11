@@ -1,4 +1,4 @@
-package ui.controllers;
+package ui;
 
 import core.Flashcard;
 import core.Quiz;
@@ -7,7 +7,6 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import ui.RemoteCognitionAccess;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -55,7 +54,7 @@ public class ViewQuizController extends LoggedInController {
   /**
    * Updates the current flashcard when the user is doing a quiz.
    */
-  public void nextFlashcard() {
+  private void nextFlashcard() {
     if (flashcardIndex == flashcards.size() - 1) {
       flashcardText.setText(
               new StringBuilder()
@@ -80,7 +79,7 @@ public class ViewQuizController extends LoggedInController {
    * was right or not, and increments the number of right answers accordingly.
    */
   @FXML
-  public void checkAnswer() {
+  private void checkAnswer() {
     String userAnswer = answerInput.getText().toLowerCase();
     String correctAnswer = flashcards.get(flashcardIndex).getAnswer().toLowerCase();
 
@@ -125,7 +124,6 @@ public class ViewQuizController extends LoggedInController {
     this.quiz = quiz;
   }
 
-
   @FXML
   private void showAnswer() {
     String invalidText = "Don't give up before trying!";
@@ -145,5 +143,4 @@ public class ViewQuizController extends LoggedInController {
   private void setAnswerText(String text) {
     this.answerText.setText(text);
   }
-
 }

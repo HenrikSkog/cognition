@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import ui.controllers.QuizController;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
