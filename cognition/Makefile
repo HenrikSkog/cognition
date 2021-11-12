@@ -43,6 +43,14 @@ client:
 server:
 	@ cd api && $(MVN) $(MVNFLAGS) spring-boot:run
 
+# Stop the Spring Boot server.
+stop-server:
+	@ lsof -t -i:8080 | xargs kill -9
+
+# Stop the Spring Boot server running on port for testing
+stop-test-server:
+	@ lsof -t -i:3000 | xargs kill -9
+
 # Print the available targets.
 help:
 	@ echo "Usage   :  make <target>"
@@ -54,4 +62,6 @@ help:
 	@ echo "   application : Run the client application, and start Spring Boot server on port for application logic."
 	@ echo "   client : Run the client application."
 	@ echo "   server : Run the Spring Boot server."
+	@ echo "   stop-server : Stop the Spring Boot server."
+	@ echo "   stop-test-server : Stop the Spring Boot server running on port for testing."
 	@ echo "   help : Print the available targets."
