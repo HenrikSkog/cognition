@@ -24,6 +24,7 @@ public class RegisterController extends Controller {
    * getter is needed.
    */
   private static final String feedbackSuccessMessage = "User created successfully!";
+
   @FXML
   private TextField usernameInput;
   @FXML
@@ -100,7 +101,6 @@ public class RegisterController extends Controller {
     }
 
     return true;
-
   }
 
   /**
@@ -113,7 +113,8 @@ public class RegisterController extends Controller {
     try {
       User user = new User(username, password);
 
-      // Every new user gets assigned a default quiz
+      // Every new user gets assigned a default quiz,
+      // in order to quickly use all features in the application
       Quiz introductionQuiz = createDefaultQuiz();
       user.addQuiz(introductionQuiz);
 
@@ -168,10 +169,13 @@ public class RegisterController extends Controller {
     }
   }
 
-  @FXML
-  protected void initialize() {
-  }
-
+  /**
+   * Creates a default quiz.
+   * This is added to each new registered user, in order for them to quickly use
+   * all functionality in the application.
+   *
+   * @return the default quiz.
+   */
   public static Quiz createDefaultQuiz() {
     Quiz introductionQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
             "A quiz to introduce you to the functionality of Cognition");

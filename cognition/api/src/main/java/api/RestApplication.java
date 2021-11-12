@@ -1,9 +1,9 @@
 package api;
 
-import java.util.Arrays;
-import java.util.Collections;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 /**
@@ -14,12 +14,10 @@ public class RestApplication {
   private static int PORT = 8080;
   private static boolean testMode = false;
 
-
   /**
-   * Method that runs the Spring Boot application
-   * with specified parameters.
+   * Starts the Spring Boot application.
    *
-   * @param args are the arguments passed to Spring Boot
+   * @param args are the optional arguments passed in when starting the Spring Boot application.
    */
   public static void main(String[] args) {
     SpringApplication application = new SpringApplication(RestApplication.class);
@@ -31,6 +29,7 @@ public class RestApplication {
       PORT = 3000;
     }
 
+    // Set the server port
     application.setDefaultProperties(
             Collections.singletonMap("server.port", String.valueOf(PORT))
     );

@@ -48,7 +48,6 @@ public class ViewQuizController extends LoggedInController {
 
     // Initialize the first flashcard
     flashcardText.setText(flashcards.get(flashcardIndex).getFront());
-
   }
 
   /**

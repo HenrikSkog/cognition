@@ -1,5 +1,6 @@
 package ui;
 
+import core.CompactQuiz;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
@@ -83,7 +84,7 @@ public class MyQuizzesTest extends ApplicationTest {
   @Test
   @DisplayName("Can display quizzes")
   public void canDisplayQuizzes() {
-    ListView<Quiz> listView = findListView();
+    ListView<CompactQuiz> listView = findListView();
 
     if (listView.getItems().size() == 0) {
       fail("No items in list");
@@ -121,7 +122,7 @@ public class MyQuizzesTest extends ApplicationTest {
     clickOn("#deleteQuizButton");
     waitForFxEvents();
 
-    ListView<Quiz> listView = findListView();
+    ListView<CompactQuiz> listView = findListView();
 
     //  -> make sure number of items are 10 - 1 = 9
     Assertions.assertEquals(9, listView.getItems().size());
@@ -222,7 +223,7 @@ public class MyQuizzesTest extends ApplicationTest {
     }
   }
 
-  private ListView<Quiz> findListView() {
+  private ListView<CompactQuiz> findListView() {
     return lookup("#quizzesListView").query();
   }
 }
