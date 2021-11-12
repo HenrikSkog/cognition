@@ -44,8 +44,8 @@ public class WebRequestsTest {
 
   /*
     Set state to indicate to CognitionController that
-    we are in test-mode, and therefore should use
-    the appropriate storage file.
+    we are in test mode, and therefore should use
+    the appropriate storage file used for testing.
    */
   static {
     System.setProperty("webRequestTest", "true");
@@ -84,12 +84,32 @@ public class WebRequestsTest {
   @Test
   @DisplayName("Expect 200 when getting user by username.")
   void expect200WhenGettingUserByUsername() {
-
     try {
       initializeUser();
 
       this.mvc.perform(
                       get("/users/" + username)
+                              .contentType(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk())
+              .andDo(document(
+                      "{methodName}",
+                      preprocessRequest(prettyPrint()),
+                      preprocessResponse(prettyPrint())
+              ));
+    } catch (Exception e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Expect 200 when getting quiz titles by username.")
+  void expect200WhenGettingQuizTitlesByUsername() {
+    try {
+      initializeUser();
+      initializeQuiz();
+
+      this.mvc.perform(
+                      get("/quizzes/" + username + "/titles")
                               .contentType(MediaType.APPLICATION_JSON))
               .andExpect(status().isOk())
               .andDo(document(
@@ -353,7 +373,6 @@ public class WebRequestsTest {
   }
 
   private void initializeUser() throws Exception {
-
     User user = new User(username, password);
     String serialized = gson.toJson(user);
 
@@ -363,8 +382,8 @@ public class WebRequestsTest {
     ).andExpect(status().isOk());
   }
 
-  private void initializeQuiz() throws Exception {
 
+  private void initializeQuiz() throws Exception {
     Quiz quiz = new Quiz(quizUuid, "Test quiz", "Test description for test quiz");
     String serializedQuiz = gson.toJson(quiz);
 

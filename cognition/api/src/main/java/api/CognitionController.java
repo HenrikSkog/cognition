@@ -1,19 +1,14 @@
 package api;
 
+import core.CompactQuiz;
 import core.Quiz;
 import core.User;
+import json.CognitionStorage;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import json.CognitionStorage;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**
@@ -134,7 +129,7 @@ public class CognitionController {
    * Performs a PUT request that updates a
    * user based on the provided parameters.
    *
-   * @param user     is the new and updated User.
+   * @param user is the new and updated User.
    * @throws UserNotFoundException if the user cannot be found.
    */
   @PutMapping(value = "/users",
@@ -181,6 +176,32 @@ public class CognitionController {
           throws UserNotFoundException {
     try {
       return getUserByUsername(username).getQuizzes();
+    } catch (UserNotFoundException e) {
+      throw new UserNotFoundException(
+              "No user with the following identifier was found: " + username
+      );
+    }
+  }
+
+  /**
+   * Performs a GET request that returns a list
+   * of quiz titles belonging to a user, based on supplied username.
+   * <p>
+   * This endpoint is useful because we do not want the client to fetch an unnecessary amount
+   * of data every single time. For a given view in the client, this is sufficient.
+   *
+   * @param username is a String representation of the current User's username.
+   * @return a list of quiz titles and identifiers corresponding to the current user.
+   * @throws UserNotFoundException if no user is found.
+   */
+  @GetMapping("/quizzes/{username}/titles")
+  public List<CompactQuiz> getQuizTitlesByUsername(@PathVariable String username)
+          throws UserNotFoundException {
+    try {
+      return getUserByUsername(username).getQuizzes()
+              .stream()
+              .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
+              .collect(Collectors.toList());
     } catch (UserNotFoundException e) {
       throw new UserNotFoundException(
               "No user with the following identifier was found: " + username

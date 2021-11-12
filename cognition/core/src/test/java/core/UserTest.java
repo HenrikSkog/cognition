@@ -29,7 +29,6 @@ public class UserTest {
 
     Assertions.assertNotNull(emptyUser);
     Assertions.assertNotNull(user);
-    // If we get here, initializing was successful
   }
 
   @Test

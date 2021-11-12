@@ -64,19 +64,17 @@ public class QuizController extends LoggedInController {
   @FXML
   private void initialize() {
     if (quizBeingUpdated != null) {
-      // populate ui according to quiz being updated
+      // Populate UI according to quiz being updated
       name.setText(quizBeingUpdated.getName());
       description.setText(quizBeingUpdated.getDescription());
       storeQuizButton.setText("Update quiz");
       heading.setText("Update " + quizBeingUpdated.getName());
 
-
       for (Flashcard flashcard : quizBeingUpdated.getFlashcards()) {
-
         createFlashcardNode(flashcard);
       }
     } else {
-      // new quiz -> start with one empty flashcard and empty name and description
+      // If no quiz is being updated, start with a title, description and an empty flashcard
       createFlashcardNode(null);
     }
   }
@@ -190,7 +188,6 @@ public class QuizController extends LoggedInController {
     removeFlashcardButton.setFont(Font.font("Avenir Book", 16));
     removeFlashcardButton.setStyle("-fx-background-color: #EE4040; -fx-background-radius: 10;");
     removeFlashcardButton.setTextFill(Color.WHITE);
-
 
     HBox upperChildContainer = new HBox();
     // Add child elements to upper child container

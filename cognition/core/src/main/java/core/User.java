@@ -129,8 +129,12 @@ public class User {
   }
 
   public void removeQuiz(Quiz quiz) {
-    // Removes only if it is present. Thus, not conditional is needed.
-    quizzes.remove(quiz);
+    for (int i = 0; i < quizzes.size(); i++) {
+      if (quizzes.get(i).getUuid().equals(quiz.getUuid())) {
+        quizzes.remove(i);
+        return;
+      }
+    }
   }
 
   @Override

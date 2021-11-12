@@ -26,19 +26,18 @@ public class DashboardController extends LoggedInController {
   /**
    * Adds application description to dashboard.
    */
-
   @FXML
   public void initialize() {
     heading.setText("Welcome, " + Tools.capitalize(getUser().getUsername()));
 
-    
+
     cognitionDescription.setText("Cognition is an interactive game-based "
             + "learning tool used to study information. This tool uses interactive "
             + "digital flashcards. Teachers and Students can easily upload information "
             + "to create study sets by adding questions and definitions. This tool is "
             + "easy to navigate and provides a fun and interactive playground to the "
             + "learners as they engage with the application.");
-    cognitionDescription.setFont(Font.font("Avenir book", 25));
+    cognitionDescription.setFont(Font.font("Avenir book", 24));
 
   }
 }

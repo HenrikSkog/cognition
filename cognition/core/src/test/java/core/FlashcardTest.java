@@ -26,13 +26,13 @@ public class FlashcardTest {
 
     Assertions.assertNotNull(emptyFlashcard);
     Assertions.assertNotNull(flashcard);
-    // If we get here, initializing was successful
   }
 
   @Test
   @DisplayName("Illegal Flashcard throws.")
   void illegalFlashcardThrows() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new Flashcard("illegal-UUID", "front", "answer"));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new Flashcard("illegal-UUID", "front", "answer"));
 
     Assertions.assertThrows(IllegalArgumentException.class,
             () -> new Flashcard(createUuid(), "", "answer"));
@@ -45,7 +45,6 @@ public class FlashcardTest {
   @DisplayName("Can be compared using the overridden equals method")
   void canBeCompared() {
     Flashcard copy = new Flashcard(flashcard.getUuid(), flashcard.getFront(), flashcard.getAnswer());
-    Flashcard notEqualFlashcard = new Flashcard(flashcard.getUuid(), "Another front", "Another answer");
 
     Assertions.assertEquals(flashcard, copy);
 
@@ -60,7 +59,7 @@ public class FlashcardTest {
     String expectedToString = "Flashcard{" + "UUID=" + flashcard.getUuid() + ", front='" + flashcard.getFront() + '\''
             + ", answer='" + flashcard.getAnswer() + '\'' + '}';
 
-    Assertions.assertEquals(flashcard.toString(), expectedToString);
+    Assertions.assertEquals(expectedToString, flashcard.toString());
   }
 
   @Test

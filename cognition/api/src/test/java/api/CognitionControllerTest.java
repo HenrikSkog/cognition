@@ -1,11 +1,11 @@
 package api;
 
 
+import core.CompactQuiz;
 import core.Quiz;
 import core.User;
 import json.CognitionStorage;
 import org.junit.jupiter.api.*;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * CognitionControllerTest validates that the REST controller behaves like expected.
- * This class is treated almost as a unit test, given the manner the methods are tested.
+ * This class is treated almost as a unit test, given the manner the controller is tested.
  */
 public class CognitionControllerTest {
   private CognitionController cognitionController;
@@ -107,6 +107,26 @@ public class CognitionControllerTest {
     } catch (StorageException | IdentifierAlreadyInUseException e) {
       fail();
     }
+  }
+
+  @Test
+  @DisplayName("Can get quiz titles by username.")
+  void canGetQuizTitlesByUsername() {
+    // Create sample quiz
+    String uuid = createUuid();
+    Quiz quiz = new Quiz(uuid, "quiz-name", "quiz-description");
+
+    // Update state in persistent storage
+    User user = cognitionController.getUserByUsername(validUsername);
+    user.addQuiz(quiz);
+    cognitionController.updateUser(user);
+
+    // Read sample quiz
+    List<CompactQuiz> quizTitles = cognitionController.getQuizTitlesByUsername(validUsername);
+    CompactQuiz compactQuiz = quizTitles.get(0);
+
+    // Assertion
+    Assertions.assertEquals(quiz.getName(), compactQuiz.getName());
   }
 
   @Test
@@ -332,6 +352,9 @@ public class CognitionControllerTest {
   /**
    * Empties the JSON data in file at the storage path. Used before validating the
    * return type when user storage is empty.
+   * <p>
+   * This method directly accesses the local storage,
+   * as it makes no sense to have an API endpoint for deleting all persistent data.
    */
   private void clearStorage() {
     try (FileWriter writer = new FileWriter(String.valueOf(cognitionStorage.getStoragePath()))) {

@@ -29,7 +29,6 @@ public class QuizTest {
 
     Assertions.assertNotNull(emptyQuiz);
     Assertions.assertNotNull(quiz);
-    // If we get here, initializing was successful
   }
 
   @Test

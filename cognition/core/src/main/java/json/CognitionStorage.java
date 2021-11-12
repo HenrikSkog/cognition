@@ -61,14 +61,14 @@ public class CognitionStorage {
     }
 
     try {
-
       return getGson().fromJson(
               /* Initialize JsonReader */
               new JsonReader(new StringReader(
                       /* StringReader parses the String data loaded from file. */
                       Files.readString(getStoragePath(), StandardCharsets.UTF_8)
               )),
-              new TypeToken<List<User>>() {}.getType());
+              new TypeToken<List<User>>() {
+              }.getType());
     } catch (IOException e) {
       throw new IOException(
               getStoragePath()
@@ -113,8 +113,7 @@ public class CognitionStorage {
     List<User> users = readUsers();
 
     if (users == null) {
-      // To maintain consistency in the dataset, a single user is also stored in a
-      // list
+      // To maintain consistency in the dataset, a single user is also stored in a list
       newUsers = List.of(instance);
     } else {
       users.add(instance);
@@ -146,7 +145,7 @@ public class CognitionStorage {
   }
 
   /**
-   * Finds a user based on an username and lets a consumer modify the user list
+   * Finds a user based on a username and lets a consumer modify the user list
    * based on it. Writes the new user list to file.
    *
    * @param username user that should be taken action upon
@@ -257,7 +256,7 @@ public class CognitionStorage {
               : stringPath.lastIndexOf("/");
 
       String dirPath = stringPath.substring(0, lastDividerIndex);
-      
+
       Files.createDirectories(Path.of(dirPath));
     } catch (IOException e) {
       throw new IOException("An error occurred when trying to create directory: " + storagePath);
