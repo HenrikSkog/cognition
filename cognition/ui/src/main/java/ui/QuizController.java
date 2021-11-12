@@ -7,6 +7,8 @@ import core.tools.Tools;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -277,6 +279,7 @@ public class QuizController extends LoggedInController {
     String quizName = name.getText();
     String quizDescription = description.getText();
 
+
     if (!Quiz.isValidName(quizName)) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "The name of a quiz cannot be empty.";
@@ -287,6 +290,13 @@ public class QuizController extends LoggedInController {
     if (!Quiz.isValidDescription(quizDescription)) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "The description of a quiz cannot be empty.";
+      setFeedbackText(feedbackErrorMessage);
+      return;
+    }
+
+    if (Objects.requireNonNull(getFlashcards()).size() == 0){
+      feedback.setTextFill(Color.RED);
+      feedbackErrorMessage = "There has to be at least one flashcard";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
