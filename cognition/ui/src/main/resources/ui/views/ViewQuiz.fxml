@@ -138,7 +138,7 @@
                                                 <Pane layoutX="23.0" layoutY="-68.0" prefHeight="372.0" prefWidth="487.0" style="-fx-background-color: ffffff;" styleClass="flashcard">
                                                     <children>
                                                         <!-- Check answer button -->
-                                                        <Button fx:id="submitAnswer" layoutX="389.0" layoutY="295.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="36.0" prefWidth="70.0" style="-fx-background-color: FCB751;" text="Check" textFill="WHITE">
+                                                        <Button fx:id="submitAnswer" layoutX="389.0" layoutY="295.0" mnemonicParsing="false" onAction="#checkAnswer" prefHeight="36.0" prefWidth="70.0" style="-fx-background-color: FCB751;" text="Check">
                                              <font>
                                                 <Font name="Verdana Bold" size="14.0" />
                                              </font></Button>
@@ -156,7 +156,7 @@
                                           <Pane layoutX="-1.0" layoutY="-5.0" prefHeight="68.0" prefWidth="488.0" style="-fx-background-color: FCB751; -fx-background-radius: 10 10 0 0;">
                                              <children>
                                                  <!-- Button that displays the answer of the flashcard -->
-                                                <Button fx:id="showAnswer" layoutX="331.0" layoutY="16.0" mnemonicParsing="false" onAction="#showAnswer" prefHeight="36.0" prefWidth="142.0" style="-fx-background-color: BC86F7;" text="Show answer" textFill="WHITE">
+                                                <Button fx:id="showAnswer" layoutX="331.0" layoutY="16.0" mnemonicParsing="false" onAction="#showAnswer" prefHeight="36.0" prefWidth="142.0" style="-fx-background-color: BC86F7;" text="Show answer">
                                                    <font>
                                                       <Font name="Verdana Bold" size="14.0" />
                                                    </font>
