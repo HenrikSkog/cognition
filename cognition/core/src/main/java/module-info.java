@@ -1,6 +1,5 @@
 module cognition.core {
   requires transitive com.google.gson;
-  requires java.net.http;
 
   exports core;
   exports core.tools;

@@ -1,5 +1,6 @@
 package ui;
 
+import core.CompactQuiz;
 import core.Quiz;
 import core.User;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * MyQuizzesController is responsible for handling the
@@ -19,12 +21,23 @@ import java.util.stream.Collectors;
 public class MyQuizzesController extends LoggedInController {
 
   @FXML
-  private ListView<Quiz> quizzesListView;
+  private ListView<CompactQuiz> quizzesListView;
 
   @FXML
   private TextField searchInput;
 
+  /**
+   * The currently selected compact quiz.
+   * See documentation on CompactQuiz for more information.
+   */
+  private CompactQuiz selectedCompactQuiz;
+
+  /**
+   * The currently selected quiz.
+   * See documentation Quiz for more information.
+   */
   private Quiz selectedQuiz;
+
   private String feedbackErrorMessage;
 
   public MyQuizzesController(User user, RemoteCognitionAccess remoteCognitionAccess) {
@@ -47,16 +60,16 @@ public class MyQuizzesController extends LoggedInController {
 
     // Update selected quiz by what quiz is selected in the ui
     quizzesListView.getSelectionModel().selectedItemProperty()
-            .addListener((observable, oldValue, newValue) -> this.selectedQuiz = newValue);
+            .addListener((observable, oldValue, newValue) -> this.selectedCompactQuiz = newValue);
   }
 
   /**
-   * Sets up list view cell factory so listview properly works using Quiz as type.
+   * Sets up list view cell factory so listview properly works using CompactQuiz as type.
    */
   private void setupListView() {
     quizzesListView.setCellFactory(quizListView -> new ListCell<>() {
       @Override
-      protected void updateItem(Quiz item, boolean empty) {
+      protected void updateItem(CompactQuiz item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
@@ -76,8 +89,18 @@ public class MyQuizzesController extends LoggedInController {
    * @param input the string quizzes are matched up against
    * @return an ObservableList with all the matching quizzes
    */
-  private ObservableList<Quiz> getQuizzes(String input) {
-    var stream = getUser().getQuizzes().stream();
+  private ObservableList<CompactQuiz> getQuizzes(String input) {
+    Stream<CompactQuiz> stream = null;
+
+    // Fetch compact quizzes
+    try {
+      stream = getCognitionAccess()
+              .getQuizTitlesByUsername(getUser().getUsername()).stream();
+    } catch (IOException | InterruptedException e) {
+      feedbackErrorMessage = "An error occurred when trying to get your quizzes.";
+      setFeedbackText(feedbackErrorMessage);
+      return null;
+    }
 
     if (!input.equals("")) {
       stream = stream.filter(quiz -> quiz.getName().toLowerCase().contains(input.toLowerCase()));
@@ -94,6 +117,16 @@ public class MyQuizzesController extends LoggedInController {
   @FXML
   private void handleStartQuiz(ActionEvent event) {
     if (quizIsNotSelected()) {
+      return;
+    }
+
+    // Fetch selected quiz based on selected CompactQuiz
+    // This is done in order to not fetch an unnecessary amount of data at once
+    try {
+      selectedQuiz = getCognitionAccess().getQuizByUuid(selectedCompactQuiz.getUuid());
+    } catch (IOException | InterruptedException e) {
+      feedbackErrorMessage = "An error occurred when trying to start the quiz.";
+      setFeedbackText(feedbackErrorMessage);
       return;
     }
 
@@ -120,6 +153,16 @@ public class MyQuizzesController extends LoggedInController {
       return;
     }
 
+    // Fetch selected quiz based on selected CompactQuiz
+    // This is done in order to not fetch an unnecessary amount of data at once
+    try {
+      selectedQuiz = getCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
+    } catch (IOException | InterruptedException e) {
+      feedbackErrorMessage = "An error occurred when trying to start the quiz.";
+      setFeedbackText(feedbackErrorMessage);
+      return;
+    }
+
     // Set state in controller
     QuizController quizController = new QuizController(getUser(), getCognitionAccess());
     quizController.setQuizBeingUpdated(selectedQuiz);
@@ -128,7 +171,7 @@ public class MyQuizzesController extends LoggedInController {
   }
 
   private boolean quizIsNotSelected() {
-    if (this.selectedQuiz == null) {
+    if (this.selectedCompactQuiz == null) {
       feedbackErrorMessage = "No selected quiz";
       setFeedbackText(feedbackErrorMessage);
       return true;
@@ -147,19 +190,29 @@ public class MyQuizzesController extends LoggedInController {
       return;
     }
 
-    // update java state
-    getUser().removeQuiz(selectedQuiz);
-    this.selectedQuiz = null;
+    // Fetch selected quiz based on selected CompactQuiz
+    // This is done in order to not fetch an unnecessary amount of data at once
+    try {
+      selectedQuiz = getCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
+    } catch (IOException | InterruptedException e) {
+      feedbackErrorMessage = "An error occurred when trying to start the quiz.";
+      setFeedbackText(feedbackErrorMessage);
+      return;
+    }
 
-    // update ui state
+    // Update state of models
+    getUser().removeQuiz(selectedQuiz);
+
+    // update state in UI
+    this.selectedCompactQuiz = null;
+    this.selectedQuiz = null;
     quizzesListView.getItems().remove(quizzesListView.getSelectionModel().getSelectedItem());
-    ObservableList<Quiz> quizzes = quizzesListView.getItems();
+    ObservableList<CompactQuiz> quizzes = quizzesListView.getItems();
     quizzesListView.setItems(quizzes);
 
-    // update the local storage state
+    // Update state in persistent storage
     try {
       getCognitionAccess().update(getUser());
-
     } catch (IOException | InterruptedException e) {
       setFeedbackText("An error occurred when trying to delete selected quiz.");
     }

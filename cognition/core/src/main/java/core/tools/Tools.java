@@ -3,7 +3,7 @@ package core.tools;
 import java.util.UUID;
 
 /**
- * Class with static helper functions.
+ * Tools has static helper functions.
  */
 public class Tools {
   public static String capitalize(String string) {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Identifier already in use")
 public class IdentifierAlreadyInUseException extends RuntimeException {
+  
   public IdentifierAlreadyInUseException(String identifier) {
     super("The identifier: " + identifier + " is already in use.");
   }

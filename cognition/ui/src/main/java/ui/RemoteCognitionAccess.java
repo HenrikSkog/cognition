@@ -3,6 +3,8 @@ package ui;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import core.CompactQuiz;
+import core.Quiz;
 import core.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -13,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 /**
- * A REST Controller that creates a bridge between
+ * A presentation layer REST accessor that creates a bridge between
  * the backend REST API and the frontend.
  */
 public class RemoteCognitionAccess {
@@ -22,10 +24,18 @@ public class RemoteCognitionAccess {
   private final Gson gson = new Gson();
   private final HttpClient client = HttpClient.newHttpClient();
 
+  /**
+   * Initializes an accessor on the default port.
+   */
   public RemoteCognitionAccess() {
     this(8080);
   }
 
+  /**
+   * Initializes an accessor on the specified port.
+   *
+   * @param port is the localhost port to interact with.
+   */
   public RemoteCognitionAccess(int port) {
     baseUri += String.valueOf(port);
   }
@@ -53,8 +63,62 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<List<User>>() {}.getType());
+            new TypeToken<List<User>>() {
+            }.getType());
+  }
 
+  /**
+   * Performs a GET request that returns a list
+   * of quiz titles belonging to a user, based on supplied username.
+   *
+   * @param username is a String representation of the current User's username.
+   * @return a list of quiz titles and identifiers corresponding to the current user.
+   * @throws InterruptedException if no connection is established
+   * @throws IOException          if the response is not 200
+   */
+  public List<CompactQuiz> getQuizTitlesByUsername(String username) throws IOException, InterruptedException {
+    String endpoint = baseUri + "/quizzes/" + username + "/titles";
+
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(endpoint))
+            .build();
+
+    HttpResponse<String> response = client.send(request,
+            HttpResponse.BodyHandlers.ofString());
+
+    return gson.fromJson(
+            new JsonReader(
+                    new StringReader(response.body())
+            ),
+            new TypeToken<List<CompactQuiz>>() {
+            }.getType());
+  }
+
+  /**
+   * Performs a GET request that returns a list
+   * of quiz titles belonging to a user, based on supplied username.
+   *
+   * @param uuid is a string corresponding to the UUID of a quiz
+   * @return the Quiz object with the corresponding UUID.
+   * @throws InterruptedException if no connection is established
+   * @throws IOException          if the response is not 200
+   */
+  public Quiz getQuizByUuid(String uuid) throws IOException, InterruptedException {
+    String endpoint = baseUri + "/quiz/" + uuid;
+
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(endpoint))
+            .build();
+
+    HttpResponse<String> response = client.send(request,
+            HttpResponse.BodyHandlers.ofString());
+
+    return gson.fromJson(
+            new JsonReader(
+                    new StringReader(response.body())
+            ),
+            new TypeToken<Quiz>() {
+            }.getType());
   }
 
   /**
@@ -81,7 +145,8 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<User>() {}.getType());
+            new TypeToken<User>() {
+            }.getType());
 
   }
 
@@ -130,10 +195,8 @@ public class RemoteCognitionAccess {
             .POST(HttpRequest.BodyPublishers.ofString(payload))
             .build();
 
-
     client.send(request,
             HttpResponse.BodyHandlers.ofString());
-
   }
 
   /**
