@@ -15,6 +15,7 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,6 +113,23 @@ public class CreateQuizTest extends ApplicationTest {
 
     waitForFxEvents();
     Assertions.assertTrue(quizWasStored);
+  }
+
+  @Test
+  @DisplayName("Cannot create empty quiz.")
+  void cannotCreateEmpty(){
+    String name = "name";
+    String description = "description";
+    waitForFxEvents();
+    clickOn("#name").write(name);
+    waitForFxEvents();
+    clickOn("#description").write(description);
+    waitForFxEvents();
+    clickOn("#remove-flashcard-button");
+    waitForFxEvents();
+    clickOn("#storeQuizButton");
+    waitForFxEvents();
+    FxAssert.verifyThat("#feedback", LabeledMatchers.hasText("There has to be at least one flashcard"));
   }
 
   /**
