@@ -179,7 +179,7 @@
                         </HBox.margin>
                           </Text>
                       <!-- Add flashcard button-->
-                            <Button fx:id="addFlashcardButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#addFlashcardNode" prefHeight="35.0" prefWidth="172.0" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Add another flashcard" textFill="WHITE">
+                            <Button fx:id="addFlashcardButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#addFlashcardNode" prefHeight="35.0" prefWidth="172.0" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Add another flashcard">
                                 <font>
                                     <Font name="Verdana Bold" size="12.0" />
                                 </font>
@@ -188,7 +188,7 @@
                         </HBox.margin>
                             </Button>
                             <!-- Button that saves the whole quiz-->
-                            <Button fx:id="storeQuizButton" mnemonicParsing="false" onAction="#handleStoreQuiz" prefHeight="35.0" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Save quiz" textFill="WHITE">
+                            <Button fx:id="storeQuizButton" mnemonicParsing="false" onAction="#handleStoreQuiz" prefHeight="35.0" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Save quiz">
                                 <font>
                                     <Font name="Verdana Bold" size="12.0" />
                                 </font>

@@ -94,8 +94,8 @@
         <!-- Container for buttons -->
         <HBox prefHeight="20.0" prefWidth="200.0">
             <children>
+                <Button fx:id="startQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleStartQuiz" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Start selected quiz">
                 <!-- Button that starts quiz (changes view to ViewQuiz.fmxl)-->
-                <Button fx:id="startQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleStartQuiz" style="-fx-background-color: FCB751; -fx-background-radius: 6;" text="Start selected quiz" textFill="WHITE">
                     <HBox.margin>
                         <Insets left="100.0" />
                     </HBox.margin>
@@ -103,8 +103,8 @@
                         <Font name="Avenir Book" size="15.0" />
                     </font>
                 </Button>
+                <Button fx:id="updateQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleUpdateQuiz" style="-fx-background-color: FCB751 FCB751; -fx-background-radius: 6;" text="Update selected quiz">
                 <!-- Button that updates quiz (changes view to Quiz.fxml and fill inputs with the data from selected quiz ) -->
-                <Button fx:id="updateQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleUpdateQuiz" style="-fx-background-color: FCB751 FCB751; -fx-background-radius: 6;" text="Update selected quiz" textFill="WHITE">
                     <HBox.margin>
                         <Insets left="60.0" right="80.0" />
                     </HBox.margin>
@@ -113,8 +113,7 @@
                     </font>
                 </Button>
                 <!-- Button that deletes selected quiz-->
-                <Button fx:id="deleteQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleDeleteQuiz" style="-fx-background-color: FCB751 FCB751; -fx-border-radius: 6;" text="Delete selected quiz" textFill="WHITE">
-
+                <Button fx:id="deleteQuizButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleDeleteQuiz" style="-fx-background-color: FCB751 FCB751; -fx-border-radius: 6;" text="Delete selected quiz">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
