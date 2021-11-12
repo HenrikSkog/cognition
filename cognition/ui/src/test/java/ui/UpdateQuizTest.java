@@ -11,7 +11,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,6 +78,21 @@ public class UpdateQuizTest extends ApplicationTest {
     Assertions.assertEquals(validQuizName, nameTextField.getText());
     waitForFxEvents();
     Assertions.assertEquals(validQuizDescription, descriptionTextField.getText());
+  }
+
+  @Test
+  @DisplayName("Cannot create empty quiz.")
+  void cannotCreateEmpty(){
+    String name = "name";
+    String description = "description";
+    waitForFxEvents();
+    clickOn("#name").write(name);
+    waitForFxEvents();
+    clickOn("#description").write(description);
+    waitForFxEvents();
+    clickOn("#storeQuizButton");
+    waitForFxEvents();
+    FxAssert.verifyThat("#feedback", LabeledMatchers.hasText("There has to be at least one flashcard"));
   }
 
   /**
