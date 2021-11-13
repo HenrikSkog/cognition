@@ -115,24 +115,6 @@ public class ViewQuizTest extends ApplicationTest {
   }
 
   @Test
-  @DisplayName("Set quiz does not throw")
-  void setQuizDoesNotThrow() {
-
-    Quiz quiz = new Quiz(createUuid(), "Test quiz",
-            "This is a test quiz used for development purposes");
-    quiz.addFlashcard(new Flashcard(createUuid(), "What is the capital of Spain?", "Madrid"));
-    quiz.addFlashcard(
-            new Flashcard(createUuid(), "What is the largest desert in the world?", "Antarctica"));
-
-    try {
-      viewQuizController.setQuiz(quiz);
-    } catch (Exception e) {
-      fail();
-    }
-
-  }
-
-  @Test
   @DisplayName("Run quiz with wrong answers and give correct number of right answers")
   void runQuizWithFails() {
     // answer first question incorrectly
@@ -185,6 +167,35 @@ public class ViewQuizTest extends ApplicationTest {
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(
             "End of quiz! " + "You got " + flashcards.size() + " right out of " + flashcards.size() + " possible."));
   }
+
+  @Test
+  @DisplayName("Can restart quiz when finished and run quiz again")
+  void canRestart() {
+    finishQuiz();
+
+    waitForFxEvents();
+
+    clickOn("#restartButton");
+
+    waitForFxEvents();
+
+    FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcards.get(0).getFront()));
+  }
+
+  @Test
+  @DisplayName("Can return to my quizzes after finishing quiz")
+  void canReturnToMyQuizzes() {
+    finishQuiz();
+
+    waitForFxEvents();
+
+    clickOn("#goToMyQuizzesButton");
+
+    waitForFxEvents();
+
+    FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
+  }
+
 
   @Test
   @DisplayName("Can navigate to Dashboard")

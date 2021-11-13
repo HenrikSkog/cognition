@@ -4,8 +4,13 @@ import core.Flashcard;
 import core.Quiz;
 import core.User;
 import java.util.List;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 /**
@@ -34,6 +39,27 @@ public class ViewQuizController extends LoggedInController {
   @FXML
   private Text answerText;
 
+  @FXML
+  private Button showAnswer;
+
+  @FXML
+  private Button submitAnswer;
+
+  @FXML
+  private Line answerInputLine;
+
+  @FXML
+  private Text answerInputText;
+
+  @FXML
+  private Label feedback;
+
+  @FXML
+  private Button restartButton;
+
+  @FXML
+  private Button goToMyQuizzesButton;
+
   public ViewQuizController(User user, Quiz quiz, RemoteCognitionAccess remoteCognitionAccess) {
     super(user, remoteCognitionAccess);
     this.quiz = quiz;
@@ -54,20 +80,6 @@ public class ViewQuizController extends LoggedInController {
    * Updates the current flashcard when the user is doing a quiz.
    */
   private void nextFlashcard() {
-    if (flashcardIndex == flashcards.size() - 1) {
-      flashcardText.setText(
-              new StringBuilder()
-                      .append("End of quiz! ")
-                      .append("You got ")
-                      .append(correctAnswerCount)
-                      .append(" right out of ")
-                      .append(flashcards.size())
-                      .append(" possible.")
-                      .toString());
-      setAnswerText("");
-      return;
-    }
-
     flashcardIndex++;
     flashcardText.setText(flashcards.get(flashcardIndex).getFront());
     setAnswerText("");
@@ -83,20 +95,33 @@ public class ViewQuizController extends LoggedInController {
     String correctAnswer = flashcards.get(flashcardIndex).getAnswer().toLowerCase();
 
     if (answerInput.getText().equals("")) {
-      setFeedbackErrorMode(true);
-      setFeedbackText("Please provide an answer.");
-      return;
-    }
-
-    if (!userAnswer.equals(correctAnswer)) {
-      setFeedbackErrorMode(true);
-      setFeedbackText("Incorrect! \n The correct answer was: " + correctAnswer + ".");
-      hasFailedFlashcard = true;
-      answerInput.setText("");
+      handleEmptyAnswer();
+    } else if (userAnswer.equals(correctAnswer)) {
+      handleCorrectAnswer();
     } else {
-      if (!hasFailedFlashcard) {
-        correctAnswerCount++;
-      }
+      handleWrongAnswer(correctAnswer);
+    }
+  }
+
+  private void handleEmptyAnswer() {
+    setFeedbackErrorMode(true);
+    setFeedbackText("Please provide an answer.");
+  }
+
+  private void handleWrongAnswer(String answer) {
+    setFeedbackErrorMode(true);
+    setFeedbackText("Incorrect! \n The correct answer was: " + answer + ".");
+    hasFailedFlashcard = true;
+    answerInput.setText("");
+  }
+
+  private void handleCorrectAnswer() {
+    if (!hasFailedFlashcard) {
+      correctAnswerCount++;
+    }
+    if (flashcardIndex == flashcards.size() - 1) {
+      handleFinishQuiz();
+    } else {
       setFeedbackErrorMode(false);
       setFeedbackText("Correct answer!");
       answerInput.setText("");
@@ -105,6 +130,57 @@ public class ViewQuizController extends LoggedInController {
       nextFlashcard();
     }
   }
+
+  private void handleFinishQuiz() {
+
+    setRunningQuizElementsVisibility(false);
+    setFinishedQuizElementsVisibility(true);
+
+    flashcardText.setText(
+        new StringBuilder()
+            .append("End of quiz! ")
+            .append("You got ")
+            .append(correctAnswerCount)
+            .append(" right out of ")
+            .append(flashcards.size())
+            .append(" possible.")
+            .toString());
+    setAnswerText("");
+
+  }
+
+  private void setRunningQuizElementsVisibility(Boolean bool) {
+    showAnswer.setVisible(bool);
+    answerInput.setVisible(bool);
+    submitAnswer.setVisible(bool);
+    answerInputLine.setVisible(bool);
+    answerInputText.setVisible(bool);
+    feedback.setVisible(bool);
+  }
+  
+  private void setFinishedQuizElementsVisibility(Boolean bool) {
+    goToMyQuizzesButton.setVisible(bool);
+    restartButton.setVisible(bool);
+  }
+
+  @FXML
+  private void goToMyQuizzes(ActionEvent event) {
+    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()), "MyQuizzes");
+  }
+
+  @FXML
+  private void restart(ActionEvent event) {
+    this.correctAnswerCount = 0;
+    this.flashcardIndex = -1;
+    nextFlashcard();
+    
+    setRunningQuizElementsVisibility(true);
+    setFinishedQuizElementsVisibility(false);
+    
+    setFeedbackText("");
+    answerInput.setText("");
+  }
+
 
   /**
    * Sets the styling on feedback in the frontend.
@@ -117,10 +193,6 @@ public class ViewQuizController extends LoggedInController {
     } else {
       setFeedbackStyle("-fx-text-fill: green");
     }
-  }
-
-  public void setQuiz(Quiz quiz) {
-    this.quiz = quiz;
   }
 
   @FXML

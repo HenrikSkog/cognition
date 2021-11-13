@@ -17,6 +17,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
@@ -128,19 +129,28 @@ public class QuizTest extends ApplicationTest {
   void invalidInputGivesCorrectFeedback() {
     // Invalid input
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     clickOn("#front-input").write("front");
+
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     clickOn("#answer-input").write("answer");
+
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     verifyInputData("", "description", true);
 
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     clearInputData("#name");
+
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     clearInputData("#description");
 
     // Description can be empty
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     verifyInputData("name", "", false);
   }
 
