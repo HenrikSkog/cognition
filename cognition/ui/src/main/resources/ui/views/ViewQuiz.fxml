@@ -147,8 +147,36 @@
                                              <font>
                                                 <Font name="Avenir Book" size="18.0" />
                                              </font></TextField>
-                                          <Line endX="205.0" layoutX="169.0" layoutY="324.0" startX="-120.00003051757812" stroke="#626262" />
-                                          <Text fill="#626262" layoutX="48.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TYPE YOUR ANSWER" wrappingWidth="200.49774169921875">
+                                          <Line fx:id="answerInputLine" endX="205.0"
+                                                layoutX="169.0"
+                                                layoutY="324.0"
+                                                startX="-120.00003051757812" stroke="#626262" />
+
+                                            <!-- Restart quiz button -->
+                                            <Button fx:id="restartButton" layoutX="25"
+                                                    layoutY="295.0" mnemonicParsing="false"
+                                                    onAction="#restart" prefHeight="36.0"
+                                                    prefWidth="200"
+                                                    style="-fx-background-color: FCB751;"
+                                                    text="RESTART QUIZ" visible="false" >
+                                                <font>
+                                                    <Font name="Verdana Bold" size="14.0" />
+                                                </font></Button>
+
+                                            <!-- Go to my quizzes page button -->
+                                            <Button fx:id="goToMyQuizzesButton" layoutX="250"
+                                                    layoutY="295.0" mnemonicParsing="false"
+                                                    onAction="#goToMyQuizzes" prefHeight="36.0"
+                                                    prefWidth="200"
+                                                    style="-fx-background-color: FCB751;"
+                                                    text="GO TO MY QUIZZES" visible="false">
+                                                <font>
+                                                    <Font name="Verdana Bold" size="14.0" />
+                                                </font></Button>
+                                          <Text fx:id="answerInputText" fill="#626262"
+                                                layoutX="48.0"
+                                                layoutY="342.0"
+                                                strokeType="OUTSIDE" strokeWidth="0.0" text="TYPE YOUR ANSWER" wrappingWidth="200.49774169921875">
                                              <font>
                                                 <Font name="Verdana" size="16.0" />
                                              </font>
