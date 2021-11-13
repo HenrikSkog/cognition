@@ -136,10 +136,8 @@ public class MyQuizzesController extends LoggedInController {
             selectedQuiz,
             getCognitionAccess()
     );
-    viewQuizController.setQuiz(selectedQuiz);
 
     changeToView(event, viewQuizController, "ViewQuiz");
-
   }
 
   /**

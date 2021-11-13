@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-
-import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,14 +73,19 @@ public class CreateQuizTest extends ApplicationTest {
     String answer = "answer";
 
     // Add flashcard
+    waitForFxEvents();
+    TestFxHelper.sleep(1);
     clickOn("#front-input").write(front);
+
     waitForFxEvents();
+    TestFxHelper.sleep(1);
     clickOn("#answer-input").write(answer);
-    waitForFxEvents();
+
 
     // Create quiz
-    verifyInputData("name", "description", false);
     waitForFxEvents();
+    TestFxHelper.sleep(1);
+    verifyInputData("name", "description", false);
 
     List<Quiz> quizzes = new ArrayList<>();
 
@@ -110,14 +113,12 @@ public class CreateQuizTest extends ApplicationTest {
         }
       }
     }
-
-    waitForFxEvents();
     Assertions.assertTrue(quizWasStored);
   }
 
   @Test
   @DisplayName("Cannot create empty quiz.")
-  void cannotCreateEmpty(){
+  void cannotCreateEmpty() {
     String name = "name";
     String description = "description";
     waitForFxEvents();
