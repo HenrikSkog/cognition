@@ -4,7 +4,6 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,10 +12,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
 /**
@@ -32,7 +27,7 @@ public class DashboardTest extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    clearUserStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
@@ -112,17 +107,5 @@ public class DashboardTest extends ApplicationTest {
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("MyQuizzes"));
     waitForFxEvents();
-  }
-
-  /**
-   * Empties the JSON data in file at the storage path. Used before validating the
-   * return type when user storage is empty.
-   */
-  private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 }

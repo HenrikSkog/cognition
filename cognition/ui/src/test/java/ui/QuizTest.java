@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +14,7 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import java.io.FileWriter;
-import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
 public class QuizTest extends ApplicationTest {
@@ -31,7 +27,7 @@ public class QuizTest extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    clearUserStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
@@ -129,28 +125,22 @@ public class QuizTest extends ApplicationTest {
   void invalidInputGivesCorrectFeedback() {
     // Invalid input
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     clickOn("#front-input").write("front");
 
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     clickOn("#answer-input").write("answer");
 
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     verifyInputData("", "description", true);
 
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     clearInputData("#name");
 
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     clearInputData("#description");
 
     // Description can be empty
     waitForFxEvents();
-    TestFxHelper.sleep(1);
     verifyInputData("name", "", false);
   }
 
@@ -180,18 +170,6 @@ public class QuizTest extends ApplicationTest {
     // Validate that user got correct feedback in UI
     waitForFxEvents();
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
-  }
-
-  /**
-   * Empties the JSON data in file at the storage path. Used before validating the
-   * return type when user storage is empty.
-   */
-  private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 
   private int getFlashcardPaneContainerChildrenCount() {
