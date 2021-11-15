@@ -4,16 +4,11 @@ import core.Quiz;
 import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +28,8 @@ public class RegisterTest extends ApplicationTest {
   private RegisterController registerController;
   private RemoteCognitionAccess remoteCognitionAccess;
 
+  private TestFxHelper helper = new TestFxHelper();
+
   @BeforeEach
   void setUp() {
     try {
@@ -46,7 +43,7 @@ public class RegisterTest extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    clearUserStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
@@ -132,31 +129,31 @@ public class RegisterTest extends ApplicationTest {
   @Test
   @DisplayName("Default quizzes are added")
   void defaultQuizzes() {
-  // Correct input yield success message
-  waitForFxEvents();
-  verifyInputData(validUsername, validPassword, validPassword, false);
+    // Correct input yield success message
+    waitForFxEvents();
+    verifyInputData(validUsername, validPassword, validPassword, false);
 
-  // Read locally stored users to find the inputted data
-  List<User> users = new ArrayList<>();
-  try {
-    users = remoteCognitionAccess.readUsers();
-  } catch (IOException | InterruptedException e) {
-    fail();
+    // Read locally stored users to find the inputted data
+    List<User> users = new ArrayList<>();
+    try {
+      users = remoteCognitionAccess.readUsers();
+    } catch (IOException | InterruptedException e) {
+      fail();
+    }
+
+    User user = users.stream()
+            .filter(u -> u.getUsername().equals(validUsername))
+            .findFirst()
+            .orElse(null);
+
+    Assertions.assertNotNull(user);
+
+
+    Quiz correctQuiz = RegisterController.createDefaultQuiz();
+
+    // Assert this quiz has been added to the newly registered user
+    Assertions.assertEquals(user.getQuizzes().get(0).getName(), correctQuiz.getName());
   }
-
-  User user = users.stream()
-      .filter(u -> u.getUsername().equals(validUsername))
-      .findFirst()
-      .orElse(null);
-
-  Assertions.assertNotNull(user);
-
-
-  Quiz correctQuiz = RegisterController.createDefaultQuiz();
-
-  // Assert this quiz has been added to the newly registered user
-  Assertions.assertEquals(user.getQuizzes().get(0).getName(), correctQuiz.getName());
-}
 
   @Test
   @DisplayName("All input fields are required.")
@@ -169,40 +166,18 @@ public class RegisterTest extends ApplicationTest {
   @DisplayName("Duplicate user gives error message.")
   void duplicateUserGivesErrorMessage() {
     // Create a local user
-    waitForFxEvents();
-    TestFxHelper.sleep(2);
     verifyInputData(validUsername, validPassword, validPassword, false);
 
     // Clear input before entering the same data again
     waitForFxEvents();
-    clearInputField("#usernameInput");
+    helper.clearInputField("#usernameInput");
     waitForFxEvents();
-    clearInputField("#passwordInput");
+    helper.clearInputField("#passwordInput");
     waitForFxEvents();
-    clearInputField("#passwordRepeatInput");
+    helper.clearInputField("#passwordRepeatInput");
 
     // Create a local user
-    waitForFxEvents();
-    TestFxHelper.sleep(2);
     verifyInputData(validUsername, validPassword, validPassword, true);
-  }
-
-  /**
-   * Helper method for clearing an input field with a given id. If the JavaFX Node
-   * with the provided id cannot be found, the method simply returns.
-   *
-   * @param id is the ID of the JavaFX Node to find.
-   */
-  private void clearInputField(String id) {
-    TextField input = (TextField) scene.lookup(id);
-
-    if (input == null) {
-      return;
-    }
-
-    while (!input.getText().equals("")) {
-      clickOn(id).push(KeyCode.BACK_SPACE);
-    }
   }
 
   @Test
@@ -241,11 +216,11 @@ public class RegisterTest extends ApplicationTest {
   private void verifyInputData(String username, String password, String repeatPassword, boolean isErrorMessage) {
     // Input data into UI
     waitForFxEvents();
-    clickOn("#usernameInput").write(username);
+    clickOn(helper.findTextField(node -> true, "#usernameInput", 0)).write(username);
     waitForFxEvents();
-    clickOn("#passwordInput").write(password);
+    clickOn(helper.findTextField(node -> true, "#passwordInput", 0)).write(password);
     waitForFxEvents();
-    clickOn("#passwordRepeatInput").write(repeatPassword);
+    clickOn(helper.findTextField(node -> true, "#passwordRepeatInput", 0)).write(repeatPassword);
     waitForFxEvents();
     clickOn("#registerButton");
 
@@ -255,17 +230,5 @@ public class RegisterTest extends ApplicationTest {
     // Validate that user got correct feedback in UI
     waitForFxEvents();
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
-  }
-
-  /**
-   * Empties the JSON data in file at the storage path. Used before validating the
-   * return type when user storage is empty.
-   */
-  private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 }
