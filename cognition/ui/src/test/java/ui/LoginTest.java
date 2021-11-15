@@ -4,13 +4,10 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -22,6 +19,8 @@ public class LoginTest extends ApplicationTest {
   private Scene scene;
   private LoginController loginController;
   private RemoteCognitionAccess remoteCognitionAccess;
+
+  private TestFxHelper helper = new TestFxHelper();
 
   @BeforeEach
   void setUp() {
@@ -36,7 +35,7 @@ public class LoginTest extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    clearUserStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
@@ -87,11 +86,14 @@ public class LoginTest extends ApplicationTest {
       fail();
     }
 
-    clickOn("#usernameInput").write(validUsername);
+    clickOn(helper.findTextField(node -> true, "#usernameInput", 0)).write(validUsername);
+
+    clickOn(helper.findTextField(node -> true, "#passwordInput", 0)).write(validPassword);
+
     waitForFxEvents();
-    clickOn("#passwordInput").write(validPassword);
-    waitForFxEvents();
+
     clickOn("#loginButton");
+
     waitForFxEvents();
 
     // Check that we loaded Dashboard view
@@ -132,9 +134,10 @@ public class LoginTest extends ApplicationTest {
    */
   private void verifyInputData(String username, String password, String feedback) {
     // Input data into UI
-    clickOn("#usernameInput").write(username);
+    clickOn(helper.findTextField(node -> true, "#usernameInput", 0)).write(username);
     waitForFxEvents();
-    clickOn("#passwordInput").write(password);
+    clickOn(helper.findTextField(node -> true, "#passwordInput", 0)).write(password);
+
     waitForFxEvents();
     clickOn("#loginButton");
     waitForFxEvents();
@@ -142,20 +145,5 @@ public class LoginTest extends ApplicationTest {
     // Validate that user got correct feedback in UI
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
     waitForFxEvents();
-  }
-
-  /**
-   * Empties the JSON data in file at the storage path. Used before validating the
-   * return type when user storage is empty.
-   */
-  private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(
-            String.valueOf(
-                    new CognitionStorage("cognitionTest.json").getStoragePath()
-            ))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 }

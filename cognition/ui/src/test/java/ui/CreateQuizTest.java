@@ -6,7 +6,6 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +27,11 @@ public class CreateQuizTest extends ApplicationTest {
   private QuizController quizController;
   private RemoteCognitionAccess remoteCognitionAccess;
 
+  private TestFxHelper helper = new TestFxHelper();
+
   @AfterEach
   void tearDown() {
-    clearUserStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
@@ -73,18 +73,14 @@ public class CreateQuizTest extends ApplicationTest {
     String answer = "answer";
 
     // Add flashcard
-    waitForFxEvents();
-    TestFxHelper.sleep(1);
-    clickOn("#front-input").write(front);
+    clickOn(helper.findTextField(node -> true, "#front-input", 0))
+            .write(front);
 
-    waitForFxEvents();
-    TestFxHelper.sleep(1);
-    clickOn("#answer-input").write(answer);
+    clickOn(helper.findTextField(node -> true, "#answer-input", 0))
+            .write(answer);
 
 
     // Create quiz
-    waitForFxEvents();
-    TestFxHelper.sleep(1);
     verifyInputData("name", "description", false);
 
     List<Quiz> quizzes = new ArrayList<>();
@@ -121,14 +117,16 @@ public class CreateQuizTest extends ApplicationTest {
   void cannotCreateEmpty() {
     String name = "name";
     String description = "description";
-    waitForFxEvents();
-    clickOn("#name").write(name);
-    waitForFxEvents();
-    clickOn("#description").write(description);
+
+    clickOn(helper.findTextField(node -> true, "#name", 0)).write(name);
+    clickOn(helper.findTextField(node -> true, "#description", 0)).write(description);
+
     waitForFxEvents();
     clickOn("#remove-flashcard-button");
+
     waitForFxEvents();
     clickOn("#storeQuizButton");
+
     waitForFxEvents();
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText("There has to be at least one flashcard"));
   }
@@ -142,30 +140,19 @@ public class CreateQuizTest extends ApplicationTest {
    */
   private void verifyInputData(String name, String description, boolean isErrorMessage) {
     // Input data into UI
-    clickOn("#name").write(name);
-    waitForFxEvents();
-    clickOn("#description").write(description);
-    waitForFxEvents();
-    clickOn("#storeQuizButton");
+    clickOn(helper.findTextField(node -> true, "#name", 0)).write(name);
+    clickOn(helper.findTextField(node -> true, "#description", 0)).write(description);
+
     waitForFxEvents();
 
+    clickOn("#storeQuizButton");
+
+    waitForFxEvents();
     String feedback = isErrorMessage ? quizController.getFeedbackErrorMessage()
             : quizController.getFeedbackSuccessMessage();
 
     // Validate that user got correct feedback in UI
     FxAssert.verifyThat("#feedback", LabeledMatchers.hasText(feedback));
     waitForFxEvents();
-  }
-
-  /**
-   * Empties the JSON data in file at the storage path. Used before validating the
-   * return type when user storage is empty.
-   */
-  private void clearUserStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 }

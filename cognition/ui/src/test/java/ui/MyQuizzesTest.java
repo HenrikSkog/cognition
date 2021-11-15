@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import json.CognitionStorage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -32,17 +29,16 @@ public class MyQuizzesTest extends ApplicationTest {
   private final String validUsername = "valid-username";
   private final String validPassword = "valid-password";
 
-
   @AfterEach
   void tearDown() {
-    clearStorage();
+    TestFxHelper.clearTestStorage();
   }
 
   @Override
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("MyQuizzes");
 
-    // logged in user and storage instances must be present for this view to function
+    // Logged-in user and storage instances must be present for this view to function
     this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     this.loggedInUser = new User(validUsername, validPassword);
 
@@ -159,7 +155,7 @@ public class MyQuizzesTest extends ApplicationTest {
   @Test
   @DisplayName("Can update quiz")
   public void canUpdateQuiz() {
-    // click on update wihout selecting quiz
+    // click on update without selecting quiz
     clickOn("#updateQuizButton");
     waitForFxEvents();
 
@@ -211,16 +207,6 @@ public class MyQuizzesTest extends ApplicationTest {
 
     FxAssert.verifyThat("#pageId", LabeledMatchers.hasText("Login"));
     waitForFxEvents();
-  }
-
-  private void clearStorage() {
-    try (FileWriter writer = new FileWriter(String.valueOf(
-            new CognitionStorage("cognitionTest.json").getStoragePath())
-    )) {
-      writer.write("");
-    } catch (IOException e) {
-      fail();
-    }
   }
 
   private ListView<CompactQuiz> findListView() {

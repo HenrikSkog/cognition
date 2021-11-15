@@ -6,6 +6,7 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static core.tools.Tools.createUuid;
-import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
 public class ViewQuizTest extends ApplicationTest {
@@ -27,6 +27,12 @@ public class ViewQuizTest extends ApplicationTest {
   private Scene scene;
   private ViewQuizController viewQuizController;
   private List<Flashcard> flashcards = new ArrayList<>();
+  private TestFxHelper helper = new TestFxHelper();
+
+  @AfterEach
+  void tearDown() {
+    TestFxHelper.clearTestStorage();
+  }
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -73,8 +79,8 @@ public class ViewQuizTest extends ApplicationTest {
     waitForFxEvents();
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcards.get(0).getFront()));
 
-    waitForFxEvents();
-    clickOn("#answerInput").write(flashcards.get(0).getAnswer());
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write(flashcards.get(0).getAnswer());
+
     waitForFxEvents();
     clickOn("#submitAnswer");
 
@@ -103,7 +109,7 @@ public class ViewQuizTest extends ApplicationTest {
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcards.get(0).getFront()));
 
     waitForFxEvents();
-    clickOn("#answerInput").write(flashcards.get(1).getAnswer());
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write(flashcards.get(1).getAnswer());
 
     waitForFxEvents();
     clickOn("#submitAnswer");
@@ -121,21 +127,21 @@ public class ViewQuizTest extends ApplicationTest {
     waitForFxEvents();
     FxAssert.verifyThat("#flashcardText", TextMatchers.hasText("What is the capital of Spain?"));
 
-    waitForFxEvents();
-    clickOn("#answerInput").write("Wrong answer");
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write("Wrong answer");
+
     waitForFxEvents();
     clickOn("#submitAnswer");
 
     // answer with the correct answer
-    waitForFxEvents();
-    clickOn("#answerInput").write(flashcards.get(0).getAnswer());
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write(flashcards.get(0).getAnswer());
+
     waitForFxEvents();
     clickOn("#submitAnswer");
 
     // answer rest of flashcards correctly
     for (Flashcard flashcard : flashcards.subList(1, flashcards.size())) {
-      waitForFxEvents();
-      clickOn("#answerInput").write(flashcard.getAnswer());
+      clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write(flashcard.getAnswer());
+
       waitForFxEvents();
       clickOn("#submitAnswer");
     }
@@ -151,16 +157,14 @@ public class ViewQuizTest extends ApplicationTest {
   @Test
   @DisplayName("Finish quiz")
   void finishQuiz() {
-
     for (Flashcard flashcard : flashcards) {
       waitForFxEvents();
       FxAssert.verifyThat("#flashcardText", TextMatchers.hasText(flashcard.getFront()));
 
-      waitForFxEvents();
-      clickOn("#answerInput").write(flashcard.getAnswer());
+      clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write(flashcard.getAnswer());
+
       waitForFxEvents();
       clickOn("#submitAnswer");
-
     }
 
     waitForFxEvents();
@@ -239,9 +243,11 @@ public class ViewQuizTest extends ApplicationTest {
   void whenShowingAnswer_firstClickAfterTryingShowsAnswer() {
     // click a first time to show the answer
     waitForFxEvents();
-    clickOn("#answerInput").write("wrong-answer");
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write("wrong-answer");
+
     waitForFxEvents();
     clickOn("#submitAnswer");
+
     waitForFxEvents();
     clickOn("#showAnswer");
 
@@ -254,11 +260,14 @@ public class ViewQuizTest extends ApplicationTest {
   void canHideAnswer() {
     // click a first time to show the answer
     waitForFxEvents();
-    clickOn("#answerInput").write("wrong-answer");
+    clickOn(helper.findTextField(node -> true, "#answerInput", 0)).write("wrong-answer");
+
     waitForFxEvents();
     clickOn("#submitAnswer");
+
     waitForFxEvents();
     clickOn("#showAnswer");
+
     // click a second time to hide it
     waitForFxEvents();
     clickOn("#showAnswer");
