@@ -159,7 +159,7 @@
                          <!-- Feedback label (Here the feedback of the view gets displayed)-->
                               <Label fx:id="feedback" alignment="CENTER" prefHeight="148.0" prefWidth="454.0" textAlignment="CENTER">
                            <font>
-                              <Font name="Avenir Book" size="20.0" />
+                              <Font name="Avenir Book" size="14.0" />
                            </font></Label>
                      </children></VBox>
                </children>
