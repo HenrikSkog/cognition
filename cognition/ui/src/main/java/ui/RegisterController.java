@@ -3,6 +3,7 @@ package ui;
 import core.Flashcard;
 import core.Quiz;
 import core.User;
+import core.UserValidation;
 import core.tools.Tools;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,13 +69,23 @@ public class RegisterController extends Controller {
    * @return a boolean indicating whether the input is valid.
    */
   private boolean isValidRegister(String username, String password, String passwordRepeat) {
-    if (!User.isValidUsername(username)) {
+    if (User.isValidUsername(username) == UserValidation.ILLEGAL_INPUT_LENGTH) {
       feedbackErrorMessage = "Username has to be at least 3 characters long";
       return false;
     }
 
-    if (!User.isValidPassword(password)) {
+    if (User.isValidUsername(username) == UserValidation.ILLEGAL_INPUT) {
+      feedbackErrorMessage = "User can only contain letters and numbers";
+      return false;
+    }
+
+    if (User.isValidPassword(password) == UserValidation.ILLEGAL_INPUT_LENGTH) {
       feedbackErrorMessage = "Password must be at least 6 characters long";
+      return false;
+    }
+
+    if (User.isValidPassword(password) == UserValidation.ILLEGAL_INPUT) {
+      feedbackErrorMessage = "Password cannot contain only whitespaces";
       return false;
     }
 

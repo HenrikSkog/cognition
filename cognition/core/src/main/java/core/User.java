@@ -26,12 +26,39 @@ public class User {
     setPassword(password);
   }
 
-  public static boolean isValidUsername(String username) {
-    return username != null && username.length() >= 3;
+  public static UserValidation isValidUsername(String username) {
+    int MAX_INPUT_LENGTH = 36;
+
+    // Checks if username is only white space
+    boolean isOnlyWhitespaces = username.trim().equals("");
+    // Checks if username only includes letters and numbers
+    boolean hasIllegalCharacters = !(username.matches("^[a-zA-Z0-9A-]*"));
+    // Checks if username has a length above 3 char and under 36;
+    boolean isValidLength = username.length() >= 3 && username.length() < MAX_INPUT_LENGTH;
+
+    if (isOnlyWhitespaces || !isValidLength) {
+      return UserValidation.ILLEGAL_INPUT_LENGTH;
+    }
+
+    if (hasIllegalCharacters) {
+      return UserValidation.ILLEGAL_INPUT;
+    }
+
+    return UserValidation.OK;
   }
 
-  public static boolean isValidPassword(String password) {
-    return password != null && password.length() >= 6;
+  public static UserValidation isValidPassword(String password) {
+    boolean hasOnlyWhitespaces = password.trim().equals("");
+
+    if (password.length() < 6) {
+      return UserValidation.ILLEGAL_INPUT_LENGTH;
+    }
+
+    if (hasOnlyWhitespaces) {
+      return UserValidation.ILLEGAL_INPUT;
+    }
+
+    return UserValidation.OK;
   }
 
   /**
@@ -89,7 +116,7 @@ public class User {
    * @param username new username
    */
   public void setUsername(String username) {
-    if (!User.isValidUsername(username)) {
+    if (!(User.isValidUsername(username) == UserValidation.OK)) {
       throw new IllegalArgumentException();
     }
 
@@ -106,7 +133,7 @@ public class User {
    * @param password new password
    */
   public void setPassword(String password) {
-    if (!User.isValidPassword(password)) {
+    if (!(User.isValidPassword(password) == UserValidation.OK)) {
       throw new IllegalArgumentException();
     }
 

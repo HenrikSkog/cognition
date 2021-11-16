@@ -141,7 +141,7 @@ public class QuizTest extends ApplicationTest {
 
     // Description can be empty
     waitForFxEvents();
-    verifyInputData("name", "", false);
+    verifyInputData("name", "description", false);
   }
 
   private void clearInputData(String nodeId) {
