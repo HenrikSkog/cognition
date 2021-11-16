@@ -4,11 +4,6 @@ import core.Flashcard;
 import core.Quiz;
 import core.User;
 import core.tools.Tools;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,6 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -28,6 +27,8 @@ import javafx.scene.text.Text;
  */
 public class QuizController extends LoggedInController {
   private static final String feedbackSuccessMessage = "Successfully created quiz.";
+  private static final int MAX_FRONT_INPUT_LENGTH = 250;
+  private static final int MAX_ANSWER_INPUT_LENGTH = 25;
 
   @FXML
   private ScrollPane flashcardPane;
@@ -78,6 +79,10 @@ public class QuizController extends LoggedInController {
     } else {
       // If no quiz is being updated, start with a title, description and an empty flashcard
       createFlashcardNode(null);
+
+      // Limit characters in UI
+      limitTextField(name, Quiz.MAX_TITLE_LENGTH);
+      limitTextField(description, Quiz.MAX_DESCRIPTION_LENGTH);
     }
   }
 
@@ -212,6 +217,7 @@ public class QuizController extends LoggedInController {
     if (flashcard != null) {
       frontInput.setText(flashcard.getFront());
     }
+    limitTextField(frontInput, MAX_FRONT_INPUT_LENGTH);
     frontContainer.getChildren().addAll(frontInput, frontLabel);
 
     // Populate answer container
@@ -229,6 +235,7 @@ public class QuizController extends LoggedInController {
     if (flashcard != null) {
       answerInput.setText(flashcard.getAnswer());
     }
+    limitTextField(answerInput, MAX_ANSWER_INPUT_LENGTH);
     answerContainer.getChildren().addAll(answerInput, answerLabel);
 
     HBox lowerChildContainer = new HBox();
@@ -289,12 +296,15 @@ public class QuizController extends LoggedInController {
 
     if (!Quiz.isValidDescription(quizDescription)) {
       feedback.setTextFill(Color.RED);
-      feedbackErrorMessage = "The description of a quiz cannot be empty.";
+      feedbackErrorMessage =
+              "The description of a quiz cannot be empty and cannot be greater than "
+                      + Quiz.MAX_DESCRIPTION_LENGTH +
+                      ".";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
 
-    if (Objects.requireNonNull(getFlashcards()).size() == 0){
+    if (Objects.requireNonNull(getFlashcards()).size() == 0) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "There has to be at least one flashcard";
       setFeedbackText(feedbackErrorMessage);
@@ -443,5 +453,20 @@ public class QuizController extends LoggedInController {
     }
     QuizController quizController = new QuizController(getUser(), getCognitionAccess());
     changeToView(event, quizController, "Quiz");
+  }
+
+  /**
+   * Limits the provided text field to a given maximum length.
+   *
+   * @param textField is the JavaFX TextField to limit
+   * @param maxLength is the max length of the String input
+   */
+  private void limitTextField(TextField textField, int maxLength) {
+    textField.textProperty().addListener((__, oldValue, newValue) -> {
+      if (textField.getText().length() > maxLength) {
+        String substring = textField.getText().substring(0, maxLength);
+        textField.setText(substring);
+      }
+    });
   }
 }

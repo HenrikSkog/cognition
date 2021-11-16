@@ -33,11 +33,13 @@ public class Flashcard {
   }
 
   public static boolean isValidFront(String front) {
-    return front != null && front.length() >= 1;
+    Boolean check = front.trim().equals("");
+    return !check && front.length() >= 1;
   }
 
   public static boolean isValidAnswer(String answer) {
-    return answer != null && answer.length() >= 1;
+    Boolean check = answer.trim().equals("");
+    return !check && answer.length() >= 1;
   }
 
   public String getUuid() {

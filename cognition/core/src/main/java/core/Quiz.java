@@ -10,7 +10,8 @@ import java.util.List;
  * and a list of flashcards. Is then used to show quizzes in the frontend (UI).
  */
 public class Quiz {
-  public static final int MAX_DESCRIPTION_LENGTH = 500;
+  public static final int MAX_DESCRIPTION_LENGTH = 260;
+  public static final int MAX_TITLE_LENGTH = 60;
   private String uuid;
   private String name;
   private String description;
@@ -34,11 +35,11 @@ public class Quiz {
   }
 
   public static boolean isValidName(String name) {
-    return name != null && name.length() >= 1;
+    return !name.trim().equals("") && name.length() >= 1;
   }
 
   public static boolean isValidDescription(String description) {
-    return description != null && description.length() < MAX_DESCRIPTION_LENGTH;
+    return !description.trim().equals("") && description.length() <= MAX_DESCRIPTION_LENGTH;
   }
 
   /**
