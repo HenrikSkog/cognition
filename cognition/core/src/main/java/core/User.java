@@ -16,7 +16,7 @@ public class User {
   }
 
   /**
-   * Initialize user fields.
+   * Initialize a User object.
    *
    * @param username username
    * @param password password

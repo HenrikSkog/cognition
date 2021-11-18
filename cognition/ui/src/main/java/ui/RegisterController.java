@@ -34,6 +34,7 @@ public class RegisterController extends Controller {
   private PasswordField passwordRepeatInput;
   @FXML
   private Labeled feedback;
+
   private String feedbackErrorMessage;
 
   public RegisterController(RemoteCognitionAccess remoteCognitionAccess) {
@@ -94,6 +95,7 @@ public class RegisterController extends Controller {
       return false;
     }
 
+    // Get users from local storage
     List<User> users = null;
     try {
       users = getCognitionAccess().readUsers();
@@ -102,6 +104,7 @@ public class RegisterController extends Controller {
       feedback.setText(feedbackErrorMessage);
     }
 
+    // Find user
     if (users != null) {
       for (User user : users) {
         if (user.getUsername().equals(username)) {

@@ -14,9 +14,11 @@ We solved this by adding static validation methods to be used by the Java models
 
 In deliverable 1, we got some feedback on remembering to assigning issues to developers.
 
-We acknowledge that not all our issues are assigned to a developer. However, the convention in our group is to assign developers to merge requests rather than issues. Internally, we accept that a developer forgets to assign himself to an issue, **as long as the merge request is assigned to the developer**.
+We acknowledge that not all our issues are assigned to a developer. Internally in the group, we accept that a developer forgets to assign himself to an issue, **as long as the merge request is assigned to the developer**.
 
 To back this up, we received positive feedback from our client that we use reasonable and easy-to-understand branching and merge requests.
+
+> Since we received this feedback, we have been more strict on assigning each issue to an assignee.
 
 ## Changelog from deliverable 1 to deliverable 2
 
@@ -39,7 +41,7 @@ Below, you can view a short summary of the changelog from deliverable 1 to deliv
 
 The Cognition application uses **implicit memory for persistent storage**. This means that when the user interacts with the application, the user does not have to worry about explicitly stating that the user wants to store data persistently.
 
-Take [Quizlet](https://quizlet.com/) as an example. As a user, I create a quiz consisting of flashcards, and click _"Create"_. As a user, I do not care how the data is persistently stored. I only care about the data being there the next time I launch the application. Thus, we have no explicit _"Store current state of the application"_ button. This would break with our design choice for persistence.
+Take [Quizlet](https://quizlet.com/) as an example. As a user, I create a quiz consisting of flashcards, and click _"Create"_. As a user, I do not care how the data is persistently stored. I only care about the data being there the next time I launch the application. Thus, we have no explicit _"Store current state of the application"_ button. This would conflict with our design choice for persistence.
 
 To compare, take _Microsoft Word_ - without automatic backup functionality to a cloud service - as a contrary example. When a user writes in a local Microsoft Word instance, the data is usually not automatically saved without the user's influence. If I want to keep my current progress, I go to `File -> Save As...`, and then persistently save my progress. This is an example of a document metaphor (desktop) for persistent storage.
 
@@ -51,24 +53,15 @@ Please see the [Core module documentation](../../cognition/core/README.md) for a
 
 The repository uses continuous integration (hereby referred to as CI) pipeline before merging new features to the main branch. This pipeline runs the following Maven commands using a Maven image:
 
-```sh
-# Clean the current build, install dependencies in all modules and test all modules
-mvn clean install
-
-# Compile the Java application
-mvn compile
-
-# Clean and test again. This is redundant, but used as a safety measure to ensure that all tests pass.
-mvn clean test
-```
+The configuration for the pipeline can be found in [`.gitlab-ci.yml`](../../.gitlab-ci.yml). It uses settings found in [`.m2/settings.xml`](../../.m2/settings.xml).
 
 The pipeline for continuous integration must succeed before merging new functionality.
 
 The code must compile, pass all code quality checks and pass all tests.
 
-The configuration for the pipeline can be found in [`.gitlab-ci.yml`](../../.gitlab-ci.yml). It uses settings found in [`.m2/settings.xml`](../../.m2/settings.xml).
-
 Please note that we do not run tests in the `ui` module in GitLab, as it is not supported. This is confirmed by the IT1901 staff. Our solution to this problem is to test the `api` and `core` module in the CI pipeline, and then test the `ui` module locally before merging. That way, all tests are validated before merging.
+
+> There may be a way to achieve headless UI tests running in GitLab using a particular Maven configuration. However, we deem this a low priority compared to other work. **We always test the client application locally before merging.**
 
 ## Architecture Documentation
 
@@ -95,6 +88,8 @@ The `ui` module has 1 Checkstyle warning we have chosen not to handle, due to th
 ```
 
 **However, `SuppressFBWarnings` must have this specific name to be considered by SpotBugs. This is confirmed by the IT1901 staff.** Thus, we intentionally ignore this Checkstyle warning.
+
+> As of release 3, SuppressFBWarnings is no longer in use and therefores does not trigger a Checkstyle warning.
 
 ## Test coverage
 
@@ -132,7 +127,7 @@ Please see the [API module documentation](../../cognition/api/README.md) for a t
 
 ### Storage format
 
-Currently, all data is written to one file: `~/it1901-gr2103/cognition/cognition.json`. In this file, the users are stored in an array with their corresponding quizzes. The advantage of this solution is that it is very comfortable to work with, as our file format and JSON representation directly corresponds to how our Java models are structured. On the contrary, we recognize that in an upscaled version of the app, this would be very inefficient. All users are read and written every time one single flashcard is updated or added. However, this is only a small scale project. As such, we stick to the [file format defintion found in the core module documentation (`### Storage Format`)](../../cognition/core/README.md).
+Currently, all data is written to one file: `~/it1901-gr2103/cognition/cognition.json`. In this file, the users are stored in an array with their corresponding quizzes. The advantage of this solution is that it is very comfortable to work with, as our file format and JSON representation directly corresponds to how our Java models are structured. On the contrary, we recognize that in an upscaled version of the app, this would be very inefficient. All users are read and written every time one single flashcard is updated or added. However, this is only a small scale project. As such, we stick to the [file format definition found in the core module documentation (`### Storage Format`)](../../cognition/core/README.md).
 
 ### Enforcing characters limits on user input
 
@@ -141,6 +136,8 @@ When the user creates a quiz, the user adds a name, description and one or more 
 There are both advantages and disadvantages to this approach. One advantage of enforcing such a character limit is that we as developers and maintainers gain more control over the visual representation. As an example, if a user inputs 50'000 characters on the front of the flashcard, the view of the flashcard may appear disfigured and incorrectly formatted. However, we as developers do not want to affect the user's formulation on a flashcard. As an example, a user wants to write a some sentences and a question with 1'000 characters on the front of the flashcard. If we enforce an upper limit to the length of the flashcard's front and back, the user will have to trim down the formulation, potentially impeding them.
 
 However, we do enforce an upper limit to the length of the a quiz' description. This is because the purpose of a quiz description is to quickly describe the essence of a quiz, rather than writing multiple paragraphs. We find that an upper limit of 500 characters fits.
+
+> Please note that this was changed for the final deliverable. We added character limits in order for the UI elements to not overflow.
 
 ### Spotbugs and resource leaks
 
@@ -171,3 +168,5 @@ As an extension of the solution, using setters to inject one instance of the `St
 Please see the [start method in the App class](../../cognition/ui/src/main/java/ui/App.java) and the [UI tests](../../cognition/ui/src/test/java/ui) for a better understanding of the solution.
 
 **In summary**, we find this to be a very clean solution to what proved to be a rather complex problem with many moving parts.
+
+> For deliverable 3, the UI has no direct ties to the local storage. The UI interacts with local storage using the REST API.

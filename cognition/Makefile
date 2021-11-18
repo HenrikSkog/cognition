@@ -2,8 +2,8 @@
 #          Project Convenience Makefile Wrapper for Maven        #
 ##################################################################
 
-# This makefile is just a convenience wrapper for the Maven
-# program. The actual building rules for this project may
+# This makefile is just a convenience wrapper for Maven.
+# The actual building rules for this project may
 # be found in the Maven "pom.xml" files in the project modules.
 
 ######################### DEFINITIONS ############################

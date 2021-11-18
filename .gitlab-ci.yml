@@ -19,7 +19,10 @@ cache:
 
 build:
   stage: build
-  # Cleans previous build, installs dependencies, runs all tests and checks that the project compiles
+  # 1. Cleans previous build
+  # 2. Installs dependencies
+  # 3. Run tests in core and api module
+  # 4. Checks that the project compiles
   script:
     - mvn $PARENT_CLI_OPTS clean install -DskipTests
     - mvn $API_CLI_OPTS test

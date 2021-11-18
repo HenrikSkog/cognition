@@ -26,14 +26,14 @@ public class RemoteCognitionAccess {
   private final HttpClient client = HttpClient.newHttpClient();
 
   /**
-   * Initializes an accessor on the default port.
+   * Initializes the REST accessor on the default port.
    */
   public RemoteCognitionAccess() {
     this(8080);
   }
 
   /**
-   * Initializes an accessor on the specified port.
+   * Initializes the REST accessor on the specified port.
    *
    * @param port is the localhost port to interact with.
    */

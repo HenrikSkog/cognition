@@ -1,6 +1,5 @@
 package api;
 
-
 import core.CompactQuiz;
 import core.Quiz;
 import core.User;
@@ -14,8 +13,9 @@ import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * CognitionControllerTest validates that the REST controller behaves like expected.
- * This class is treated almost as a unit test, given the manner the controller is tested.
+ * CognitionControllerTest validates that the REST controller behaves like
+ * expected. This class is treated almost as a unit test, given the manner the
+ * controller is tested.
  */
 public class CognitionControllerTest {
   private CognitionController cognitionController;
@@ -25,9 +25,10 @@ public class CognitionControllerTest {
   @BeforeEach
   void setUp() {
     try {
+      // Because we test the REST controller in isolation, a new instance is made and
+      // its methods are tested like a unit test
       cognitionController = new CognitionController();
       cognitionStorage = new CognitionStorage("cognitionTest.json");
-
       cognitionController.setCognitionStorage(cognitionStorage);
 
       // Create sample user for tests
@@ -79,8 +80,8 @@ public class CognitionControllerTest {
       fail();
     }
 
+    // Assert that user was created
     User parsedUser = cognitionController.getUserByUsername(username);
-
     Assertions.assertEquals(username, parsedUser.getUsername());
   }
 
@@ -100,10 +101,7 @@ public class CognitionControllerTest {
 
     // Create duplicate user
     try {
-      Assertions.assertThrows(
-              IdentifierAlreadyInUseException.class,
-              () -> cognitionController.createUser(user)
-      );
+      Assertions.assertThrows(IdentifierAlreadyInUseException.class, () -> cognitionController.createUser(user));
     } catch (StorageException | IdentifierAlreadyInUseException e) {
       fail();
     }
@@ -125,7 +123,6 @@ public class CognitionControllerTest {
     List<CompactQuiz> quizTitles = cognitionController.getQuizTitlesByUsername(validUsername);
     CompactQuiz compactQuiz = quizTitles.get(0);
 
-    // Assertion
     Assertions.assertEquals(quiz.getName(), compactQuiz.getName());
   }
 
@@ -145,8 +142,8 @@ public class CognitionControllerTest {
 
       User parsedUser = cognitionController.getUserByUsername(validUsername);
 
+      // Assert that we added quiz
       boolean addedQuiz = parsedUser.getQuizzes().size() == 1;
-
       Assertions.assertTrue(addedQuiz);
     } catch (UserNotFoundException e) {
       fail();
@@ -159,7 +156,6 @@ public class CognitionControllerTest {
     try {
       // Get user
       User user = cognitionController.getUserByUsername(validUsername);
-
       Assertions.assertNotNull(user);
 
       // Delete user
@@ -189,7 +185,7 @@ public class CognitionControllerTest {
     // Read sample quiz
     Quiz parsedQuiz = cognitionController.getQuizByUuid(uuid);
 
-    // Assertion
+    // Assert that we could read quiz
     Assertions.assertNotNull(parsedQuiz);
   }
 
@@ -198,10 +194,7 @@ public class CognitionControllerTest {
   void whenGettingQuizByUuid_ifNoQuizzesExist_thenThrow() {
     String nonExistingUuid = createUuid();
 
-    Assertions.assertThrows(
-            QuizNotFoundException.class,
-            () -> cognitionController.getQuizByUuid(nonExistingUuid)
-    );
+    Assertions.assertThrows(QuizNotFoundException.class, () -> cognitionController.getQuizByUuid(nonExistingUuid));
   }
 
   @Test
@@ -212,11 +205,7 @@ public class CognitionControllerTest {
       User user = cognitionController.getUserByUsername(validUsername);
 
       // Add quiz to user
-      user.addQuiz(new Quiz(
-              createUuid(),
-              "quiz-name",
-              "quiz-description")
-      );
+      user.addQuiz(new Quiz(createUuid(), "quiz-name", "quiz-description"));
 
       // Update state
       cognitionController.updateUser(user);
@@ -253,7 +242,8 @@ public class CognitionControllerTest {
     // Update using controller
     cognitionController.updateQuizByUuid(quiz);
 
-    // Inspect the user corresponding to the quiz, and verify that the quiz was updated
+    // Inspect the user corresponding to the quiz, and verify that the quiz was
+    // updated
     user = cognitionController.getUserByUsername(validUsername);
     Quiz updatedQuiz = user.getQuizzes().get(0);
 
@@ -265,16 +255,10 @@ public class CognitionControllerTest {
   @Test
   @DisplayName("If user to update is null, then throw.")
   void ifUserToUpdateIsNullThenThrow() {
-    Quiz quizNotBelongingToUser = new Quiz(
-            createUuid(),
-            "test-name",
-            "test-description"
-    );
+    Quiz quizNotBelongingToUser = new Quiz(createUuid(), "test-name", "test-description");
 
-    Assertions.assertThrows(
-            UserNotFoundException.class,
-            () -> cognitionController.updateQuizByUuid(quizNotBelongingToUser)
-    );
+    Assertions.assertThrows(UserNotFoundException.class,
+        () -> cognitionController.updateQuizByUuid(quizNotBelongingToUser));
   }
 
   @Test
@@ -296,7 +280,6 @@ public class CognitionControllerTest {
     // Verify state
     user = cognitionController.getUserByUsername(validUsername);
     boolean quizWasDeleted = user.getQuizzes().size() == 0;
-
     Assertions.assertTrue(quizWasDeleted);
   }
 
@@ -305,19 +288,13 @@ public class CognitionControllerTest {
   void ifQuizToDeleteIsNullThenThrow() {
     String nonExistingUuid = createUuid();
 
-    Assertions.assertThrows(
-            QuizNotFoundException.class,
-            () -> cognitionController.deleteQuizByUuid(nonExistingUuid)
-    );
+    Assertions.assertThrows(QuizNotFoundException.class, () -> cognitionController.deleteQuizByUuid(nonExistingUuid));
   }
 
   @Test
   @DisplayName("Can create quiz.")
   void canCreateQuiz() {
-    cognitionController.createQuiz(
-            new Quiz(createUuid(), "new-name", "new-description"),
-            validUsername
-    );
+    cognitionController.createQuiz(new Quiz(createUuid(), "new-name", "new-description"), validUsername);
 
     User user = cognitionController.getUserByUsername(validUsername);
 
@@ -329,10 +306,8 @@ public class CognitionControllerTest {
   @DisplayName("Invalid user throws when creating quiz.")
   void invalidUserThrowsWhenCreatingQuiz() {
     Quiz quiz = new Quiz(createUuid(), "new-name", "new-description");
-    Assertions.assertThrows(
-            UserNotFoundException.class,
-            () -> cognitionController.createQuiz(quiz, "non-existing-username")
-    );
+    Assertions.assertThrows(UserNotFoundException.class,
+        () -> cognitionController.createQuiz(quiz, "non-existing-username"));
   }
 
   @Test
@@ -345,18 +320,16 @@ public class CognitionControllerTest {
     cognitionController.createQuiz(quiz, validUsername);
 
     // When we find a duplicate UUID for a quiz, we throw
-    Assertions.assertThrows(
-            IdentifierAlreadyInUseException.class,
-            () -> cognitionController.createQuiz(quiz, validUsername)
-    );
+    Assertions.assertThrows(IdentifierAlreadyInUseException.class,
+        () -> cognitionController.createQuiz(quiz, validUsername));
   }
 
   /**
    * Empties the JSON data in file at the storage path. Used before validating the
    * return type when user storage is empty.
    * <p>
-   * This method directly accesses the local storage,
-   * as it makes no sense to have an API endpoint for deleting all persistent data.
+   * This method directly accesses the local storage, as it makes no sense to have
+   * an API endpoint for deleting all persistent data.
    */
   private void clearStorage() {
     try (FileWriter writer = new FileWriter(String.valueOf(cognitionStorage.getStoragePath()))) {
