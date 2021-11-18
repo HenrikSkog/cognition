@@ -6,8 +6,11 @@ import core.User;
 import json.CognitionStorage;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -41,7 +44,6 @@ public class CognitionController {
     } else {
       setCognitionStorage(new CognitionStorage());
     }
-
   }
 
 
@@ -51,7 +53,7 @@ public class CognitionController {
    * @param cognitionStorage is an instance of the CognitionStorage class.
    */
   public void setCognitionStorage(CognitionStorage cognitionStorage) {
-    this.cognitionStorage = cognitionStorage;
+    this.cognitionStorage = Objects.requireNonNull(cognitionStorage);
   }
 
   /**
@@ -61,11 +63,11 @@ public class CognitionController {
    * @throws UserNotFoundException if no users are found.
    */
   @GetMapping("/users")
-  public List<User> getUsers() throws UserNotFoundException {
+  public List<User> getUsers() throws StorageException {
     try {
       return cognitionStorage.readUsers();
     } catch (IOException e) {
-      throw new UserNotFoundException();
+      throw new StorageException();
     }
   }
 
@@ -76,15 +78,16 @@ public class CognitionController {
    * @param username is the String representation of the user's username.
    * @return an instance of the User class.
    * @throws UserNotFoundException if the user cannot be found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/users/{username}")
-  public User getUserByUsername(@PathVariable String username) throws UserNotFoundException {
+  public User getUserByUsername(@PathVariable String username) throws UserNotFoundException, StorageException {
     try {
       return cognitionStorage.read(username);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException();
     } catch (IOException e) {
-      throw new UserNotFoundException(
-              "No user with the following identifier was found: " + username
-      );
+      throw new StorageException();
     }
   }
 
@@ -99,16 +102,16 @@ public class CognitionController {
    */
   @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
   public void createUser(@RequestBody User user)
-          throws StorageException, IdentifierAlreadyInUseException {
+      throws IdentifierAlreadyInUseException, StorageException {
     try {
       boolean userAlreadyExists;
 
       List<User> users = cognitionStorage.readUsers();
 
-      if (users != null) {
+      if (users.size() != 0) {
         // Check for duplicates if we have content in local storage
         userAlreadyExists = users.stream()
-                .anyMatch(u -> u.getUsername().equals(user.getUsername()));
+            .anyMatch(u -> u.getUsername().equals(user.getUsername()));
       } else {
         // If local storage is empty, then a duplicate user cannot exist
         userAlreadyExists = false;
@@ -131,17 +134,18 @@ public class CognitionController {
    *
    * @param user is the new and updated User.
    * @throws UserNotFoundException if the user cannot be found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @PutMapping(value = "/users",
-          consumes = MediaType.APPLICATION_JSON_VALUE)
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   public void updateUser(@RequestBody User user)
-          throws UserNotFoundException {
+      throws UserNotFoundException, StorageException {
     try {
       cognitionStorage.update(user.getUsername(), user);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException("User not found in local storage");
     } catch (IOException e) {
-      throw new UserNotFoundException(
-              "No user with the following identifier was found: " + user.getUsername()
-      );
+      throw new StorageException();
     }
   }
 
@@ -151,15 +155,16 @@ public class CognitionController {
    *
    * @param username is the string representation of the user to update.
    * @throws UserNotFoundException if the user cannot be found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @DeleteMapping("/users/{username}")
-  public void deleteUser(@PathVariable String username) throws UserNotFoundException {
+  public void deleteUser(@PathVariable String username) throws UserNotFoundException, StorageException {
     try {
       cognitionStorage.delete(username);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException();
     } catch (IOException e) {
-      throw new UserNotFoundException(
-              "No user with the following identifier was found: " + username
-      );
+      throw new StorageException();
     }
   }
 
@@ -170,17 +175,12 @@ public class CognitionController {
    * @param username is a String representation of the current User's username.
    * @return a list of quizzes corresponding to the current user.
    * @throws UserNotFoundException if no user is found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/quizzes/{username}")
   public List<Quiz> getQuizzesByUsername(@PathVariable String username)
-          throws UserNotFoundException {
-    try {
-      return getUserByUsername(username).getQuizzes();
-    } catch (UserNotFoundException e) {
-      throw new UserNotFoundException(
-              "No user with the following identifier was found: " + username
-      );
-    }
+      throws UserNotFoundException, StorageException {
+    return getUserByUsername(username).getQuizzes();
   }
 
   /**
@@ -193,20 +193,15 @@ public class CognitionController {
    * @param username is a String representation of the current User's username.
    * @return a list of quiz titles and identifiers corresponding to the current user.
    * @throws UserNotFoundException if no user is found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/quizzes/{username}/titles")
   public List<CompactQuiz> getQuizTitlesByUsername(@PathVariable String username)
-          throws UserNotFoundException {
-    try {
-      return getUserByUsername(username).getQuizzes()
-              .stream()
-              .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
-              .collect(Collectors.toList());
-    } catch (UserNotFoundException e) {
-      throw new UserNotFoundException(
-              "No user with the following identifier was found: " + username
-      );
-    }
+      throws UserNotFoundException, StorageException {
+    return getUserByUsername(username).getQuizzes()
+        .stream()
+        .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -215,23 +210,26 @@ public class CognitionController {
    * @param uuid is a string corresponding to the UUID of a quiz
    * @return a quiz
    * @throws QuizNotFoundException if no quizzes were found.
+   * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/quiz/{uuid}")
-  public Quiz getQuizByUuid(@PathVariable String uuid) throws QuizNotFoundException {
+  public Quiz getQuizByUuid(@PathVariable String uuid) throws QuizNotFoundException, StorageException {
 
-    List<Quiz> quizzes = getQuizzes();
+    List<Quiz> quizzes = null;
+    try {
+      quizzes = getQuizzes();
+    } catch (IOException e) {
+      throw new StorageException();
+    }
 
     if (quizzes.size() == 0) {
       throw new QuizNotFoundException("No quizzes were found in persistent storage.");
     }
 
-    Quiz quiz = quizzes.stream().filter(q -> q.getUuid().equals(uuid)).findFirst().orElse(null);
-
-    if (quiz != null) {
-      return quiz;
-    } else {
-      throw new QuizNotFoundException("No quiz with the following identifier was found: " + uuid);
-    }
+    return quizzes.stream()
+        .filter(q -> q.getUuid().equals(uuid))
+        .findFirst()
+        .orElseThrow(() -> new QuizNotFoundException("No quiz with the following identifier was found: "));
   }
 
   /**
@@ -240,11 +238,12 @@ public class CognitionController {
    * the UUID of the quiz.
    *
    * @param newQuiz is the new quiz object.
-   * @throws UserNotFoundException if the User belonging to the quiz to updated
+   * @throws QuizNotFoundException if the User belonging to the quiz to updated
    *                               could not be found.
+   * @throws StorageException      if there was an error reading local storage
    */
   @PutMapping("/quiz")
-  public void updateQuizByUuid(@RequestBody Quiz newQuiz) throws UserNotFoundException {
+  public void updateQuizByUuid(@RequestBody Quiz newQuiz) throws QuizNotFoundException, StorageException {
     User userToUpdate = null;
 
     for (User user : getUsers()) {
@@ -263,10 +262,10 @@ public class CognitionController {
     try {
       userToUpdate.updateQuiz(newQuiz);
       cognitionStorage.update(userToUpdate.getUsername(), userToUpdate);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException();
     } catch (IOException e) {
-      throw new QuizNotFoundException(
-              "No quiz with the following identifier was found: " + newQuiz.getUuid()
-      );
+      throw new StorageException();
     }
   }
 
@@ -275,6 +274,9 @@ public class CognitionController {
    * deletes a quiz from persistent storage based on the provided UUID of the quiz.
    *
    * @param uuid is the UUID of the quiz.
+   * @throws QuizNotFoundException if the User belonging to the quiz to updated
+   *                               could not be found.
+   * @throws StorageException      if there was an error reading local storage
    */
   @DeleteMapping("/quiz/{uuid}")
   public void deleteQuizByUuid(@PathVariable String uuid) throws QuizNotFoundException {
@@ -300,8 +302,10 @@ public class CognitionController {
     try {
       user.removeQuiz(quiz);
       cognitionStorage.update(user.getUsername(), user);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException();
     } catch (IOException e) {
-      throw new QuizNotFoundException("No quiz with the following identifier was found: " + uuid);
+      throw new StorageException();
     }
   }
 
@@ -310,25 +314,25 @@ public class CognitionController {
    *
    * @param quiz     is the quiz object to be stored.
    * @param username is the user that the quiz is related to.
-   * @throws QuizNotFoundException           if an error occurred when checking for
-   *                                         duplicate quizzes
    * @throws UserNotFoundException           if no user with the given username exists
    * @throws IdentifierAlreadyInUseException if the exact quiz provided already exists
+   * @throws StorageException                if there was an error reading local storage
    */
   @PostMapping("/quiz/{username}")
   public void createQuiz(@RequestBody Quiz quiz, @PathVariable String username)
-          throws QuizNotFoundException, UserNotFoundException, IdentifierAlreadyInUseException {
+      throws UserNotFoundException, IdentifierAlreadyInUseException {
 
     User user = getUserByUsername(username);
 
-    List<Quiz> quizzes = getQuizzes();
+    List<Quiz> quizzes = null;
+    try {
+      quizzes = getQuizzes();
+    } catch (IOException e) {
+      throw new StorageException();
+    }
 
     boolean uuidAlreadyExists = quizzes.stream()
-            .anyMatch(q -> q.getUuid().equals(quiz.getUuid()));
-
-    if (user == null) {
-      throw new UserNotFoundException(username);
-    }
+        .anyMatch(q -> q.getUuid().equals(quiz.getUuid()));
 
     if (uuidAlreadyExists) {
       throw new IdentifierAlreadyInUseException(quiz.getUuid());
@@ -338,8 +342,10 @@ public class CognitionController {
 
     try {
       cognitionStorage.update(user.getUsername(), user);
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException();
     } catch (IOException e) {
-      throw new UserNotFoundException(username);
+      throw new StorageException();
     }
   }
 
@@ -347,20 +353,10 @@ public class CognitionController {
    * Gets a list of all available quizzes.
    *
    * @return a list of all quizzes, or null if an error occurs when getting quizzes.
-   * @throws QuizNotFoundException if no quizzes were found in persistent storage.
+   * @throws IOException if there was an error reading local storage
    */
-  private List<Quiz> getQuizzes() throws QuizNotFoundException {
-
-    List<Quiz> quizzes = null;
-
-    try {
-      quizzes = cognitionStorage.readUsers().stream()
-              .flatMap(u -> u.getQuizzes().stream()).collect(Collectors.toList());
-    } catch (IOException e) {
-      throw new QuizNotFoundException("No quizzes were found in persistent storage.");
-    }
-
-    return quizzes;
+  private List<Quiz> getQuizzes() throws IOException {
+    return cognitionStorage.readUsers().stream()
+        .flatMap(u -> u.getQuizzes().stream()).collect(Collectors.toList());
   }
-
 }
