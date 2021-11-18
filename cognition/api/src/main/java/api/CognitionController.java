@@ -36,7 +36,7 @@ public class CognitionController {
    * @throws IOException if an error occurs when initializing persistent storage.
    */
   public CognitionController() throws IOException {
-
+    // Determines if the server is running on a port used for testing
     boolean isTest = System.getProperty("webRequestTest") != null;
 
     /*
@@ -110,6 +110,7 @@ public class CognitionController {
   public void createUser(@RequestBody User user)
       throws IdentifierAlreadyInUseException, StorageException {
     try {
+      // Determine if user already exists
       boolean userAlreadyExists;
 
       List<User> users = cognitionStorage.readUsers();

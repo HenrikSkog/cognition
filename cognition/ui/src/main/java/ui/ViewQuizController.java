@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import java.util.List;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -102,11 +103,19 @@ public class ViewQuizController extends LoggedInController {
     }
   }
 
+  /**
+   * Updates UI based on an empty answer.
+   */
   private void handleEmptyAnswer() {
     setFeedbackErrorMode(true);
     setFeedbackText("Please provide an answer.");
   }
 
+  /**
+   * Updates UI based on an incorrect answer.
+   *
+   * @param answer is the answer provided by the user.
+   */
   private void handleWrongAnswer(String answer) {
     setFeedbackErrorMode(true);
     setFeedbackText("Incorrect! \n The correct answer was: " + answer + ".");
@@ -114,10 +123,14 @@ public class ViewQuizController extends LoggedInController {
     answerInput.setText("");
   }
 
+  /**
+   * Updates UI based on a correct answer.
+   */
   private void handleCorrectAnswer() {
     if (!hasFailedFlashcard) {
       correctAnswerCount++;
     }
+
     if (flashcardIndex == flashcards.size() - 1) {
       handleFinishQuiz();
     } else {
@@ -130,25 +143,31 @@ public class ViewQuizController extends LoggedInController {
     }
   }
 
+  /**
+   * Updates UI when a user finishes quiz
+   */
   private void handleFinishQuiz() {
-
     setRunningQuizElementsVisibility(false);
     setFinishedQuizElementsVisibility(true);
 
     flashcardText.setText(
-        new StringBuilder()
-            .append("End of quiz! ")
-            .append("You got ")
-            .append(correctAnswerCount)
-            .append(" right out of ")
-            .append(flashcards.size())
-            .append(" possible.")
-            .toString());
+            new StringBuilder()
+                    .append("End of quiz! ")
+                    .append("You got ")
+                    .append(correctAnswerCount)
+                    .append(" right out of ")
+                    .append(flashcards.size())
+                    .append(" possible.")
+                    .toString());
     setAnswerText("");
-
   }
 
-  private void setRunningQuizElementsVisibility(Boolean bool) {
+  /**
+   * Change visibility on given UI elements based on boolean input
+   *
+   * @param bool is the boolean representing if the UI element should be visible or not.
+   */
+  private void setRunningQuizElementsVisibility(boolean bool) {
     showAnswer.setVisible(bool);
     answerInput.setVisible(bool);
     submitAnswer.setVisible(bool);
@@ -156,8 +175,13 @@ public class ViewQuizController extends LoggedInController {
     answerInputText.setVisible(bool);
     feedback.setVisible(bool);
   }
-  
-  private void setFinishedQuizElementsVisibility(Boolean bool) {
+
+  /**
+   * Change visibility on given UI elements based on boolean input
+   *
+   * @param bool is the boolean representing if the UI element should be visible or not.
+   */
+  private void setFinishedQuizElementsVisibility(boolean bool) {
     goToMyQuizzesButton.setVisible(bool);
     restartButton.setVisible(bool);
   }
@@ -167,15 +191,20 @@ public class ViewQuizController extends LoggedInController {
     changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()), "MyQuizzes");
   }
 
+  /**
+   * Restarts the quiz.
+   *
+   * @param event is the event on button click
+   */
   @FXML
   private void restart(ActionEvent event) {
     this.correctAnswerCount = 0;
     this.flashcardIndex = -1;
     nextFlashcard();
-    
+
     setRunningQuizElementsVisibility(true);
     setFinishedQuizElementsVisibility(false);
-    
+
     setFeedbackText("");
     answerInput.setText("");
   }
@@ -194,6 +223,9 @@ public class ViewQuizController extends LoggedInController {
     }
   }
 
+  /**
+   * Displays the answer in the UI.
+   */
   @FXML
   private void showAnswer() {
     String invalidText = "Don't give up before trying!";
@@ -208,8 +240,7 @@ public class ViewQuizController extends LoggedInController {
       setAnswerText(invalidText);
     }
   }
-
-
+  
   private void setAnswerText(String text) {
     this.answerText.setText(text);
   }

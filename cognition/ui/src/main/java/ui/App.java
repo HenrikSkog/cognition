@@ -22,8 +22,8 @@ public class App extends Application {
     // Load FXML view
     FXMLLoader loader = getLoader("Login");
 
-    // Set state in controller
-    // The UserStorage that gets initialized here, is common for the entire
+    // Set state in controller.
+    // The RemoteCognitionAccess that gets initialized here is common for the entire
     // application.
     // This UserStorage is set in all other controllers, in order to maintain
     // continuity.

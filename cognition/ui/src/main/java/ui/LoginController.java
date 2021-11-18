@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 public class LoginController extends Controller {
   @FXML
   private TextField usernameInput;
+
   @FXML
   private PasswordField passwordInput;
 
@@ -65,6 +66,11 @@ public class LoginController extends Controller {
             "Dashboard");
   }
 
+  /**
+   * Switches to the Register view.
+   *
+   * @param event is the event on button click
+   */
   @FXML
   private void goToRegister(ActionEvent event) {
     changeToView(event, new RegisterController(getCognitionAccess()),
@@ -81,6 +87,7 @@ public class LoginController extends Controller {
   private boolean isValidLogin(String username, String password) {
     List<User> users;
 
+    // Read users in local storage
     try {
       users = getCognitionAccess().readUsers();
     } catch (IOException | InterruptedException e) {
@@ -88,6 +95,7 @@ public class LoginController extends Controller {
       return false;
     }
 
+    // Find user based on parameters
     if (users != null) {
       for (User user : users) {
         if (user.getUsername().equals(username) && user.getPassword().equals(password)) {

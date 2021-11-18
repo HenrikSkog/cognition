@@ -4,7 +4,7 @@ import core.tools.Tools;
 import java.util.Objects;
 
 /**
- * Class that handles flashcards.
+ * A single Flashcard in a collection of flashcards, corresponding to a given Quiz.
  */
 public class Flashcard {
   private String uuid;

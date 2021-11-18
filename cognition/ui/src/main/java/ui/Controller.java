@@ -1,6 +1,5 @@
 package ui;
 
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import java.io.IOException;
 
 /**
  * Controller is an abstract class with the common functionality
@@ -21,7 +21,18 @@ public abstract class Controller {
 
   private RemoteCognitionAccess remoteCognitionAccess;
 
-  public Controller(RemoteCognitionAccess remoteCognitionAccess) {
+  /**
+   * Initializes an extensions of the Controller abstract class.
+   * See {@link ui.Controller} for more information.
+   *
+   * @param remoteCognitionAccess is REST API accessor
+   * @throws NullPointerException if remoteCognitionAccess is null
+   */
+  public Controller(RemoteCognitionAccess remoteCognitionAccess) throws NullPointerException {
+    if (remoteCognitionAccess == null) {
+      throw new NullPointerException("Remote access cannot be null.");
+    }
+
     this.remoteCognitionAccess = remoteCognitionAccess;
   }
 

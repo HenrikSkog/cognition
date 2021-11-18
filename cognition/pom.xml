@@ -66,11 +66,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M5</version>
                     <configuration>
-                        <!--
-                            <argLine>dash dash enable-preview</argLine>
-                        -->
                     </configuration>
                 </plugin>
+
                 <!-- Run the checkstyle code quality tool -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -100,6 +98,7 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <!-- Run the spotbugs code quality tool -->
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
@@ -118,6 +117,7 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <!-- Configure jacoco code coverage -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -140,42 +140,6 @@
                         </execution>
                     </executions>
                 </plugin>
-
-                <!--<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>copy-dependencies</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>copy-dependencies</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>
-                                    ${project.build.directory}/libs
-                                </outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>-->
-                <!--<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>libs/</classpathPrefix>
-                                <mainClass>
-                                    ui.App
-                                </mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>-->
-
-
             </plugins>
         </pluginManagement>
         <plugins>
@@ -195,6 +159,4 @@
         <module>core</module>
         <module>api</module>
     </modules>
-
-
 </project>

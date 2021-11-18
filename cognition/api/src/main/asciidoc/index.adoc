@@ -13,7 +13,7 @@ This REST API documentation draws inspiration from https://spring.io/projects/sp
 [[http_verbs]]
 == HTTP verbs
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+These RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.
 
 |===
@@ -37,7 +37,7 @@ use of HTTP verbs.
 
 The `cognition` project's RESTful notes adheres to standard HTTP and REST conventions in its use of HTTP status codes.
 
-Please note that `cognition` does not use variation of `OK` status codes, but rather only `200 OK`.
+Please note that `cognition` does not use variations of `OK` status codes, but rather only `200 OK`.
 
 |===
 | Status code | Usage
