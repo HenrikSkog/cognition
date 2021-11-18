@@ -5,11 +5,16 @@ import core.Quiz;
 import core.User;
 import json.CognitionStorage;
 import org.junit.jupiter.api.*;
+
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static core.tools.Tools.createUuid;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -146,8 +151,20 @@ public class CognitionControllerTest {
       boolean addedQuiz = parsedUser.getQuizzes().size() == 1;
       Assertions.assertTrue(addedQuiz);
     } catch (UserNotFoundException e) {
+
       fail();
     }
+  }
+
+  @Test
+  @DisplayName("When updating user: If no user exist, then throw.")
+  void whenUpdatingUser_ifNoUserExist_thenThrow() {
+    String nonExistingUuid = createUuid();
+    User user = new User("nonUser", "hheloas");
+    Assertions.assertThrows(
+             UserNotFoundException.class,
+            () -> cognitionController.updateUser(user)
+    );
   }
 
   @Test
@@ -168,6 +185,17 @@ public class CognitionControllerTest {
     } catch (UserNotFoundException e) {
       fail();
     }
+  }
+
+  @Test
+  @DisplayName("When deleting user: If no such user exist, then throw.")
+  void whenDeletingUser_ifNoUserExists_thenThrow() {
+    String invalidUsername = "thisUsernameDoesNotExist";
+
+    Assertions.assertThrows(
+            UserNotFoundException.class,
+            () -> cognitionController.deleteUser(invalidUsername)
+    );
   }
 
   @Test
@@ -252,6 +280,8 @@ public class CognitionControllerTest {
     Assertions.assertEquals(expectedDescription, updatedQuiz.getDescription());
   }
 
+
+
   @Test
   @DisplayName("If user to update is null, then throw.")
   void ifUserToUpdateIsNullThenThrow() {
@@ -260,6 +290,8 @@ public class CognitionControllerTest {
     Assertions.assertThrows(UserNotFoundException.class,
         () -> cognitionController.updateQuizByUuid(quizNotBelongingToUser));
   }
+
+
 
   @Test
   @DisplayName("Can delete quiz.")
