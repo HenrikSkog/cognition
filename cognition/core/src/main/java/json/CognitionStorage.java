@@ -5,7 +5,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import core.User;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

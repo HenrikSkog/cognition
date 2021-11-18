@@ -4,7 +4,6 @@ import core.Flashcard;
 import core.Quiz;
 import core.User;
 import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
