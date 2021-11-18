@@ -3,15 +3,20 @@ package api;
 import core.CompactQuiz;
 import core.Quiz;
 import core.User;
-import json.CognitionStorage;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import json.CognitionStorage;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
@@ -81,7 +86,8 @@ public class CognitionController {
    * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/users/{username}")
-  public User getUserByUsername(@PathVariable String username) throws UserNotFoundException, StorageException {
+  public User getUserByUsername(@PathVariable String username)
+      throws UserNotFoundException, StorageException {
     try {
       return cognitionStorage.read(username);
     } catch (NoSuchElementException e) {
@@ -158,7 +164,8 @@ public class CognitionController {
    * @throws StorageException      if an error occurred with the persistent storage
    */
   @DeleteMapping("/users/{username}")
-  public void deleteUser(@PathVariable String username) throws UserNotFoundException, StorageException {
+  public void deleteUser(@PathVariable String username)
+      throws UserNotFoundException, StorageException {
     try {
       cognitionStorage.delete(username);
     } catch (NoSuchElementException e) {
@@ -186,8 +193,8 @@ public class CognitionController {
   /**
    * Performs a GET request that returns a list
    * of quiz titles belonging to a user, based on supplied username.
-   * <p>
-   * This endpoint is useful because we do not want the client to fetch an unnecessary amount
+   *
+   * <p>This endpoint is useful because we do not want the client to fetch an unnecessary amount
    * of data every single time. For a given view in the client, this is sufficient.
    *
    * @param username is a String representation of the current User's username.
@@ -213,7 +220,8 @@ public class CognitionController {
    * @throws StorageException      if an error occurred with the persistent storage
    */
   @GetMapping("/quiz/{uuid}")
-  public Quiz getQuizByUuid(@PathVariable String uuid) throws QuizNotFoundException, StorageException {
+  public Quiz getQuizByUuid(@PathVariable String uuid)
+      throws QuizNotFoundException, StorageException {
 
     List<Quiz> quizzes = null;
     try {
@@ -229,7 +237,9 @@ public class CognitionController {
     return quizzes.stream()
         .filter(q -> q.getUuid().equals(uuid))
         .findFirst()
-        .orElseThrow(() -> new QuizNotFoundException("No quiz with the following identifier was found: "));
+        .orElseThrow(
+            () -> new QuizNotFoundException("No quiz with the following identifier was found: ")
+        );
   }
 
   /**
@@ -243,7 +253,8 @@ public class CognitionController {
    * @throws StorageException      if there was an error reading local storage
    */
   @PutMapping("/quiz")
-  public void updateQuizByUuid(@RequestBody Quiz newQuiz) throws QuizNotFoundException, StorageException {
+  public void updateQuizByUuid(@RequestBody Quiz newQuiz)
+      throws QuizNotFoundException, StorageException {
     User userToUpdate = null;
 
     for (User user : getUsers()) {

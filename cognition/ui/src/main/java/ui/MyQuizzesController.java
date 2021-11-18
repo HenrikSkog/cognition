@@ -3,6 +3,9 @@ package ui;
 import core.CompactQuiz;
 import core.Quiz;
 import core.User;
+import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,9 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import java.io.IOException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * MyQuizzesController is responsible for handling the

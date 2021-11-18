@@ -43,9 +43,9 @@ public class CompactQuiz {
 
   @Override
   public String toString() {
-    return "CompactQuiz{" +
-            "uuid='" + uuid + '\'' +
-            ", name='" + name + '\'' +
-            '}';
+    return "CompactQuiz{"
+        + "uuid='" + uuid + '\''
+        + ", name='" + name + '\''
+        + '}';
   }
 }

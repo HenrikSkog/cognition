@@ -26,15 +26,23 @@ public class User {
     setPassword(password);
   }
 
+  /**
+   * Validates a username.
+   *
+   * @param username the username to validate
+   * @return {@link UserValidation#OK} if the username is valid,
+   *         {@link UserValidation#ILLEGAL_INPUT} if the username contains illegal characters,
+   *         {@link UserValidation#ILLEGAL_INPUT_LENGTH} if the username is too long or too short
+   */
   public static UserValidation isValidUsername(String username) {
-    int MAX_INPUT_LENGTH = 36;
+    final int maxInputLength = 36;
 
     // Checks if username is only white space
     boolean isOnlyWhitespaces = username.trim().equals("");
     // Checks if username only includes letters and numbers
     boolean hasIllegalCharacters = !(username.matches("^[a-zA-Z0-9A-]*"));
     // Checks if username has a length above 3 char and under 36;
-    boolean isValidLength = username.length() >= 3 && username.length() < MAX_INPUT_LENGTH;
+    boolean isValidLength = username.length() >= 3 && username.length() < maxInputLength;
 
     if (isOnlyWhitespaces || !isValidLength) {
       return UserValidation.ILLEGAL_INPUT_LENGTH;
@@ -47,6 +55,14 @@ public class User {
     return UserValidation.OK;
   }
 
+  /**
+   * Validates a password.
+   *
+   * @param password the password to validate
+   * @return {@link UserValidation#OK} if the password is valid,
+   *         {@link UserValidation#ILLEGAL_INPUT_LENGTH} if the password is too short,
+   *         {@link UserValidation#ILLEGAL_INPUT} if the password contains only whitespaces
+   */
   public static UserValidation isValidPassword(String password) {
     boolean hasOnlyWhitespaces = password.trim().equals("");
 
@@ -135,6 +151,11 @@ public class User {
     }
   }
 
+  /**
+   * Removes the quiz with the given uuid from the list of quizzes.
+   *
+   * @param quiz the quiz to remove
+   */
   public void removeQuiz(Quiz quiz) {
     Objects.requireNonNull(quiz);
     for (int i = 0; i < quizzes.size(); i++) {
@@ -163,6 +184,7 @@ public class User {
   public int hashCode() {
     return Objects.hash(username);
   }
+
   @Override
   public String toString() {
     return "User{"
