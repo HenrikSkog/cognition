@@ -165,8 +165,10 @@ public class CognitionControllerTest {
       // Delete user
       cognitionController.deleteUser(user.getUsername());
 
-      Assertions.assertNull(cognitionController.getUserByUsername(validUsername));
-
+      Assertions.assertThrows(
+          UserNotFoundException.class,
+          () -> cognitionController.getUserByUsername(validUsername)
+      );
     } catch (UserNotFoundException e) {
       fail();
     }
