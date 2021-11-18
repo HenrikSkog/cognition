@@ -12,17 +12,18 @@ import core.tools.Tools;
  */
 public class CompactQuiz {
   /**
-   * This UUID corresponds to the UUID in {@link core.Quiz}
+   * This UUID corresponds to the UUID in {@link core.Quiz}.
    */
   private String uuid;
 
   /**
-   * This name corresponds to the name in {@link core.Quiz}
+   * This name corresponds to the name in {@link core.Quiz}.
    */
   private String name;
 
   /**
-   * Initializes a "lighter" version of a Quiz object. See {@link core.CompactQuiz} for more information.
+   * Initializes a "lighter" version of a Quiz object.
+   * See {@link core.CompactQuiz} for more information.
    *
    * @param uuid corresponds to the UUID for a quiz in {@link core.Quiz}
    * @param name corresponds to the name for a quiz in {@link core.Quiz}
