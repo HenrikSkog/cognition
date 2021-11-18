@@ -75,11 +75,17 @@ cd api && mvn spring-boot:run -Dspring-boot.run.arguments=testmode
 # Run tests for all Maven modules.
 cd cognition && mvn test
 
+# Stop Spring Boot server running on port for testing
+lsof -t -i:3000 | xargs kill -9
+
 # Start Spring Boot server on port for application logic.
 cd api && mvn spring-boot:run
 
 # Run the client application.
 cd ui && mvn javafx:run
+
+# Stop Spring Boot server running on port for application
+lsof -t -i:8080 | xargs kill -9
 ```
 
 **As seen in the commands above, the `make` option is clearly quicker and more pleasant for the developer.**
