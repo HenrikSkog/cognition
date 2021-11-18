@@ -1,11 +1,9 @@
 package api;
 
-import json.CognitionStorage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 
@@ -19,7 +17,6 @@ public class ContextTest {
   void setUp() {
     try {
       cognitionController = new CognitionController();
-      cognitionController.setCognitionStorage(new CognitionStorage("cognitionTest.json"));
     } catch (IOException e) {
       fail();
     }
