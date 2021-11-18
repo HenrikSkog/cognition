@@ -3,54 +3,36 @@ package api;
 import core.CompactQuiz;
 import core.Quiz;
 import core.User;
+import json.CognitionStorage;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import json.CognitionStorage;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * CognitionController controls the REST API logic.
- * Uses Spring Boot.
+ * Controls the REST API logic,
+ * implementing persistent local storage via {@link api.CognitionService}.
  */
 @RestController
 public class CognitionController {
-  /**
-   * CognitionStorage is the local storage used to implement persistent storage.
-   */
-  private CognitionStorage cognitionStorage;
+  private final CognitionService cognitionService;
 
   /**
-   * Default constructor initializes the application persistent storage.
+   * Initializes the application persistent storage.
    *
    * @throws IOException if an error occurs when initializing persistent storage.
    */
   public CognitionController() throws IOException {
-    // Determines if the server is running on a port used for testing
-    boolean isTest = System.getProperty("webRequestTest") != null;
-
-    /*
-     * If system property webRequestTest (indicating API test) is set,
-     * or the RestApplication's testMode flag is set, use the test
-     * storage file: cognitionTest.json.
-     */
-    if (isTest || RestApplication.isTestMode()) {
-      setCognitionStorage(new CognitionStorage("cognitionTest.json"));
-    } else {
-      setCognitionStorage(new CognitionStorage());
-    }
+    this.cognitionService = new CognitionService();
   }
 
+  public CognitionStorage getCognitionStorage() {
+    return cognitionService.getCognitionStorage();
+  }
 
   /**
    * Sets a new active instance of the persistent storage.
@@ -58,7 +40,7 @@ public class CognitionController {
    * @param cognitionStorage is an instance of the CognitionStorage class.
    */
   public void setCognitionStorage(CognitionStorage cognitionStorage) {
-    this.cognitionStorage = Objects.requireNonNull(cognitionStorage);
+    cognitionService.setCognitionStorage(Objects.requireNonNull(cognitionStorage));
   }
 
   /**
@@ -70,7 +52,7 @@ public class CognitionController {
   @GetMapping("/users")
   public List<User> getUsers() throws StorageException {
     try {
-      return cognitionStorage.readUsers();
+      return getCognitionStorage().readUsers();
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -87,9 +69,9 @@ public class CognitionController {
    */
   @GetMapping("/users/{username}")
   public User getUserByUsername(@PathVariable String username)
-      throws UserNotFoundException, StorageException {
+          throws UserNotFoundException, StorageException {
     try {
-      return cognitionStorage.read(username);
+      return getCognitionStorage().read(username);
     } catch (NoSuchElementException e) {
       throw new UserNotFoundException();
     } catch (IOException e) {
@@ -108,17 +90,17 @@ public class CognitionController {
    */
   @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
   public void createUser(@RequestBody User user)
-      throws IdentifierAlreadyInUseException, StorageException {
+          throws IdentifierAlreadyInUseException, StorageException {
     try {
       // Determine if user already exists
       boolean userAlreadyExists;
 
-      List<User> users = cognitionStorage.readUsers();
+      List<User> users = getCognitionStorage().readUsers();
 
       if (users.size() != 0) {
         // Check for duplicates if we have content in local storage
         userAlreadyExists = users.stream()
-            .anyMatch(u -> u.getUsername().equals(user.getUsername()));
+                .anyMatch(u -> u.getUsername().equals(user.getUsername()));
       } else {
         // If local storage is empty, then a duplicate user cannot exist
         userAlreadyExists = false;
@@ -127,7 +109,7 @@ public class CognitionController {
       if (userAlreadyExists) {
         throw new IdentifierAlreadyInUseException(user.getUsername());
       } else {
-        cognitionStorage.create(user);
+        getCognitionStorage().create(user);
       }
     } catch (IOException e) {
       // An error occurred in persistent storage
@@ -144,11 +126,11 @@ public class CognitionController {
    * @throws StorageException      if an error occurred with the persistent storage
    */
   @PutMapping(value = "/users",
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+          consumes = MediaType.APPLICATION_JSON_VALUE)
   public void updateUser(@RequestBody User user)
-      throws UserNotFoundException, StorageException {
+          throws UserNotFoundException, StorageException {
     try {
-      cognitionStorage.update(user.getUsername(), user);
+      getCognitionStorage().update(user.getUsername(), user);
     } catch (NoSuchElementException e) {
       throw new UserNotFoundException("User not found in local storage");
     } catch (IOException e) {
@@ -166,9 +148,9 @@ public class CognitionController {
    */
   @DeleteMapping("/users/{username}")
   public void deleteUser(@PathVariable String username)
-      throws UserNotFoundException, StorageException {
+          throws UserNotFoundException, StorageException {
     try {
-      cognitionStorage.delete(username);
+      getCognitionStorage().delete(username);
     } catch (NoSuchElementException e) {
       throw new UserNotFoundException();
     } catch (IOException e) {
@@ -187,7 +169,7 @@ public class CognitionController {
    */
   @GetMapping("/quizzes/{username}")
   public List<Quiz> getQuizzesByUsername(@PathVariable String username)
-      throws UserNotFoundException, StorageException {
+          throws UserNotFoundException, StorageException {
     return getUserByUsername(username).getQuizzes();
   }
 
@@ -205,11 +187,11 @@ public class CognitionController {
    */
   @GetMapping("/quizzes/{username}/titles")
   public List<CompactQuiz> getQuizTitlesByUsername(@PathVariable String username)
-      throws UserNotFoundException, StorageException {
+          throws UserNotFoundException, StorageException {
     return getUserByUsername(username).getQuizzes()
-        .stream()
-        .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
-        .collect(Collectors.toList());
+            .stream()
+            .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
+            .collect(Collectors.toList());
   }
 
   /**
@@ -222,7 +204,7 @@ public class CognitionController {
    */
   @GetMapping("/quiz/{uuid}")
   public Quiz getQuizByUuid(@PathVariable String uuid)
-      throws QuizNotFoundException, StorageException {
+          throws QuizNotFoundException, StorageException {
 
     List<Quiz> quizzes = null;
     try {
@@ -236,11 +218,11 @@ public class CognitionController {
     }
 
     return quizzes.stream()
-        .filter(q -> q.getUuid().equals(uuid))
-        .findFirst()
-        .orElseThrow(
-            () -> new QuizNotFoundException("No quiz with the following identifier was found: ")
-        );
+            .filter(q -> q.getUuid().equals(uuid))
+            .findFirst()
+            .orElseThrow(
+                    () -> new QuizNotFoundException("No quiz with the following identifier was found: ")
+            );
   }
 
   /**
@@ -255,7 +237,7 @@ public class CognitionController {
    */
   @PutMapping("/quiz")
   public void updateQuizByUuid(@RequestBody Quiz newQuiz)
-      throws QuizNotFoundException, StorageException {
+          throws QuizNotFoundException, StorageException {
     User userToUpdate = null;
 
     for (User user : getUsers()) {
@@ -273,7 +255,7 @@ public class CognitionController {
 
     try {
       userToUpdate.updateQuiz(newQuiz);
-      cognitionStorage.update(userToUpdate.getUsername(), userToUpdate);
+      getCognitionStorage().update(userToUpdate.getUsername(), userToUpdate);
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -311,7 +293,7 @@ public class CognitionController {
 
     try {
       user.removeQuiz(quiz);
-      cognitionStorage.update(user.getUsername(), user);
+      getCognitionStorage().update(user.getUsername(), user);
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -328,7 +310,7 @@ public class CognitionController {
    */
   @PostMapping("/quiz/{username}")
   public void createQuiz(@RequestBody Quiz quiz, @PathVariable String username)
-      throws UserNotFoundException, IdentifierAlreadyInUseException {
+          throws UserNotFoundException, IdentifierAlreadyInUseException {
 
     User user = getUserByUsername(username);
 
@@ -340,7 +322,7 @@ public class CognitionController {
     }
 
     boolean uuidAlreadyExists = quizzes.stream()
-        .anyMatch(q -> q.getUuid().equals(quiz.getUuid()));
+            .anyMatch(q -> q.getUuid().equals(quiz.getUuid()));
 
     if (uuidAlreadyExists) {
       throw new IdentifierAlreadyInUseException(quiz.getUuid());
@@ -349,7 +331,7 @@ public class CognitionController {
     user.addQuiz(quiz);
 
     try {
-      cognitionStorage.update(user.getUsername(), user);
+      getCognitionStorage().update(user.getUsername(), user);
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -362,7 +344,7 @@ public class CognitionController {
    * @throws IOException if there was an error reading local storage
    */
   private List<Quiz> getQuizzes() throws IOException {
-    return cognitionStorage.readUsers().stream()
-        .flatMap(u -> u.getQuizzes().stream()).collect(Collectors.toList());
+    return getCognitionStorage().readUsers().stream()
+            .flatMap(u -> u.getQuizzes().stream()).collect(Collectors.toList());
   }
 }
