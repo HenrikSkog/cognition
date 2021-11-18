@@ -4,6 +4,7 @@ package core;
 import core.tools.Tools;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The class Quiz - Creates a new Quiz object that stores a name, a description
@@ -49,11 +50,7 @@ public class Quiz {
    * @param flashcards is the provided list of flashcards
    */
   public void addFlashcards(List<Flashcard> flashcards) {
-    if (flashcards == null) {
-      throw new IllegalArgumentException("Flashcards cannot be null");
-    }
-
-    for (Flashcard flashcard : flashcards) {
+    for (Flashcard flashcard : Objects.requireNonNull(flashcards)) {
       addFlashcard(flashcard);
     }
   }
@@ -77,9 +74,7 @@ public class Quiz {
    * @param flashcard is a flashcard object
    */
   public void addFlashcard(Flashcard flashcard) {
-    if (flashcard == null) {
-      return;
-    }
+    Objects.requireNonNull(flashcard);
 
     if (!flashcards.contains(flashcard)) {
       flashcards.add(flashcard);
@@ -87,6 +82,7 @@ public class Quiz {
   }
 
   public void removeFlashcard(Flashcard flashcard) {
+    Objects.requireNonNull(flashcard);
     // Removes only if it is present. Thus, not conditional is needed.
     flashcards.remove(flashcard);
   }
@@ -140,10 +136,6 @@ public class Quiz {
    * null.
    */
   public void setFlashcards(List<Flashcard> flashcards) {
-    if (flashcards == null) {
-      return;
-    }
-
-    this.flashcards = flashcards;
+    this.flashcards = Objects.requireNonNull(flashcards);
   }
 }
