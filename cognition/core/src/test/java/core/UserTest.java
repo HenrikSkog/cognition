@@ -49,7 +49,7 @@ public class UserTest {
   @Test
   @DisplayName("Can add quiz.")
   void canAddQuiz() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> user.addQuiz(null));
+    Assertions.assertThrows(NullPointerException.class, () -> user.addQuiz(null));
 
     // Quiz should not have been added
     Assertions.assertEquals(0, user.getQuizzes().size());

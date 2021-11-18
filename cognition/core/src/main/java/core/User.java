@@ -77,6 +77,7 @@ public class User {
    * @param updatedQuiz updated version of quiz
    */
   public void updateQuiz(Quiz updatedQuiz) {
+    Objects.requireNonNull(updatedQuiz);
     for (int i = 0; i < quizzes.size(); i++) {
       Quiz quiz = quizzes.get(i);
 
@@ -85,25 +86,6 @@ public class User {
         quizzes.add(updatedQuiz);
       }
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    User user = (User) o;
-    return Objects.equals(username, user.username);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(username);
   }
 
   public String getUsername() {
@@ -146,9 +128,7 @@ public class User {
    * @param quiz new quiz.
    */
   public void addQuiz(Quiz quiz) {
-    if (quiz == null) {
-      throw new IllegalArgumentException("Quiz cannot be null");
-    }
+    Objects.requireNonNull(quiz);
 
     if (!quizzes.contains(quiz)) {
       quizzes.add(quiz);
@@ -156,6 +136,7 @@ public class User {
   }
 
   public void removeQuiz(Quiz quiz) {
+    Objects.requireNonNull(quiz);
     for (int i = 0; i < quizzes.size(); i++) {
       if (quizzes.get(i).getUuid().equals(quiz.getUuid())) {
         quizzes.remove(i);
@@ -164,6 +145,24 @@ public class User {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    User user = (User) o;
+    return Objects.equals(username, user.username);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(username);
+  }
   @Override
   public String toString() {
     return "User{"

@@ -69,7 +69,7 @@ public class QuizTest {
   @Test
   @DisplayName("Can set flashcards.")
   void canSetFlashcards() {
-    quiz.setFlashcards(null);
+    quiz.setFlashcards(new ArrayList<>());
 
     boolean didNotAdd = quiz.getFlashcards().size() == 0;
 
@@ -101,9 +101,6 @@ public class QuizTest {
   @Test
   @DisplayName("Can add flashcard.")
   void canAddFlashcard() {
-    quiz.addFlashcard(null);
-
-    // Flashcard should not have been added
     Assertions.assertEquals(0, quiz.getFlashcards().size());
 
     quiz.addFlashcard(new Flashcard(createUuid(), "front", "answer"));
