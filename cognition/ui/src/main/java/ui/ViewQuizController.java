@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import java.util.List;
 
 /**
  * ViewQuizController is responsible for the presentation logic in the ViewQuiz view.
@@ -144,7 +143,7 @@ public class ViewQuizController extends LoggedInController {
   }
 
   /**
-   * Updates UI when a user finishes quiz
+   * Updates UI when a user finishes quiz.
    */
   private void handleFinishQuiz() {
     setRunningQuizElementsVisibility(false);
@@ -163,7 +162,7 @@ public class ViewQuizController extends LoggedInController {
   }
 
   /**
-   * Change visibility on given UI elements based on boolean input
+   * Change visibility on given UI elements based on boolean input.
    *
    * @param bool is the boolean representing if the UI element should be visible or not.
    */
@@ -177,7 +176,7 @@ public class ViewQuizController extends LoggedInController {
   }
 
   /**
-   * Change visibility on given UI elements based on boolean input
+   * Change visibility on given UI elements based on boolean input.
    *
    * @param bool is the boolean representing if the UI element should be visible or not.
    */

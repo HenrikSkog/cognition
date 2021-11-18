@@ -1,9 +1,9 @@
 package api;
 
-import json.CognitionStorage;
-import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Objects;
+import json.CognitionStorage;
+import org.springframework.stereotype.Service;
 
 /**
  * Handles the service layer of the REST API, with the business logic of the application.

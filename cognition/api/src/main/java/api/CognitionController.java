@@ -3,15 +3,20 @@ package api;
 import core.CompactQuiz;
 import core.Quiz;
 import core.User;
-import json.CognitionStorage;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+import json.CognitionStorage;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controls the REST API logic,
@@ -221,7 +226,8 @@ public class CognitionController {
             .filter(q -> q.getUuid().equals(uuid))
             .findFirst()
             .orElseThrow(
-                    () -> new QuizNotFoundException("No quiz with the following identifier was found: ")
+                    () -> new QuizNotFoundException(
+                            "No quiz with the following identifier was found: ")
             );
   }
 
