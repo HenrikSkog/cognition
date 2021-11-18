@@ -274,8 +274,6 @@ public class CognitionController {
     try {
       userToUpdate.updateQuiz(newQuiz);
       cognitionStorage.update(userToUpdate.getUsername(), userToUpdate);
-    } catch (NoSuchElementException e) {
-      throw new UserNotFoundException();
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -314,8 +312,6 @@ public class CognitionController {
     try {
       user.removeQuiz(quiz);
       cognitionStorage.update(user.getUsername(), user);
-    } catch (NoSuchElementException e) {
-      throw new UserNotFoundException();
     } catch (IOException e) {
       throw new StorageException();
     }
@@ -354,8 +350,6 @@ public class CognitionController {
 
     try {
       cognitionStorage.update(user.getUsername(), user);
-    } catch (NoSuchElementException e) {
-      throw new UserNotFoundException();
     } catch (IOException e) {
       throw new StorageException();
     }
