@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A presentation layer REST accessor that creates a bridge between
@@ -131,6 +132,7 @@ public class RemoteCognitionAccess {
    * @throws IOException          if the response is not 200
    */
   public User read(String username) throws InterruptedException, IOException {
+    Objects.requireNonNull(username);
 
     String endpoint = baseUri + "/users/" + username;
 
@@ -159,6 +161,7 @@ public class RemoteCognitionAccess {
    * @throws IOException          if the response is not 200
    */
   public void update(User instance) throws InterruptedException, IOException {
+    Objects.requireNonNull(instance);
 
     String endpoint = baseUri + "/users";
     String payload = gson.toJson(instance);
@@ -184,6 +187,7 @@ public class RemoteCognitionAccess {
    * @throws IOException          if the response is not 200
    */
   public void create(User instance) throws InterruptedException, IOException {
+    Objects.requireNonNull(instance);
 
     String endpoint = baseUri + "/users";
     String payload = gson.toJson(instance);
@@ -208,6 +212,7 @@ public class RemoteCognitionAccess {
    * @throws IOException          if the response is not 200
    */
   public void delete(String username) throws InterruptedException, IOException {
+    Objects.requireNonNull(username);
 
     String endpoint = baseUri + "/users/" + username;
 
