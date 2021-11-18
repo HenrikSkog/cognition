@@ -241,7 +241,7 @@ public class CognitionStorageTest {
     User user = new User(username, "valid-password");
 
     Assertions.assertThrows(
-            NullPointerException.class,
+            NoSuchElementException.class,
             () -> cognitionStorage.update(username, user)
     );
   }
@@ -301,7 +301,7 @@ public class CognitionStorageTest {
 
   @Test
   @DisplayName("No users returns null.")
-  void noUsersStoredReturnsNull() {
+  void noUsersStoredReturnsEmptyList() {
     List<User> users = new ArrayList<>();
 
     // Clear user storage before validating the return type when user storage is
@@ -316,8 +316,8 @@ public class CognitionStorageTest {
 
     // Because we have not added any users to the local storage, the returned value
     // of
-    // userStorage.readUsers() should be null.
-    Assertions.assertNull(users);
+    // userStorage.readUsers() should be an empty list.
+    Assertions.assertEquals(users.size(), 0);
   }
 
   /**
