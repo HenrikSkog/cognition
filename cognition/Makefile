@@ -28,7 +28,7 @@ install:
 # Run tests for all Maven modules, and start Spring Boot server on port for testing.
 tests:
 	@ cd api && $(MVN) $(MVNFLAGS) spring-boot:run -Dspring-boot.run.arguments=testmode &\
-  	sleep 10 && $(MVN) $(MVNFLAGS) test
+  	sleep 10 && $(MVN) $(MVNFLAGS) test ; lsof -t -i:3000 | xargs kill -9
 
 # Run the client application, and start Spring Boot server on port for application logic
 application:
