@@ -72,10 +72,11 @@ public class CognitionStorageTest {
     int NUMBER_OF_QUIZZES = 1;
     int NUMBER_OF_FLASHCARDS_PER_QUIZ = 2;
 
+    // Create UUID from deterministic seed
     String seed = "seed-used-for-testing";
     String id = UUID.nameUUIDFromBytes(seed.getBytes()).toString();
 
-    // Manipulate userId to ensure that not all IDs are equal
+    // Create sample user
     User user = new User("username", "password");
 
     for (int i = 0; i < NUMBER_OF_QUIZZES; i++) {
@@ -83,6 +84,7 @@ public class CognitionStorageTest {
       String quizId = id.replace(id.charAt(id.length() - 1), 'q');
       quizId = quizId.replace(quizId.charAt(quizId.length() - 2), characters[i % characters.length]);
 
+      // Create sample quiz
       Quiz quiz = new Quiz(quizId, "quiz-" + i, "description-" + i);
 
       for (int j = 0; j < NUMBER_OF_FLASHCARDS_PER_QUIZ; j++) {
@@ -91,6 +93,7 @@ public class CognitionStorageTest {
         flashcardId = flashcardId.replace(flashcardId.charAt(flashcardId.length() - 2),
                 characters[j % characters.length]);
 
+        // Create sample flashcard
         Flashcard flashcard = new Flashcard(flashcardId, "front-" + j, "answer-" + j);
 
         quiz.addFlashcard(flashcard);
@@ -99,11 +102,8 @@ public class CognitionStorageTest {
       user.addQuiz(quiz);
     }
 
-    try {
-      cognitionStorage.create(user);
-    } catch (IOException e) {
-      fail();
-    }
+    // Save current state of user
+    createUser(user);
 
     // Read content of user storage as pure String
     String actual = "";
@@ -117,8 +117,9 @@ public class CognitionStorageTest {
   }
 
   /**
-   * A helper method when testing canSerializeNestedObjects. The correct String is
-   * encapsulated in a method in order to hide implementation detail and make the
+   * A helper method when testing {@link CognitionStorageTest#canSerializeNestedObjects()}.
+   * The correct String is encapsulated in a method in order to hide
+   * implementation detail and make the
    * developer workflow less cluttered. All values in the JSON data are
    * deterministic.
    *
@@ -161,11 +162,7 @@ public class CognitionStorageTest {
     String password = "test-password";
     User user = new User(username, password);
 
-    try {
-      cognitionStorage.create(user);
-    } catch (IOException e) {
-      fail();
-    }
+    createUser(user);
 
     try {
       User parsedUser = cognitionStorage.read(username);

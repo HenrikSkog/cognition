@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
- * CRUD (Create, Read, Update and Delete) for all local storage.
+ * CRUD (Create, Read, Update and Delete) operations for all local storage.
  */
 public class CognitionStorage {
 

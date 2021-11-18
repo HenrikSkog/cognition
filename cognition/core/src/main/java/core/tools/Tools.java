@@ -20,6 +20,12 @@ public class Tools {
     return UUID.randomUUID().toString();
   }
 
+  /**
+   * Determines whether the provided UUID is a valid UUID.
+   *
+   * @param uuid is the String representation of the provided UUID.
+   * @return a boolean determining if the UUID is valid.
+   */
   public static boolean isValidUuid(String uuid) {
     return uuid != null && uuid.length() == 36 && uuid.split("-").length == 5;
   }

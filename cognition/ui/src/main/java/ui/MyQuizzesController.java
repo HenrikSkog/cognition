@@ -28,13 +28,13 @@ public class MyQuizzesController extends LoggedInController {
 
   /**
    * The currently selected compact quiz.
-   * See documentation on CompactQuiz for more information.
+   * See documentation of {@link core.CompactQuiz} for more information.
    */
   private CompactQuiz selectedCompactQuiz;
 
   /**
    * The currently selected quiz.
-   * See documentation Quiz for more information.
+   * See documentation {@link core.Quiz} for more information.
    */
   private Quiz selectedQuiz;
 
@@ -50,12 +50,12 @@ public class MyQuizzesController extends LoggedInController {
   @FXML
   private void initialize() {
     // Initially render ListView
-    quizzesListView.setItems(getQuizzes(""));
+    quizzesListView.setItems(filterQuizzes(""));
     setupListView();
 
     // Add onChange event handler for search input
     searchInput.textProperty().addListener((observable, oldValue, newValue) -> {
-      quizzesListView.setItems(getQuizzes(newValue));
+      quizzesListView.setItems(filterQuizzes(newValue));
     });
 
     // Update selected quiz by what quiz is selected in the ui
@@ -64,7 +64,7 @@ public class MyQuizzesController extends LoggedInController {
   }
 
   /**
-   * Sets up list view cell factory so listview properly works using CompactQuiz as type.
+   * Sets up list view cell factory so ListView properly works using CompactQuiz as type.
    */
   private void setupListView() {
     quizzesListView.setCellFactory(quizListView -> new ListCell<>() {
@@ -89,7 +89,7 @@ public class MyQuizzesController extends LoggedInController {
    * @param input the string quizzes are matched up against
    * @return an ObservableList with all the matching quizzes
    */
-  private ObservableList<CompactQuiz> getQuizzes(String input) {
+  private ObservableList<CompactQuiz> filterQuizzes(String input) {
     Stream<CompactQuiz> stream = null;
 
     // Fetch compact quizzes
@@ -201,7 +201,7 @@ public class MyQuizzesController extends LoggedInController {
     // Update state of models
     getUser().removeQuiz(selectedQuiz);
 
-    // update state in UI
+    // Update state in UI
     this.selectedCompactQuiz = null;
     this.selectedQuiz = null;
     quizzesListView.getItems().remove(quizzesListView.getSelectionModel().getSelectedItem());

@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
  */
 public abstract class LoggedInController extends Controller {
 
-  private User user;
+  private final User user;
 
   public LoggedInController(User user, RemoteCognitionAccess remoteCognitionAccess) {
     super(remoteCognitionAccess);
@@ -25,7 +25,7 @@ public abstract class LoggedInController extends Controller {
   /**
    * Handles logging out and going to the login screen.
    *
-   * @param event is the event given by javafx when the method is triggered
+   * @param event is the event on button click
    */
   @FXML
   private void handleLogout(ActionEvent event) {
@@ -36,7 +36,7 @@ public abstract class LoggedInController extends Controller {
   /**
    * Handles going to the dashboard.
    *
-   * @param event is the event given by javafx when the method is triggered
+   * @param event is the event on button click
    */
   @FXML
   private void handleDashboard(ActionEvent event) {
@@ -47,7 +47,7 @@ public abstract class LoggedInController extends Controller {
   /**
    * Handles going to the "My Quizzes" view.
    *
-   * @param event is the event given by javafx when the method is triggered
+   * @param event is the event on button click
    */
   @FXML
   private void handleMyQuizzes(ActionEvent event) {
@@ -58,7 +58,7 @@ public abstract class LoggedInController extends Controller {
   /**
    * Handles going to the "Create New Quiz" view.
    *
-   * @param event is the event given by javafx when the method is triggered
+   * @param event is the event on button click
    */
   @FXML
   protected void handleCreateQuiz(ActionEvent event) {

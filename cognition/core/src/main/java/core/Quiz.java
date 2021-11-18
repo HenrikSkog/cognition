@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The class Quiz - Creates a new Quiz object that stores a name, a description
- * and a list of flashcards. Is then used to show quizzes in the frontend (UI).
+ * Creates a new Quiz object that stores a name, a description and a list of flashcards.
  */
 public class Quiz {
   public static final int MAX_DESCRIPTION_LENGTH = 260;
@@ -45,7 +44,7 @@ public class Quiz {
 
   /**
    * Loops through all provided flashcards and runs them through the singular
-   * addFlashcard method.
+   * {@link core.Quiz#addFlashcard(Flashcard)} method.
    *
    * @param flashcards is the provided list of flashcards
    */

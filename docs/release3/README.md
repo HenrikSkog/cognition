@@ -1,62 +1,185 @@
 # Release 3
 
+## Updated documentation in all modules
+
+Please note that all prior documentation in all modules have been revised and updated.
+
+### `ui` module documentation
+
+[Click here](../../cognition/ui/README.md) to read the documentation for the `ui` module.
+
+### `core` module documentation
+
+[Click here](../../cognition/core/README.md) to read the documentation for the `core` module.
+
+### `api` module documentation
+
+[Click here](../../cognition/api/README.md) to read the documentation for the `api` module.
+
+## Changelog from deliverable 2 to deliverable 3
+
+Below, you can view a short summary of the changelog from deliverable 2 to deliverable 3:
+
+### General
+
+- Facilitate for packaging application, both UI and API
+- Add `Makefile`, in order for each developer to run the application easier
+- Shut down test server after tests are finished running using `Makefile`
+- Update documentation
+
+### The `ui` module
+
+- Add functionality for displaying answer in the UI
+- Enforce length checking in the `TextField` components in the UI
+- Limit characters to only valid characters in the `TextField` components in the UI
+- Filter quiz on user input
+- Add functionality for restarting quiz
+- Add REST accessor to act as middle-man between UI and
+  API: [`RemoteCognitionAccess`](../../cognition/ui/src/main/java/ui/RemoteCognitionAccess.java)
+- Update tests and application logic to
+  use [`RemoteCognitionAccess`](../../cognition/ui/src/main/java/ui/RemoteCognitionAccess.java)
+- Add default quizzes to each user, in order for the user to quickly use all available functionality in Cognition.
+  See [`RegisterController`](../../cognition/ui/src/main/java/ui/RegisterController.java) for implementation detail.
+- Add [`TestFxHelper`](../../cognition/ui/src/test/java/ui/TestFxHelper.java) for common methods used in all UI tests
+
+### The `core` module
+
+- Refactor validation of plain old Java objects
+- Add new model: [`CompactQuiz`](../../cognition/core/src/main/java/core/CompactQuiz.java)
+- Add enum for user validation: [`UserValidation`](../../cognition/core/src/main/java/core/UserValidation.java)
+
+### The `api` module
+
+- Add Spring Boot web server
+- Add REST controller
+- Add tests
+  - Add REST controller test
+  - Add endpoint test
+- Add functionality for autogenerating documentation of the REST application
+
 ## Feedback from deliverable 2
 
 ### Refactoring and cleaning up local storage
 
-As pointed out in the feedback we received on the second deliverable, we realized that we did not fully utilize the potential of the abstract class `Storage` and `Storable` interface. Hence, we decided to move the logic of the `Storage` class into [`CognitionStorage`](../../cognition/core/src/main/java/json/CognitionStorage.java), and deleted `Storable` and `Storage` entirely.
+As pointed out in the feedback we received on the second deliverable, we realized that we did not fully utilize the
+potential of the abstract class `Storage` and `Storable` interface. Hence, we decided to move the logic of the `Storage`
+class into [`CognitionStorage`](../../cognition/core/src/main/java/json/CognitionStorage.java), and deleted `Storable`
+and `Storage` entirely.
 
 For the `cognition` code base, we see this as a cleaner solution, as we only need a single class for persistent storage.
 
 ### Overriding `toString()` and testing
 
-The feedback for deliverable 2 stated that our `toString()` methods in our Java models (i.e. [`User`](../../cognition/core/src/main/java/core/User.java), [`Quiz`](../../cognition/core/src/main/java/core/Quiz.java) and [`Flashcard`](../../cognition/core/src/main/java/core/Flashcard.java)) could not guarantee a given format.
+The feedback for deliverable 2 stated that our `toString()` methods in our Java models (
+i.e. [`User`](../../cognition/core/src/main/java/core/User.java)
+, [`Quiz`](../../cognition/core/src/main/java/core/Quiz.java)
+and [`Flashcard`](../../cognition/core/src/main/java/core/Flashcard.java)) could not guarantee a given format.
 
-All the `toString()` methods in our Java models are overridden using the `@Override` annotation with a deterministic String representation.
+All the `toString()` methods in our Java models are overridden using the `@Override` annotation with a deterministic
+String representation.
 
-Although testing these methods may seem redundant and bloated, we test these `toString()` methods in order to increase test coverage.
+Although testing these methods may seem redundant and bloated, we test these `toString()` methods in order to increase
+test coverage.
+
+### Tests irregularly failing in GitPod
+
+The feedback for deliverable 2 stated that some tests in the `ui` module fail in GitPod. We have noticed the same
+pattern. The tests in question are always changing, with `NoSuchElementException` being the exception thrown by TestFX.
+
+The UI tests fail in GitPod when testing the process of switching between views. When switching views, UI components are
+required to render before the tests can pass successfully. Due to latency issues in GitPod, some JavaFX components do
+not have time to load before the tests execute.
+
+**This error never happens locally**.
+
+#### Attempts to fix this issue
+
+We tried solving this by pinpointing the failing tests in question, and then waiting for JavaFX events before
+interacting with the UI in the tests. This did not solve the issue of latency in GitPod. We even tried to sleep for a
+hard-coded amount of seconds between each interaction with the view. This did also not solve the problem of latency
+issues in GitPod.
+
+Please see the [`TestFxHelper`](../../cognition/ui/src/test/java/ui/TestFxHelper.java) in the `ui` module for more
+information about how we wait for FX events before continuing tests. Additionally, please
+inspect [the tests in the `ui` module](../../cognition/ui/src/test/java/ui) to see
+how [`TestFxHelper`](../../cognition/ui/src/test/java/ui/TestFxHelper.java) is used to wait for nodes.
+
+After putting this much effort into achieving consistently passing tests in GitPod **using a method inspired by the
+IT1901 staff**, with some UI tests still failing occasionally, we deemed other tasks more important to finish. Hence,
+this issue was less prioritized at the end of deliverable 3.
+
+**We encourage you to run the UI tests locally.**
 
 ### UUID
 
-We got feedback on the usage of UUID in the User class, as username is unique. We agree on this
-and refactored the codebase to use username.
+We got feedback on the usage of UUID in the `User` class, as `username` is unique per user. We agree on this and refactored the
+codebase to use `username`.
 
-For Quiz and Flashcard we still use UUID as we do not want to force uniqueness in the quiz name and flashcard name. We feel that
-this is a clean solution which makes for a good developer experience for a low cost.
+For `Quiz` and `Flashcard`, we still use UUID as we do not want to force uniqueness in the quiz name and flashcard name. We feel that this is a clean solution which makes for a good developer experience.
 
 ### Encapsulation
 
-We got multiple comments on encapsulation problems. One of these was getters that returned
-internal lists, which we resolved by returning new lists with the same contents. The Controller
-class also had three methods that we changed to private.
+We got multiple comments on encapsulation problems of lists throughout the code base. One of these was getters that returned internal lists, which we
+resolved by returning new lists with the same contents. The `Controller` class also had three methods that we changed to `private`.
 
 ## Reflection
 
 ### Refactoring local storage
 
-Taking a chronological view on the progress of our project, we added [`CognitionStorage`](../../cognition/core/src/main/java/json/CognitionStorage.java), the abstract `Storage` class and the `Storable` interface at the same time. For deliverable 1 and 2, we went on interacting with the local storage using only the `CognitionStorage` class, not utilizing the full potential of the hierarchy we had sketched out. This class hierarchy would have been more fitting if we had several implementing storage classes, but there was no need for this, due to the nature of our Java models.
+Taking a chronological view on the progress of our project, we
+added [`CognitionStorage`](../../cognition/core/src/main/java/json/CognitionStorage.java), the abstract `Storage` class
+and the `Storable` interface at the same time. For deliverable 1 and 2, we went on interacting with the local storage
+using only the `CognitionStorage` class, not utilizing the full potential of the hierarchy we had sketched out. This
+class hierarchy would have been more fitting if we had several implementing storage classes, but there was no need for
+this, due to the nature of our Java models and the [file format defintion found in the core module documentation (`### Storage Format`)](../../cognition/core/README.md).
 
-In hindsight, we should have started with only the `CognitionStorage` class, and then later improved on the persistence solution. **That is more akin to agile software development**; continuously improving upon a working solution.
+In hindsight, we should have started with only the `CognitionStorage` class, and then later improved on the persistence
+solution. **That is more akin to agile software development**; continuously improving upon a working solution.
 
 ### Commit Culture
 
-During deliverable 3, we put a great focus on the commit culture when contributing to our code base. Please see [CONTRIBUTING](../../CONTRIBUTING.md) for more information on contributing to the code base.
+During deliverable 3, we put a great focus on the commit culture when contributing to our code base. Please
+see [CONTRIBUTING](../../CONTRIBUTING.md) for more information on contributing to the code base.
 
-Throughout deliverable 1 and 2, we practised our own guideline on how to commit code to our code base. This is inline with the group contract formulated at the start of the project. The majority of these commits were only commit titles; rarely descriptions and footers. This was sufficient for the four of us in the group, but **we recognize that this is not sustainable for new developers** contributing to the code base.
+Throughout deliverable 1 and 2, we practised our own guideline on how to commit code to our code base. This is inline
+with the group contract formulated at the start of the project. The majority of these commits were only commit titles;
+rarely descriptions and footers. This was sufficient for the four of us in the group, but **we recognize that this is
+not sustainable for new developers** contributing to the code base.
 
-Thus, we put more effort into every single commit during deliverable 3. Our commit messages now have a category (e.g. `feat`, `fix`, `docs`, etc...), title, description with **what** and **why**, and a reference to the issue to resolve. Branch names are clear and concise, and is to be marked with the ID number of the issue it resolves.
+Thus, we put more effort into every single commit during deliverable 3. Our commit messages now have a category (
+e.g. `feat`, `fix`, `docs`, etc...), title, an optional description with **why** this change is needed, and a reference to the issue to
+resolve. Branch names are clear and concise, and is to be marked with the ID number of the issue it resolves.
 Example: `#10/feat-frontend`.
 
 ### Public methods in REST controller
 
-In `CognitionController`, we have intentionally left all route functions as public, even though 
-the server technically won't break if they are private. We have done this for three reasons:
-1. The methods are logically public, as they are used when ui sends HTTP requests to it. 
+In `CognitionController`, we have intentionally left all route functions as `public`, even though the server technically
+won't break if they are `private`. We have done this for three reasons:
+
+1. The methods are logically `public`, as they are used when `ui` sends HTTP requests to it.
 2. The class is not being instantiated anywhere, and therefore the access modifiers do not matter
 3. It makes it possible to unit test them
- 
-Public route methods are also the convention in Spring Boot, so doing this another way would 
-confuse someone familiar with Spring Boot.
+
+**Public route methods are also the convention in Spring Boot**, so doing this another way would confuse someone familiar with Spring Boot.
+
+### Component Based UI
+
+After working with multiples FXML views, we realized that it would be convinient to separate some parts of the code into
+components that could be imported into the main views of our projects. Specifically, 4 of our views include a navigation
+bar that is identical in all of the views. Making this part of the code a component would not only make the current FXML
+views easier to read, but it would also facilitate modifing the component as well as guarantee that the navigation bar is identical in all views.
+
+However, when trying to implement this change we stumbled into a problem. The `FXMLLoader` (a class that loads the object
+hierarchy from an XML document) expects a **parameterless constructor** when initializing a controller with `fx:include`. `fx:include` is how you are able to import the external fxml file. This problem makes the creation of a navigation bar
+component difficult, as all the links in the navigation bar call functions that require a specific `User`. This `User` is only accesible because the FXML Controller is constructed with it as a parameter.
+
+In this case, we opted to not create a component based UI, as it would require modificating several parts of our code base. In this case, we **suffer from technical debt**, in the sense that we commited to a solution that is hard to modify
+without putting in more effort than what we deemed as efficient.
+
+### The choice of not testing `CompactQuiz`
+
+[Click here](../../cognition/core/README.md) to why we chose not to test the `CompactQuiz` class.
+
 ## REST server documentation
 
 [Click here](../../cognition/api/src/main/asciidoc/index.adoc) to read the REST server documentation.
@@ -67,52 +190,72 @@ confuse someone familiar with Spring Boot.
 
 ## `RemoteCognitionAccess`: The middle-man between `ui` and `api`
 
-[`RemoteCognitionAccess`](../../cognition/ui/src/main/java/ui/RemoteCognitionAccess.java) is the middle-man between `ui` and `api`; the class responsible for handling HTTP queries between classes in the `ui` module and the `api` module.
+[`RemoteCognitionAccess`](../../cognition/ui/src/main/java/ui/RemoteCognitionAccess.java) is the middle-man between `ui`
+and `api`; the class responsible for handling HTTP queries between classes in the `ui` module and the `api` module.
 
 ## Updating the way a developer runs the application (using `make`)
 
-When finishing deliverable 2 of this project, you could install dependencies and test the application using `mvn clean install`. If that command built successfully, you could run the application using `cd ui && mvn javafx:run`.
+When finishing deliverable 2 of this project, you could install dependencies and test the application
+using `mvn clean install`. If that command built successfully, you could run the application
+using `cd ui && mvn javafx:run`.
 
-For deliverable 3, we converted the application to interact with a web server using the Spring Boot framework. This demanded that we reworked how the tests and the application is run, as there are more moving parts currently.
+For deliverable 3, we converted the application to interact with a web server using the Spring Boot framework. This
+demanded that we reworked how the tests and the application is run, as there are more moving parts currently.
 
-First, you need to **install dependencies without running tests**, in order to ensure that all Maven modules have downloaded necessary dependencies.
+First, you need to **install dependencies without running tests**, in order to ensure that all Maven modules have
+downloaded necessary dependencies.
 
-Then, you need to **test** the application. For the user interface tests to pass, this requires using a Spring Boot server running on our port for testing (port `3000`).
+Then, you need to **test** the application. For the user interface tests to pass, this requires using a Spring Boot
+server running on our port for testing (port `3000`).
 
-**Running the application** also requires a Spring Boot server to be running, this time on port `8080`. We made the choice of not running the test server and the application server on the same port in order to prevent potential crashes.
+**Running the application** also requires a Spring Boot server to be running, this time on port `8080`. We made the
+choice of not running the test server and the application server on the same port in order to prevent potential crashes.
 
-In summary, all these moving parts led us to streamline the process of testing and running the application. Hence, we added a [`Makefile`](../../cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life for the current developers and "future" developer (the one grading this project). **We underline that we still use Maven for building the application.** Make is simply acts as an abstraction above the existing Maven commands.
+In summary, all these moving parts led us to streamline the process of testing and running the application. Hence, we
+added a [`Makefile`](../../cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life
+for the current developers and "future" developer (the one grading this project). **We underline that we still use Maven
+for building the application.** Make is simply acts as an abstraction above the existing Maven commands.
 
-Given the number of actual commands to run the application, the group saw this abstraction as necessary and worth dedicating time to, in order to improve the quality of life for the developer.
+Given the number of actual commands to run the application, the group saw this abstraction as necessary and worth
+dedicating time to, in order to improve the quality of life for the developer.
 
-Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`.
+Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`
+.
 
 **TL;DR** - You can now run tests using `make test` and run the application using `make` in the `cognition` directory.
 
 ## Default quizzes
 
-Previously, new users started with no quizzes. Now, every new user is created with a standard
-introductory quiz. By doing this, the user can now quickly use all available functionality in
-Cognition immediately after registering.
+Previously, new users started with no quizzes. Now, every new user is created with a standard introductory quiz. By
+doing this, the user can now quickly use all available functionality in Cognition immediately after registering.
 
-We struggled a bit with where this logic should be located. First, we thought about putting it in
-the `core` module, as this module is where the logic for writing new users to file is located. We
-eventually ended up putting it in the `ui` module, specifically in the `RegisterController` class. The introductory quiz is now added client-side when the user is to be registered.
+We struggled a bit with where this logic should be located. First, we thought about putting it in the `core` module, as
+this module is where the logic for writing new users to file is located. We eventually ended up putting it in the `ui`
+module, specifically in the `RegisterController` class. The introductory quiz is now added client-side when the user is
+to be registered.
 
 ## Balancing implementing new functionality and ensuring code quality
 
-After finishing deliverable 2, the Cognition application was a working minimum viable product (MVP). Due to an extended deadline for deliverable 2, the group had time to add the following extra functionality:
+After finishing deliverable 2, the Cognition application was a working minimum viable product (MVP). Due to an extended
+deadline for deliverable 2, the group had time to add the following extra functionality:
 
-- Filter quizzes based on user input
+- Filter quizzes based on user input.
+  See [`MyQuizzesController`](../../cognition/ui/src/main/java/ui/MyQuizzesController.java) for implementation detail.
 
 Throughout the milestones for deliverable 3, the group has added the following extra features:
 
-- Improve user experience when navigating through a quiz
+- Improve user experience when navigating through a quiz. The user can now get some help along the way, and see how many
+  correct answers the user got when finished with the quiz.
+  See [`ViewQuizController`](../../cognition/ui/src/main/java/ui/ViewQuizController.java) for implementation detail.
 
-- Add default quizzes to each user, in order for the user to quickly use all available functionality in Cognition
+- Add default quizzes to each user, in order for the user to quickly use all available functionality in Cognition.
+  See [`RegisterController`](../../cognition/ui/src/main/java/ui/RegisterController.java) for implementation detail.
 
 Furthermore, we have fixed suggested changes from deliverable 2.
 
-We also felt the need to improve upon parts of our code base. This is in line with **agile development**; continuously improving existing code in our code base. Specifically, we improved JavaDocs, updated access modifiers where it was needed and increased readability in our code base.
+We also felt the need to improve upon parts of our code base. This is in line with **agile development**; continuously
+improving existing code in our code base. Specifically, we improved JavaDocs, updated access modifiers where it was
+needed and increased readability in our code base.
 
-**In summary, we feel that we struck a great balance between adding new functionality and improving code quality in our code base.**
+**In summary, we feel that we struck a great balance between adding new functionality and improving code quality in our
+code base.**

@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * DashboardController has the presentation logic for the DashBoard view.
+ * DashboardController handles the presentation logic for the Dashboard view.
  */
 public class DashboardController extends LoggedInController {
 
@@ -30,13 +30,13 @@ public class DashboardController extends LoggedInController {
   public void initialize() {
     heading.setText("Welcome, " + Tools.capitalize(getUser().getUsername()));
 
-
     cognitionDescription.setText("Cognition is an interactive game-based "
             + "learning tool used to study information. This tool uses interactive "
             + "digital flashcards. Teachers and Students can easily upload information "
             + "to create study sets by adding questions and definitions. This tool is "
             + "easy to navigate and provides a fun and interactive playground to the "
             + "learners as they engage with the application.");
+    
     cognitionDescription.setFont(Font.font("Avenir book", 24));
 
   }

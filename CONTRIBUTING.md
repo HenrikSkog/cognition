@@ -1,8 +1,8 @@
 # Cognition: Contributing Documentation
 
-In this guide, you will get an overview of the contribution workflow from opening an issue, creating a merge request, reviewing, and merging the merge request.
+In this guide, you will get an overview of the contribution workflow: Going from opening an issue, resolving that issue, creating a merge request, reviewing another developer's merge request, and merging your code into the `main` branch.
 
-To get an overview of the project, please read through the root [README](README.md).
+To get an overview of the project, please read through the root [`README.md`](README.md).
 
 ## Gitpod
 
@@ -15,7 +15,7 @@ Each developer is encouraged to use their IDE of choice, as long as all function
 Milestones on GitLab are used to monitor the sprints, and thus link issues to each sprint. Each sprint lasts 1 week.
 
 Milestones that span over a longer period of time will also be created in order to keep an overview of the main
-deliverables ("Gruppeinnlevering 1", "Gruppeinnlevering 2", etc...).
+deliverables (e.g. "Deliverable 1", "Deliverable 2", etc...).
 
 ## Issue tracking
 
@@ -24,8 +24,7 @@ deliverables ("Gruppeinnlevering 1", "Gruppeinnlevering 2", etc...).
 GitLab issue templates have been set up to streamline the process of creating a new issue. A reference guide can be
 found using [this link](https://docs.gitlab.com/ee/user/project/description_templates.html).
 
-An issue can either be a [**Feature Request**](.gitlab/issue_templates/Feature.md), a [**Bug**](.gitlab/issue_templates/Bug.md) or **Uncategorized**. Please inspect the raw Markdown code when viewing
-these templates.
+An issue can either be a [**Feature Request**](.gitlab/issue_templates/Feature.md), a [**Bug**](.gitlab/issue_templates/Bug.md) or **Uncategorized**. Please inspect the raw Markdown code when viewing these templates.
 
 The issue templates are adapted to resemble an informal user story.
 
@@ -62,7 +61,7 @@ In short, a commit should be short, concise and descriptive.
 
 For some commits, only a commit title is sufficient. Oftentimes, adding a description explaining what is done, and why it is done is helpful for new developers joining the project.
 
-Commit messages should be categorized. One should not blend or mix categories in one single commit, in order to maintain a clean Git timeline and to increase readability for the developer.
+Commit messages must be categorized. One should not blend or mix categories in one single commit, in order to maintain a clean Git timeline and to increase readability for the developer.
 
 #### Example
 
@@ -78,10 +77,6 @@ docs: Add CONTRIBUTING.md
 WHAT: Add documentation for contribution to the code base
 
 WHY: New developers should quickly be able to contribute new code to our code base
-
-# Footer
-
-Reference: #ISSUE_NUMBER
 ```
 
 ## Branches and merge requests
@@ -89,7 +84,7 @@ Reference: #ISSUE_NUMBER
 ### Naming
 
 Branch names should be clear and concise, and be marked with the id number of the issue it resolves.
-Example: `#10-feat-frontend`.
+Example: `feat/#10-frontend`.
 
 ### Description
 

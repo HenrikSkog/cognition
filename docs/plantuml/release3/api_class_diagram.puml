@@ -1,0 +1,41 @@
+@startuml
+class CognitionController {
+    -CognitionStorage congnitionStorage
+    +setCognitionStorage()
+    +getUsers(): GET /users
+    +getUsersByUsername(): /users/{username}
+    +createUser(): POST /users
+    +updateUser(): PUT /users
+    +deleteUser(): DELETE /users/{username}
+    +getQuizzesByUsername(): GET /quizzes/{username}
+    +getQuizByUuid(): GET /quiz/{uuid}
+    +updateQuizByUuid(): PUT /quiz
+    +deleteQuizByUuid(): DELETE /quiz/{uuid}
+    +createQuiz(): POST /quiz/{username}
+    -getQuizzes()
+
+}
+
+class StorageException
+
+class UserNotFoundException
+
+class QuizNotFoundException
+
+class IdentifierAlreadyInUseException
+
+class RestApplication{
+-int PORT
+-boolean testMode
++{static}main()
++{static}setTestMode()
++{static}isTestMode()
+}
+
+CognitionController ..> IdentifierAlreadyInUseException : <<throws>>
+CognitionController ..> UserNotFoundException: <<throws>>
+CognitionController ..> QuizNotFoundException: <<throws>>
+CognitionController ..> StorageException: <<throws>>
+
+CognitionController .> RestApplication: Framework connection
+@enduml

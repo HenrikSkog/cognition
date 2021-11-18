@@ -48,7 +48,7 @@ public class QuizController extends LoggedInController {
   @FXML
   private TextField description;
 
-  private VBox flashcardPaneContainer = new VBox();
+  private final VBox flashcardPaneContainer = new VBox();
   private String feedbackErrorMessage = "";
   private Quiz quizBeingUpdated = null;
 
@@ -127,6 +127,7 @@ public class QuizController extends LoggedInController {
         return;
       }
 
+      // Find "Remove Flashcard" button
       Button removeFlashcardButton = (Button) upperChildContainer.getChildren().stream()
               .filter(node -> node.getId() != null
                       && node.getId().equals("remove-flashcard-button"))
@@ -140,6 +141,7 @@ public class QuizController extends LoggedInController {
         return;
       }
 
+      // Find "Flashcard Number" text
       Text flashcardNumberText = (Text) upperChildContainer.getChildren().stream()
               .filter(node -> node.getId() != null
                       && node.getId().equals("flashcard-number-text"))
@@ -185,7 +187,6 @@ public class QuizController extends LoggedInController {
     flashcardNumberText.setId("flashcard-number-text");
     flashcardNumberText.setText(String.valueOf(nodeCount + 1));
     flashcardNumberText.setFont(Font.font("Avenir Book", 20));
-    ;
 
     // Set "remove flashcard" button properties
     Button removeFlashcardButton = new Button();
@@ -244,13 +245,14 @@ public class QuizController extends LoggedInController {
     lowerChildContainer.getChildren().addAll(frontContainer, answerContainer);
     lowerChildContainer.setSpacing(50);
 
-
+    // Render line used for division
     Line division = new Line();
     division.setStrokeWidth(2);
     division.setStartX(0);
     division.setEndX(740);
     division.setStroke(Color.GRAY);
 
+    // Render spacing
     Line spacing = new Line();
     spacing.setStrokeWidth(20);
     spacing.setStroke(Color.TRANSPARENT);
@@ -286,7 +288,7 @@ public class QuizController extends LoggedInController {
     String quizName = name.getText();
     String quizDescription = description.getText();
 
-
+    // Validate name
     if (!Quiz.isValidName(quizName)) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "The name of a quiz cannot be empty.";
@@ -294,6 +296,7 @@ public class QuizController extends LoggedInController {
       return;
     }
 
+    // Validate description
     if (!Quiz.isValidDescription(quizDescription)) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage =
@@ -342,11 +345,11 @@ public class QuizController extends LoggedInController {
       getUser().addQuiz(newQuiz);
     }
 
+    // Update state in local storage
     try {
       getCognitionAccess().update(getUser());
       feedback.setTextFill(Color.GREEN);
       setFeedbackText(getFeedbackSuccessMessage());
-
     } catch (IOException | InterruptedException e) {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage = "An error occurred when trying to create the quiz.";
@@ -354,9 +357,15 @@ public class QuizController extends LoggedInController {
     }
   }
 
+  /**
+   * Gets a list of {@link core.Flashcard} object from the rendered UI.
+   *
+   * @return the list of flashcards on-screen.
+   */
   private List<Flashcard> getFlashcards() {
     List<Flashcard> flashcards = new ArrayList<>();
 
+    // Extract the relevant data from UI components
     for (int i = 0; i < flashcardPaneContainer.getChildren().size(); i++) {
       VBox parent = (VBox) flashcardPaneContainer.getChildren().get(i);
       HBox lowerChildContainer = (HBox) parent.getChildren().stream()
@@ -433,6 +442,7 @@ public class QuizController extends LoggedInController {
         return null;
       }
 
+      // Create list of flashcards
       Flashcard flashcard = new Flashcard(Tools.createUuid(), front, answer);
       flashcards.add(flashcard);
     }
