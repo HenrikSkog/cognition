@@ -81,6 +81,11 @@ public class Quiz {
     }
   }
 
+  /**
+   * Removes the given flashcard from the list of flashcards.
+   *
+   * @param flashcard the flashcard to remove
+   */
   public void removeFlashcard(Flashcard flashcard) {
     Objects.requireNonNull(flashcard);
     // Removes only if it is present. Thus, not conditional is needed.

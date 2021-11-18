@@ -5,14 +5,14 @@ import core.Quiz;
 import core.User;
 import core.UserValidation;
 import core.tools.Tools;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -188,12 +188,13 @@ public class RegisterController extends Controller {
    * @return the default quiz.
    */
   public static Quiz createDefaultQuiz() {
-    Quiz introductionQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
+    final Quiz introductionQuiz = new Quiz(Tools.createUuid(), "Introduction to Cognition",
             "A quiz to introduce you to the functionality of Cognition");
     List<Flashcard> flashcards = new ArrayList<>();
     flashcards.add(new Flashcard(Tools.createUuid(), "What is the 3rd letter of the alphabet?",
             "c"));
-    flashcards.add(new Flashcard(Tools.createUuid(), "What is the chemical formula for water? ", "H2O"));
+    flashcards.add(new Flashcard(Tools.createUuid(),
+            "What is the chemical formula for water? ", "H2O"));
     flashcards.add(new Flashcard(Tools.createUuid(), "How tall is Mount Everest? (m)", "8849"));
     introductionQuiz.addFlashcards(flashcards);
 

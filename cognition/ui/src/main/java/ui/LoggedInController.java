@@ -23,7 +23,7 @@ public abstract class LoggedInController extends Controller {
   }
 
   /**
-   * Handles logging out and going to the login screen
+   * Handles logging out and going to the login screen.
    *
    * @param event is the event given by javafx when the method is triggered
    */
@@ -34,7 +34,7 @@ public abstract class LoggedInController extends Controller {
   }
 
   /**
-   * Handles going to the dashboard
+   * Handles going to the dashboard.
    *
    * @param event is the event given by javafx when the method is triggered
    */
@@ -45,7 +45,7 @@ public abstract class LoggedInController extends Controller {
   }
 
   /**
-   * Handles going to the "My Quizzes" view
+   * Handles going to the "My Quizzes" view.
    *
    * @param event is the event given by javafx when the method is triggered
    */
@@ -56,7 +56,7 @@ public abstract class LoggedInController extends Controller {
   }
 
   /**
-   * Handles going to the "Create New Quiz" view
+   * Handles going to the "Create New Quiz" view.
    *
    * @param event is the event given by javafx when the method is triggered
    */

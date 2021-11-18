@@ -64,8 +64,7 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<List<User>>() {
-            }.getType());
+            new TypeToken<List<User>>() {}.getType());
   }
 
   /**
@@ -77,7 +76,8 @@ public class RemoteCognitionAccess {
    * @throws InterruptedException if no connection is established
    * @throws IOException          if the response is not 200
    */
-  public List<CompactQuiz> getQuizTitlesByUsername(String username) throws IOException, InterruptedException {
+  public List<CompactQuiz> getQuizTitlesByUsername(String username)
+          throws IOException, InterruptedException {
     String endpoint = baseUri + "/quizzes/" + username + "/titles";
 
     HttpRequest request = HttpRequest.newBuilder()
@@ -91,8 +91,7 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<List<CompactQuiz>>() {
-            }.getType());
+            new TypeToken<List<CompactQuiz>>() {}.getType());
   }
 
   /**
@@ -118,8 +117,7 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<Quiz>() {
-            }.getType());
+            new TypeToken<Quiz>() {}.getType());
   }
 
   /**
@@ -147,8 +145,7 @@ public class RemoteCognitionAccess {
             new JsonReader(
                     new StringReader(response.body())
             ),
-            new TypeToken<User>() {
-            }.getType());
+            new TypeToken<User>() {}.getType());
 
   }
 

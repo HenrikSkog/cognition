@@ -4,6 +4,10 @@ import core.Flashcard;
 import core.Quiz;
 import core.User;
 import core.tools.Tools;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,10 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -298,8 +298,8 @@ public class QuizController extends LoggedInController {
       feedback.setTextFill(Color.RED);
       feedbackErrorMessage =
               "The description of a quiz cannot be empty and cannot be greater than "
-                      + Quiz.MAX_DESCRIPTION_LENGTH +
-                      ".";
+                      + Quiz.MAX_DESCRIPTION_LENGTH
+                      + ".";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
@@ -462,7 +462,7 @@ public class QuizController extends LoggedInController {
    * @param maxLength is the max length of the String input
    */
   private void limitTextField(TextField textField, int maxLength) {
-    textField.textProperty().addListener((__, oldValue, newValue) -> {
+    textField.textProperty().addListener((a, oldValue, newValue) -> {
       if (textField.getText().length() > maxLength) {
         String substring = textField.getText().substring(0, maxLength);
         textField.setText(substring);
