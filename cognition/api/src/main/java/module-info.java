@@ -11,4 +11,5 @@ module cognition.api {
   exports api;
   opens api;
   requires java.net.http;
+  requires spring.beans;
 }
