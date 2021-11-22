@@ -1,9 +1,9 @@
 package api;
 
-import java.util.Arrays;
-import java.util.Collections;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 /**
@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class RestApplication {
+  public static final int TEST_PORT = 3000;
   private static int PORT = 8080;
   private static boolean testMode = false;
 
