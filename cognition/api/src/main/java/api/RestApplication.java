@@ -37,8 +37,4 @@ public class RestApplication {
     context.stop();
     context.close();
   }
-
-  public static void start() {
-    main(new String[]{});
-  }
 }
