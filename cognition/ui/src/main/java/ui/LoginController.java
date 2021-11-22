@@ -55,14 +55,14 @@ public class LoginController extends Controller {
   private void goToDashboard(ActionEvent event, String username) {
     User user;
     try {
-      user = getCognitionAccess().read(username);
+      user = getRemoteCognitionAccess().read(username);
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading the user from file";
       setFeedbackText(feedbackErrorMessage);
       return;
     }
 
-    changeToView(event, new DashboardController(user, getCognitionAccess()),
+    changeToView(event, new DashboardController(user, getRemoteCognitionAccess()),
             "Dashboard");
   }
 
@@ -73,7 +73,7 @@ public class LoginController extends Controller {
    */
   @FXML
   private void goToRegister(ActionEvent event) {
-    changeToView(event, new RegisterController(getCognitionAccess()),
+    changeToView(event, new RegisterController(getRemoteCognitionAccess()),
             "Register");
   }
 
@@ -89,7 +89,7 @@ public class LoginController extends Controller {
 
     // Read users in local storage
     try {
-      users = getCognitionAccess().readUsers();
+      users = getRemoteCognitionAccess().readUsers();
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when loading local storage.";
       return false;

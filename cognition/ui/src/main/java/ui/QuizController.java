@@ -347,7 +347,7 @@ public class QuizController extends LoggedInController {
 
     // Update state in local storage
     try {
-      getCognitionAccess().update(getUser());
+      getRemoteCognitionAccess().update(getUser());
       feedback.setTextFill(Color.GREEN);
       setFeedbackText(getFeedbackSuccessMessage());
     } catch (IOException | InterruptedException e) {
@@ -461,7 +461,7 @@ public class QuizController extends LoggedInController {
     if (quizBeingUpdated == null) {
       return;
     }
-    QuizController quizController = new QuizController(getUser(), getCognitionAccess());
+    QuizController quizController = new QuizController(getUser(), getRemoteCognitionAccess());
     changeToView(event, quizController, "Quiz");
   }
 
