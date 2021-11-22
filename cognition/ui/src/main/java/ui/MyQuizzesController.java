@@ -94,7 +94,7 @@ public class MyQuizzesController extends LoggedInController {
 
     // Fetch compact quizzes
     try {
-      stream = getCognitionAccess()
+      stream = getRemoteCognitionAccess()
               .getQuizTitlesByUsername(getUser().getUsername()).stream();
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when trying to get your quizzes.";
@@ -123,7 +123,7 @@ public class MyQuizzesController extends LoggedInController {
     // Fetch selected quiz based on selected CompactQuiz
     // This is done in order to not fetch an unnecessary amount of data at once
     try {
-      selectedQuiz = getCognitionAccess().getQuizByUuid(selectedCompactQuiz.getUuid());
+      selectedQuiz = getRemoteCognitionAccess().getQuizByUuid(selectedCompactQuiz.getUuid());
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when trying to start the quiz.";
       setFeedbackText(feedbackErrorMessage);
@@ -134,7 +134,7 @@ public class MyQuizzesController extends LoggedInController {
     ViewQuizController viewQuizController = new ViewQuizController(
             getUser(),
             selectedQuiz,
-            getCognitionAccess()
+            getRemoteCognitionAccess()
     );
 
     changeToView(event, viewQuizController, "ViewQuiz");
@@ -154,7 +154,7 @@ public class MyQuizzesController extends LoggedInController {
     // Fetch selected quiz based on selected CompactQuiz
     // This is done in order to not fetch an unnecessary amount of data at once
     try {
-      selectedQuiz = getCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
+      selectedQuiz = getRemoteCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when trying to start the quiz.";
       setFeedbackText(feedbackErrorMessage);
@@ -162,7 +162,7 @@ public class MyQuizzesController extends LoggedInController {
     }
 
     // Set state in controller
-    QuizController quizController = new QuizController(getUser(), getCognitionAccess());
+    QuizController quizController = new QuizController(getUser(), getRemoteCognitionAccess());
     quizController.setQuizBeingUpdated(selectedQuiz);
 
     changeToView(event, quizController, "Quiz");
@@ -191,7 +191,7 @@ public class MyQuizzesController extends LoggedInController {
     // Fetch selected quiz based on selected CompactQuiz
     // This is done in order to not fetch an unnecessary amount of data at once
     try {
-      selectedQuiz = getCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
+      selectedQuiz = getRemoteCognitionAccess().getQuizByUuid(this.selectedCompactQuiz.getUuid());
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when trying to start the quiz.";
       setFeedbackText(feedbackErrorMessage);
@@ -210,7 +210,7 @@ public class MyQuizzesController extends LoggedInController {
 
     // Update state in persistent storage
     try {
-      getCognitionAccess().update(getUser());
+      getRemoteCognitionAccess().update(getUser());
     } catch (IOException | InterruptedException e) {
       setFeedbackText("An error occurred when trying to delete selected quiz.");
     }
