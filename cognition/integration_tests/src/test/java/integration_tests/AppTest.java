@@ -4,28 +4,45 @@ import api.RestApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testfx.framework.junit5.ApplicationTest;
 import ui.LoginController;
 import ui.RemoteCognitionAccess;
-import java.io.IOException;
-import java.net.URL;
 
 public class AppTest extends ApplicationTest {
   private LoginController loginController;
   private Scene scene;
 
+  private final String validUsername = "valid-username";
+  private final String validPassword = "valid-password";
+
+  @BeforeAll
+  static void beforeAll() {
+    // Ensure that we're using file for testing in persistent storage
+    RestApplication.setTestMode(true);
+
+    // Start web server
+    RestApplication.start();
+  }
+
+  @AfterAll
+  static void afterAll() {
+    RestApplication.stop();
+  }
+
+  @AfterEach
+  void tearDown() {
+    IntegrationTestsHelper.clearTestStorage();
+  }
+
   @Override
   public void start(final Stage stage) throws Exception {
     // Load FXML view
-    FXMLLoader loader = loadFromUserInterface("Login");
+    FXMLLoader loader = IntegrationTestsHelper.loadFromUserInterface("Login");
 
-    // Set state in controller
-    this.loginController = new LoginController(
-            new RemoteCognitionAccess(RestApplication.TEST_PORT)
-    );
+    // Set state in controller.
+    // The controller uses a RemoteCognitionAccess configured with the port for testing
+    this.loginController = new LoginController(new RemoteCognitionAccess(RestApplication.TEST_PORT));
     loader.setController(loginController);
 
     // Switch stage
@@ -40,22 +57,10 @@ public class AppTest extends ApplicationTest {
     Assertions.assertNotNull(loginController);
   }
 
-  /**
-   * Loads an FXML view from the ui module.
-   * This is used in order to not duplicate the views across Maven modules.
-   *
-   * @param fxml is the name of the FXML view.
-   * @return an FXMLLoader for the given FXML view.
-   * @throws IOException if an error occurs when loading the FXML view.
-   */
-  private FXMLLoader loadFromUserInterface(String fxml) throws IOException {
-    FXMLLoader loader = new FXMLLoader();
-
-    // Find the FXML file relative to the App class in the ui module
-    URL url = ui.App.class.getResource("views/" + fxml + ".fxml");
-
-    loader.setLocation(url);
-
-    return loader;
-  }
+  // @Test
+  // @DisplayName("Client can connect to web server.")
+  // void clientCanConnectToWebServer() {
+  //   User user = new User(validUsername, validPassword);
+  //   this.loginController.getRemoteCognitionAccess().create(user);
+  // }
 }
