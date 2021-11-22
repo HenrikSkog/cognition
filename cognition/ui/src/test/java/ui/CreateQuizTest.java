@@ -38,8 +38,7 @@ public class CreateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    this.remoteCognitionAccess = remoteCognitionAccess;
+    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
 
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
