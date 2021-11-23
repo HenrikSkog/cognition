@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -36,15 +37,11 @@ public class UpdateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-
-
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
     Quiz quiz = new Quiz(createUuid(), validQuizName, validQuizDescription);
     loggedInUser.addQuiz(quiz);
-    remoteCognitionAccess.create(loggedInUser);
 
 
     quizController = new QuizController(loggedInUser, mockRemoteCognitionAccess);

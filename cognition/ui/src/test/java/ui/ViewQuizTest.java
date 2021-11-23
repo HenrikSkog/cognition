@@ -6,10 +6,8 @@ import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -41,8 +39,6 @@ public class ViewQuizTest extends ApplicationTest {
     RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
-
-    remoteCognitionAccess.create(loggedInUser);
 
     Quiz quiz = new Quiz(createUuid(), "Test quiz",
             "This is a test quiz used for development purposes");

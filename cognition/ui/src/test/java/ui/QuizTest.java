@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -34,16 +35,11 @@ public class QuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    this.remoteCognitionAccess = remoteCognitionAccess;
-
     // In the app, there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    remoteCognitionAccess.create(loggedInUser);
-
-    quizController = new QuizController(loggedInUser, remoteCognitionAccess);
+    quizController = new QuizController(loggedInUser, mockRemoteCognitionAccess);
     loader.setController(quizController);
 
     scene = new Scene(loader.load());
@@ -66,7 +62,7 @@ public class QuizTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(remoteCognitionAccess);
+    Assertions.assertNotNull(mockRemoteCognitionAccess);
   }
 
   @Test
