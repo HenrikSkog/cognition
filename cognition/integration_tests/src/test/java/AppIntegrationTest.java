@@ -14,6 +14,10 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * Tests and verifies that the client application can successfully communicate with a
+ * running Spring Boot web server, the {@link RestApplication} class.
+ */
 public class AppIntegrationTest extends ApplicationTest {
   private LoginController loginController;
   private Scene scene;
@@ -22,6 +26,8 @@ public class AppIntegrationTest extends ApplicationTest {
   static void beforeAll() {
     // Ensure that we're using file for testing in persistent storage, and start web server
     RestApplication.main(new String[]{"testmode"});
+
+    // RestApplication gets implicitly shut down when all test are done running.
   }
 
   @AfterEach
