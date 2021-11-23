@@ -27,6 +27,8 @@ public class RegisterTest extends ApplicationTest {
   private Scene scene;
   private RegisterController registerController;
   private RemoteCognitionAccess remoteCognitionAccess;
+  // Mock RemoteCognitionAccess in order to test the client application in isolation
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   private TestFxHelper helper = new TestFxHelper();
 
@@ -175,6 +177,7 @@ public class RegisterTest extends ApplicationTest {
     waitForFxEvents();
     helper.clearInputField("#passwordRepeatInput");
 
+    // Mocking that the user was added
     List<User> users = new ArrayList<>();
     users.add(new User(validUsername, validPassword));
     Mockito.when(mockRemoteCognitionAccess.readUsers()).thenReturn(users);

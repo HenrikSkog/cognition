@@ -48,7 +48,9 @@ public class CreateQuizTest extends ApplicationTest {
     // logged-in user. Thus, we create a fake user here to emulate it
     loggedInUser = new User(validUsername, validPassword);
 
+    // create the controller with the mocked version of cognition access
     quizController = new QuizController(loggedInUser, mockRemoteCognitionAccess);
+
     // IMPORTANT: We do not set a quiz object here. Thus, we render the view like we
     // create a quiz.
     loader.setController(quizController);
