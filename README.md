@@ -36,9 +36,9 @@ Make sure you have Maven installed and can successfully use `mvn` in your termin
 
 ### Important to note
 
-Before running the application, let's add some context as to why we have 2 solutions for running the application. When testing the application, the `ui` requires a running Spring Boot server, running on port `3000`. The same goes for running the application; the `ui` requires a running Spring Boot server on port `8000`. This causes the number of commands in the command line to **increase drastically**. Hence, we added a [`Makefile`](./cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life for the current developers and "future" developer, i.e. the person grading this project.
+The `cognition` project supports using `make` as a wrapper for running `mvn` commands. This is done to improve the quality of life for the current developers and "future" developer, i.e. the person grading this project.
 
-### Using `make` with `mvn` under the hood **(recommended)**
+### Using `make` with `mvn` under the hood **(recommended for ease of use)**
 
 ```sh
 # Navigate to the cognition directory.
@@ -48,14 +48,14 @@ cd cognition
 # Alternatively, "make app" does the same.
 make
 
-# Install dependencies, start test server, and run tests for all modules.
+# Install dependencies, and run tests for all modules.
 make test
 
 # Print the available targets.
 make help
 ```
 
-**`make test` and `make app` are all that is needed to run tests and the Cognition application.**
+**`make test` and `make` are all that is needed to run tests and the Cognition application.**
 
 Please see the [`Makefile`](./cognition/Makefile) for more information on the targets we have made.
 
@@ -65,18 +65,8 @@ Please see the [`Makefile`](./cognition/Makefile) for more information on the ta
 # Navigate to the cognition directory.
 cd cognition
 
-# Install dependencies without running tests.
-# This is required to run before tests to ensure all dependencies in all modules are installed.
-mvn clean install -DskipTests
-
-# Start Spring Boot on port for testing.
-cd api && mvn spring-boot:run -Dspring-boot.run.arguments=testmode
-
-# Run tests for all Maven modules.
-cd cognition && mvn test
-
-# Stop Spring Boot server running on port for testing
-lsof -t -i:3000 | xargs kill -9
+# Install dependencies and run tests in all modules.
+mvn clean install
 
 # Start Spring Boot server on port for application logic.
 cd api && mvn spring-boot:run
@@ -84,7 +74,7 @@ cd api && mvn spring-boot:run
 # Run the client application.
 cd ui && mvn javafx:run
 
-# Stop Spring Boot server running on port for application
+# Stop Spring Boot server running on port for application logic
 lsof -t -i:8080 | xargs kill -9
 ```
 
