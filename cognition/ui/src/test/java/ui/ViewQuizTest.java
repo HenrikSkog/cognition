@@ -38,7 +38,7 @@ public class ViewQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("ViewQuiz");
 
-    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
+    RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
     // in the app there is no logical way for Create Quiz to be accessed without a logged in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
@@ -52,7 +52,7 @@ public class ViewQuizTest extends ApplicationTest {
 
     flashcards = quiz.getFlashcards();
 
-    viewQuizController = new ViewQuizController(loggedInUser, quiz, remoteCognitionAccess);
+    viewQuizController = new ViewQuizController(loggedInUser, quiz, mockRemoteCognitionAccess);
     loader.setController(viewQuizController);
 
     scene = new Scene(loader.load());

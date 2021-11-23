@@ -22,7 +22,7 @@ public class QuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
 
   @AfterEach

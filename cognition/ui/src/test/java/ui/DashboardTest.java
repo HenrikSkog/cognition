@@ -24,6 +24,7 @@ public class DashboardTest extends ApplicationTest {
   private Scene scene;
   private DashboardController dashboardController;
   private RemoteCognitionAccess remoteCognitionAccess;
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   @AfterEach
   void tearDown() {
@@ -34,16 +35,11 @@ public class DashboardTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Dashboard");
 
-    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
     User loggedInUser = new User(validUsername, validPassword);
 
-    remoteCognitionAccess.create(loggedInUser);
-    // in the app there is no logical way for Create Quiz to be accessed without a
-    // logged-in user. Thus, we create a fake user here to emulate it
-    this.dashboardController = new DashboardController(loggedInUser, remoteCognitionAccess);
+    this.dashboardController = new DashboardController(loggedInUser, mockRemoteCognitionAccess);
 
     loader.setController(dashboardController);
 
@@ -67,7 +63,7 @@ public class DashboardTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(remoteCognitionAccess);
+    Assertions.assertNotNull(mockRemoteCognitionAccess);
   }
 
   @Test

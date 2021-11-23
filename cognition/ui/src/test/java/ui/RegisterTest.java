@@ -52,8 +52,7 @@ public class RegisterTest extends ApplicationTest {
 
     // The few places in UI code that allegedly do not test the constructor are false,
     // in the way that the constructor is tested here and fails if it cannot be created successfully.
-    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    this.registerController = new RegisterController(remoteCognitionAccess);
+    this.registerController = new RegisterController(mockRemoteCognitionAccess);
 
     loader.setController(registerController);
 
@@ -175,6 +174,10 @@ public class RegisterTest extends ApplicationTest {
     helper.clearInputField("#passwordInput");
     waitForFxEvents();
     helper.clearInputField("#passwordRepeatInput");
+
+    List<User> users = new ArrayList<>();
+    users.add(new User(validUsername, validPassword));
+    Mockito.when(mockRemoteCognitionAccess.readUsers()).thenReturn(users);
 
     // Create a local user
     verifyInputData(validUsername, validPassword, validPassword, true);
