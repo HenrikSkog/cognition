@@ -1,5 +1,7 @@
 import api.RestApplication;
+import core.Quiz;
 import core.User;
+import core.tools.Tools;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,6 +13,8 @@ import ui.RemoteCognitionAccess;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -22,12 +26,24 @@ public class AppIntegrationTest extends ApplicationTest {
   private LoginController loginController;
   private Scene scene;
 
+  private String validUsername = "it-username";
+  private String validPassword = "it-password";
+
+  private List<User> users;
+
   @BeforeAll
   static void beforeAll() {
     // Ensure that we're using file for testing in persistent storage, and start web server
     RestApplication.main(new String[]{"testmode"});
 
     // RestApplication gets implicitly shut down when all test are done running.
+  }
+
+  @BeforeEach
+  void setUp() {
+    this.users = generateTestData();
+    // Write test data to local storage
+    writeTestData(users);
   }
 
   @AfterEach
@@ -59,20 +75,12 @@ public class AppIntegrationTest extends ApplicationTest {
   @Test
   @DisplayName("Client can connect to web server.")
   void clientCanConnectToWebServer() throws IOException, InterruptedException {
-    String username = "it-username";
-    String password = "it-password";
-
-    User user = new User(username, password);
-
-    // Create sample user
-    this.loginController.getRemoteCognitionAccess().create(user);
-
     // Read stored user
-    User parsedUser = loginController.getRemoteCognitionAccess().read(username);
+    User parsedUser = loginController.getRemoteCognitionAccess().read(users.get(0).getUsername());
 
     // Assertions
     Assertions.assertNotNull(parsedUser);
-    Assertions.assertEquals(username, parsedUser.getUsername());
+    Assertions.assertEquals(users.get(0), parsedUser);
   }
 
   /**
@@ -103,5 +111,104 @@ public class AppIntegrationTest extends ApplicationTest {
     loader.setLocation(url);
 
     return loader;
+  }
+
+  @Test
+  @DisplayName("Client can read all users")
+  void clientCanReadAllUsers() {
+    try {
+      List<User> readUsers = loginController.getRemoteCognitionAccess().readUsers();
+
+      for (int i = 0; i < users.size(); i++) {
+        Assertions.assertEquals(users.get(i), readUsers.get(i));
+      }
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Client can update a user")
+  void clientCanUpdateUser() {
+    try {
+      User user = users.get(0);
+      user.setPassword("new-password");
+
+      loginController.getRemoteCognitionAccess().update(user);
+
+      User updatedUser = loginController.getRemoteCognitionAccess().read(user.getUsername());
+
+      Assertions.assertEquals(user, updatedUser);
+    } catch( InterruptedException | IOException e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Client can delete a user")
+  void clientCanDelete() {
+    User user = users.get(0);
+    users.remove(0);
+
+    try {
+      loginController.getRemoteCognitionAccess().delete(user.getUsername());
+      List<User> readUsers = loginController.getRemoteCognitionAccess().readUsers();
+
+      for (int i = 0; i < users.size(); i++) {
+        Assertions.assertEquals(users.get(i), readUsers.get(i));
+      }
+
+    } catch( InterruptedException | IOException e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Client can read a quiz by id")
+  void clientCanReadQuiz() {
+    // Try to read 2nd quiz in 2nd user
+    try {
+      String quizId = users.get(1).getQuizzes().get(1).getUuid();
+      String readQuizId = loginController
+              .getRemoteCognitionAccess()
+              .getQuizByUuid(users.get(1).getQuizzes().get(1).getUuid())
+                  .getUuid();
+
+
+      Assertions.assertEquals(quizId, readQuizId);
+    } catch (IOException | InterruptedException e) {
+      fail();
+    }
+  }
+
+  @Test
+  @DisplayName("Client can read all quizzes")
+  void clientCanReadQuizzes() {
+    //
+  }
+
+  private List<User> generateTestData() {
+    List<User> users = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      User user = new User(validUsername + i, validPassword + i);
+
+      for (int j = 0; j < 3; j++) {
+        user.addQuiz(new Quiz(Tools.createUuid(), "front" + j, "back" + j));
+      }
+
+      users.add(user);
+    }
+    return users;
+  }
+
+  private void writeTestData(List<User> users) {
+    users.forEach(user ->
+    {
+      try {
+        this.loginController.getRemoteCognitionAccess().create(user);
+      } catch (InterruptedException | IOException e) {
+        fail();
+      }
+    });
   }
 }
