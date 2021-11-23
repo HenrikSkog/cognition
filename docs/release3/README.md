@@ -181,6 +181,8 @@ However, our initial solution for testing `ui` given a running Spring Boot web s
 
 **We do not want this test functionality to go to waste, but it does not really fit in our `main` branch.** Thus, we have decided to tag the `main` branch at the moment when the `ui` module used deployment tests, rather than testing the client application functionality in isolation. The tag [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag is available on GitLab with explaining documentation.
 
+**Please note that this tag of the `main` branch excludes the `integration_tests` module, as the two approaches have quite fundamentally different setups in the `api` module and consequently the Spring Boot configuration.**
+
 #### In summary
 
 The `main` branch should test, **and currently is testing**, `api`, `core` and `ui` in isolation. Additionally, we have a module called `integration_tests` for testing connections between the client application and web server. The integration tests do not test many deatils in neither the `ui` module or the `api` module. This is tested in the respective modules. Rather, `integration_tests` verify that a client application view can successfully connect to the web server. You can find the deployment tests with explaining documentation in the [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag on GitLab.
