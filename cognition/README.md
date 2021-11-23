@@ -59,9 +59,7 @@ cd target/cognition/bin
 ./cognition
 ```
 
-### Important to note
-
-Please note that **during testing, but not during production**, the client application and web server runs simultaneously. This is most easily achieved by navigating to the `cognition` directory, and running `make test`.
+## `Makefile`
 
 [Click here](Makefile) to read inspect the `Makefile`. Read the root [README](../README.md) for more information on how to run the application using `make`.
 
@@ -69,36 +67,23 @@ Please note that **during testing, but not during production**, the client appli
 
 ### `api` module
 
-[Click here](./api/README.md) to read the documentation for the `api` module.
+[Click here](./api) to read the documentation for the `api` module.
 
 ### `core` module
 
-[Click here](./core/README.md) to read the documentation for the `core` module.
+[Click here](./core) to read the documentation for the `core` module.
 
 ### `ui` module
 
-[Click here](./ui/README.md) to read the documentation for the `ui` module.
+[Click here](./ui) to read the documentation for the `ui` module.
+
+### `integration_tests` module
+
+[Click here](./integration_tests) to read the documentation for the `integration_tests` module.
 
 ## User stories, MVP and future improvements
 
-### Minimum Viable Product (MVP)
-
-As a user, I want to log in to the application and have a personalized experience of the application. This means that my
-collection of flashcards may be different to other users' flashcards.
-
-When logged in, I want to create, view, update and delete flashcards. After creating a flashcard, I want to group
-several flashcards together to form a quiz; a collection of flashcards.
-
-Furthermore, I want to be able to exit the application and log in to continue where I left off. This means that the
-quizzes and flashcards are stored persistently.
-
-### Improvements and future functionality
-
-As a user, I want to search quizzes and flashcards for easier and more intuitive navigation.
-
-As a user, I want to see how many flashcards I answered correctly the first time.
-
-Additionally, default quizzes are added to each user when a user successfully registers, such that a user can try out the full functionality of the Cognition application at once.
+[Click here](../USER_STORIES.md) to read more about user stories, MVP and future improvements.
 
 ## Mockup screenshots
 
