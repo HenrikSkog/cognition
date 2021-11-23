@@ -94,4 +94,4 @@ group is happy with the current groundwork, and agrees that this will be easier 
 
 ## Design
 
-[Click here](./DESIGN.md) to read about and view the design of the client application. 
+[Click here](../design/DESIGN.md) to read about and view the design of the client application. 
