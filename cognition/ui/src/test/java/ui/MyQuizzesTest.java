@@ -121,6 +121,8 @@ public class MyQuizzesTest extends ApplicationTest {
     clickOn("#quizzesListView");
     waitForFxEvents();
 
+
+    // mock getting back a quiz from local storage
     try {
       Mockito.when(mockRemoteCognitionAccess.getQuizByUuid(notNull()))
           .thenReturn(loggedInUser.getQuizzes().get(0));

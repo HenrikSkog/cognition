@@ -71,6 +71,7 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Existing user can log in.")
   void existingUserCanLogIn() {
+    // mock created users
     List<User> users = List.of(new User(validUsername, validPassword));
 
     try {
@@ -116,6 +117,7 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Non-existing user cannot log in.")
   void nonExistingUserCannotLogIn() {
+    // mock already created users
     List<User> users = new ArrayList<>();
     try {
       Mockito.when(mockRemoteCognitionAccess.readUsers())

@@ -23,7 +23,8 @@ public class DashboardTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private DashboardController dashboardController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+
+  // Mock RemoteCognitionAccess in order to test the client application in isolation
   private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   @AfterEach
