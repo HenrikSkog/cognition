@@ -11,12 +11,10 @@ import ui.LoginController;
 import ui.RemoteCognitionAccess;
 import java.io.IOException;
 
-public class AppTest extends ApplicationTest {
+public class LoginIT extends ApplicationTest {
   private LoginController loginController;
   private Scene scene;
-
-  private final String validUsername = "valid-username";
-  private final String validPassword = "valid-password";
+  private final IntegrationTestsHelper helper = new IntegrationTestsHelper();
 
   @BeforeAll
   static void beforeAll() {
@@ -32,13 +30,13 @@ public class AppTest extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    IntegrationTestsHelper.clearTestStorage();
+    helper.clearTestStorage();
   }
 
   @Override
   public void start(final Stage stage) throws Exception {
     // Load FXML view
-    FXMLLoader loader = IntegrationTestsHelper.loadFromUserInterface("Login");
+    FXMLLoader loader = helper.loadFromUserInterface("Login");
 
     // Set state in controller.
     // The controller uses a RemoteCognitionAccess configured with the port for testing
@@ -60,16 +58,16 @@ public class AppTest extends ApplicationTest {
   @Test
   @DisplayName("Client can connect to web server.")
   void clientCanConnectToWebServer() throws IOException, InterruptedException {
-    User user = new User(validUsername, validPassword);
+    User user = new User(helper.getUsername(), helper.getPassword());
 
     // Create sample user
     this.loginController.getRemoteCognitionAccess().create(user);
 
     // Read stored user
-    User parsedUser = loginController.getRemoteCognitionAccess().read(validUsername);
+    User parsedUser = loginController.getRemoteCognitionAccess().read(helper.getUsername());
 
     // Assertions
     Assertions.assertNotNull(parsedUser);
-    Assertions.assertEquals(validUsername, parsedUser.getUsername());
+    Assertions.assertEquals(helper.getUsername(), parsedUser.getUsername());
   }
 }
