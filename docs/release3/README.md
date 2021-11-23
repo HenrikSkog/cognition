@@ -183,6 +183,12 @@ However, our initial solution for testing `ui` given a running Spring Boot web s
 
 **Please note that this tag of the `main` branch excludes the `integration_tests` module, as the two approaches have quite fundamentally different setups in the `api` module and consequently the Spring Boot configuration.**
 
+#### An alternative approach
+
+Let's take a moment to reflect on a different approach, and why we deem this less fitting in a multi-modular Maven project.
+
+We could have easily made `ui` depend on `api`. `ui` would then be able to simply call `RestApplication.main(...)` on test startup and `RestApplication.stop()` on test shutdown, or something similar. This would allow us to keep UI unit tests and integration tests in the same module (`ui`). However, this would introduce a **very unnecessary** dependency. The client application should really have no relation to the running web server. It should simply assume that some actor has the web server running on a machine, and act accordingly.
+
 #### In summary
 
 The `main` branch should test, **and currently is testing**, `api`, `core` and `ui` in isolation. Additionally, we have a module called `integration_tests` for testing connections between the client application and web server. The integration tests do not test many deatils in neither the `ui` module or the `api` module. This is tested in the respective modules. Rather, `integration_tests` verify that a client application view can successfully connect to the web server. You can find the deployment tests with explaining documentation in the [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag on GitLab.
