@@ -23,7 +23,7 @@ import static ui.TestFxHelper.waitForFxEvents;
 public class MyQuizzesTest extends ApplicationTest {
   private Scene scene;
   private MyQuizzesController myQuizzesController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
   private User loggedInUser;
 
   private final String validUsername = "valid-username";
@@ -54,9 +54,16 @@ public class MyQuizzesTest extends ApplicationTest {
       loggedInUser.addQuiz(quiz);
     }
 
-    remoteCognitionAccess.create(loggedInUser);
+    Mockito.when(mockRemoteCognitionAccess.getQuizTitlesByUsername(loggedInUser.getUsername()))
+        .thenReturn(loggedInUser
+                .getQuizzes()
+                .stream()
+                .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
+                .collect(Collectors.toList()
+                )
+        );
 
-    myQuizzesController = new MyQuizzesController(loggedInUser, remoteCognitionAccess);
+    myQuizzesController = new MyQuizzesController(loggedInUser, mockRemoteCognitionAccess);
 
     loader.setController(myQuizzesController);
 
@@ -114,6 +121,13 @@ public class MyQuizzesTest extends ApplicationTest {
     clickOn("#quizzesListView");
     waitForFxEvents();
 
+    try {
+      Mockito.when(mockRemoteCognitionAccess.getQuizByUuid(notNull()))
+          .thenReturn(loggedInUser.getQuizzes().get(0));
+    } catch (IOException | InterruptedException e) {
+      fail();
+    }
+
     // delete selected quiz
     clickOn("#deleteQuizButton");
     waitForFxEvents();
@@ -142,6 +156,9 @@ public class MyQuizzesTest extends ApplicationTest {
     // select a quiz
     clickOn("#quizzesListView");
     waitForFxEvents();
+
+    Mockito.when(mockRemoteCognitionAccess.getQuizByUuid(notNull()))
+        .thenReturn(loggedInUser.getQuizzes().get(0));
 
     // start quiz
     clickOn("#startQuizButton");

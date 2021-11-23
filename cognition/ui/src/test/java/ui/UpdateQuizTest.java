@@ -23,7 +23,7 @@ public class UpdateQuizTest extends ApplicationTest {
   private final String validQuizDescription = "valid-quiz-description";
   private Scene scene;
   private QuizController quizController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   private TestFxHelper helper = new TestFxHelper();
 
@@ -47,7 +47,7 @@ public class UpdateQuizTest extends ApplicationTest {
     remoteCognitionAccess.create(loggedInUser);
 
 
-    quizController = new QuizController(loggedInUser, remoteCognitionAccess);
+    quizController = new QuizController(loggedInUser, mockRemoteCognitionAccess);
     quizController.setQuizBeingUpdated(quiz);
     loader.setController(quizController);
 

@@ -71,9 +71,13 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Existing user can log in.")
   void existingUserCanLogIn() {
+    List<User> users = List.of(new User(validUsername, validPassword));
+
     try {
+      Mockito.when(mockRemoteCognitionAccess.readUsers())
+              .thenReturn(users);
       Mockito.when(mockRemoteCognitionAccess.read(validUsername))
-              .thenReturn(new User(validUsername, validPassword));
+              .thenReturn(users.get(0));
     } catch (InterruptedException | IOException e) {
       fail();
     }
@@ -112,6 +116,13 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Non-existing user cannot log in.")
   void nonExistingUserCannotLogIn() {
+    List<User> users = new ArrayList<>();
+    try {
+      Mockito.when(mockRemoteCognitionAccess.readUsers())
+          .thenReturn(users);
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
     // This username and password is not in local storage, as users.json is cleared
     // after each test
     verifyInputData("non-existing-user", "non-existing-password", loginController.getFeedbackErrorMessage());
