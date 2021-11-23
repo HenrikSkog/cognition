@@ -14,11 +14,22 @@ import static org.junit.jupiter.api.Assertions.fail;
  * It serves as a helper class with static methods when running tests in the integration_tests module.
  */
 class IntegrationTestsHelper {
+  protected final String username = "it-username";
+  protected final String password = "it-password";
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
   /**
    * Empties the JSON data in file at the storage path. Used before validating the
    * return type when user storage is empty.
    */
-  protected static void clearTestStorage() {
+  protected void clearTestStorage() {
     try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
       writer.write("");
     } catch (IOException e) {
@@ -33,7 +44,7 @@ class IntegrationTestsHelper {
    * @param fxml is the name of the FXML view.
    * @return an FXMLLoader for the given FXML view.
    */
-  protected static FXMLLoader loadFromUserInterface(String fxml) {
+  protected FXMLLoader loadFromUserInterface(String fxml) {
     FXMLLoader loader = new FXMLLoader();
 
     // Find the FXML file relative to the App class in the ui module
