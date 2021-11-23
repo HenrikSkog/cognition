@@ -49,6 +49,12 @@ As a result of this, the [presentation layer controllers](src/main/java/ui)
 and [corresponding UI tests](src/test/java/ui) were refactored to use `RemoteCognitionAccess` to communicate with the
 web server handling interaction with the persistent storage.
 
+### The choice of not testing `RemoteCognitionAccess`
+
+We consider [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) to be implicitly tested using the [`integration_tests`](../integration_tests) module.
+
+Please read below for a version about the application that tests `RemoteCognitionAccess` using deployment tests.
+
 ### Testing the UI
 
 In the current `main` branch, the client application is tested in isolation; not dependent on a running web server. We achieved this by mocking [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) and its returning values when testing.
