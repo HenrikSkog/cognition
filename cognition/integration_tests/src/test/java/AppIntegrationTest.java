@@ -1,20 +1,22 @@
-package integration_tests;
-
 import api.RestApplication;
 import core.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import json.CognitionStorage;
 import org.junit.jupiter.api.*;
 import org.testfx.framework.junit5.ApplicationTest;
 import ui.LoginController;
 import ui.RemoteCognitionAccess;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 
-public class AppIT extends ApplicationTest {
+import static org.junit.jupiter.api.Assertions.fail;
+
+public class AppIntegrationTest extends ApplicationTest {
   private LoginController loginController;
   private Scene scene;
-  private final IntegrationTestsHelper helper = new IntegrationTestsHelper();
 
   @BeforeAll
   static void beforeAll() {
@@ -30,13 +32,13 @@ public class AppIT extends ApplicationTest {
 
   @AfterEach
   void tearDown() {
-    helper.clearTestStorage();
+    clearTestStorage();
   }
 
   @Override
   public void start(final Stage stage) throws Exception {
     // Load FXML view
-    FXMLLoader loader = helper.loadFromUserInterface("Login");
+    FXMLLoader loader = loadFromUserInterface("Login");
 
     // Set state in controller.
     this.loginController = new LoginController(new RemoteCognitionAccess());
@@ -71,5 +73,35 @@ public class AppIT extends ApplicationTest {
     // Assertions
     Assertions.assertNotNull(parsedUser);
     Assertions.assertEquals(username, parsedUser.getUsername());
+  }
+
+  /**
+   * Empties the JSON data in file at the storage path. Used before validating the
+   * return type when user storage is empty.
+   */
+  private void clearTestStorage() {
+    try (FileWriter writer = new FileWriter(String.valueOf(new CognitionStorage("cognitionTest.json").getStoragePath()))) {
+      writer.write("");
+    } catch (IOException e) {
+      fail();
+    }
+  }
+
+  /**
+   * Loads an FXML view from the ui module.
+   * This is used in order to not duplicate the views across Maven modules.
+   *
+   * @param fxml is the name of the FXML view.
+   * @return an FXMLLoader for the given FXML view.
+   */
+  private FXMLLoader loadFromUserInterface(String fxml) {
+    FXMLLoader loader = new FXMLLoader();
+
+    // Find the FXML file relative to the App class in the ui module
+    URL url = ui.App.class.getResource("views/" + fxml + ".fxml");
+
+    loader.setLocation(url);
+
+    return loader;
   }
 }
