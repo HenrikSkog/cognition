@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -26,27 +27,11 @@ public class RegisterTest extends ApplicationTest {
   private final String notMatchingPassword = "not-matching";
   private Scene scene;
   private RegisterController registerController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+
   // Mock RemoteCognitionAccess in order to test the client application in isolation
   private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   private TestFxHelper helper = new TestFxHelper();
-
-  @BeforeEach
-  void setUp() {
-    try {
-      // Add a user, such that storage is not empty. Empty storage is tested in core
-      // module.
-      remoteCognitionAccess.create(new User("placeholder", "placeholder"));
-    } catch (IOException | InterruptedException e) {
-      fail();
-    }
-  }
-
-  @AfterEach
-  void tearDown() {
-    TestFxHelper.clearTestStorage();
-  }
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -78,7 +63,7 @@ public class RegisterTest extends ApplicationTest {
   @Test
   @DisplayName("Storage is defined.")
   void storageIsDefined() {
-    Assertions.assertNotNull(remoteCognitionAccess);
+    Assertions.assertNotNull(mockRemoteCognitionAccess);
   }
 
   @Test
@@ -98,71 +83,18 @@ public class RegisterTest extends ApplicationTest {
   }
 
   @Test
-  @DisplayName("Valid register passes.")
-  void validRegisterPasses() {
-    // Correct input yield success message
-    waitForFxEvents();
-    verifyInputData(validUsername, validPassword, validPassword, false);
-
-    // Read locally stored users to find the inputted data
-    List<User> users = new ArrayList<>();
-    try {
-      users = remoteCognitionAccess.readUsers();
-    } catch (IOException | InterruptedException e) {
-      fail();
-    }
-
-    // Check if user actually was stored
-    boolean userWasStored = false;
-
-    for (User user : users) {
-      userWasStored = user.getUsername().equals(validUsername) && user.getPassword().equals(validPassword);
-
-      if (userWasStored) {
-        break;
-      }
-    }
-
-    waitForFxEvents();
-    Assertions.assertTrue(userWasStored);
-  }
-
-  @Test
-  @DisplayName("Default quizzes are added")
-  void defaultQuizzes() {
-    // Correct input yield success message
-    waitForFxEvents();
-    verifyInputData(validUsername, validPassword, validPassword, false);
-
-    // Read locally stored users to find the inputted data
-    List<User> users = new ArrayList<>();
-    try {
-      users = remoteCognitionAccess.readUsers();
-    } catch (IOException | InterruptedException e) {
-      fail();
-    }
-
-    User user = users.stream()
-            .filter(u -> u.getUsername().equals(validUsername))
-            .findFirst()
-            .orElse(null);
-
-    Assertions.assertNotNull(user);
-
-
-    Quiz correctQuiz = RegisterController.createDefaultQuiz();
-
-    // Assert this quiz has been added to the newly registered user
-    Assertions.assertEquals(user.getQuizzes().get(0).getName(), correctQuiz.getName());
-  }
-
-  @Test
   @DisplayName("All input fields are required.")
   void allInputFieldsAreRequired() {
     waitForFxEvents();
     verifyInputData("", "", "", true);
   }
 
+  @Test
+  @DisplayName("Valid user gives success message")
+  void validCreatedUserGivesSuccessMessage() {
+    // Register a user
+    verifyInputData(validUsername, validPassword, validPassword, false);
+  }
   @Test
   @DisplayName("Duplicate user gives error message.")
   void duplicateUserGivesErrorMessage() {
@@ -180,7 +112,11 @@ public class RegisterTest extends ApplicationTest {
     // Mocking that the user was added
     List<User> users = new ArrayList<>();
     users.add(new User(validUsername, validPassword));
-    Mockito.when(mockRemoteCognitionAccess.readUsers()).thenReturn(users);
+    try {
+      Mockito.when(mockRemoteCognitionAccess.readUsers()).thenReturn(users);
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
 
     // Create a local user
     verifyInputData(validUsername, validPassword, validPassword, true);
