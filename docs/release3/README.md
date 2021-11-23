@@ -6,19 +6,19 @@ Please note that all prior documentation in all modules have been revised and up
 
 ### `ui` module documentation
 
-[Click here](../../cognition/ui/README.md) to read the documentation for the `ui` module.
+[Click here](../../cognition/ui) to read the documentation for the `ui` module.
 
 ### `core` module documentation
 
-[Click here](../../cognition/core/README.md) to read the documentation for the `core` module.
+[Click here](../../cognition/core) to read the documentation for the `core` module.
 
 ### `api` module documentation
 
-[Click here](../../cognition/api/README.md) to read the documentation for the `api` module.
+[Click here](../../cognition/api) to read the documentation for the `api` module.
 
 ### `integration_tests` module documentation
 
-[Click here](../../cognition/integration_tests/README.md) to read the documentation for the `integration_tests` module.
+[Click here](../../cognition/integration_tests) to read the documentation for the `integration_tests` module.
 
 ## Changelog from deliverable 2 to deliverable 3
 
