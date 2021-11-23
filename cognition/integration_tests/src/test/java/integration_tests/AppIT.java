@@ -7,15 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.*;
 import org.testfx.framework.junit5.ApplicationTest;
-import ui.MyQuizzesController;
+import ui.LoginController;
 import ui.RemoteCognitionAccess;
 import java.io.IOException;
 
-public class MyQuizzesIT extends ApplicationTest {
-
-  private MyQuizzesController myQuizzesController;
+public class AppIT extends ApplicationTest {
+  private LoginController loginController;
   private Scene scene;
-
   private final IntegrationTestsHelper helper = new IntegrationTestsHelper();
 
   @BeforeAll
@@ -38,14 +36,11 @@ public class MyQuizzesIT extends ApplicationTest {
   @Override
   public void start(final Stage stage) throws Exception {
     // Load FXML view
-    FXMLLoader loader = helper.loadFromUserInterface("MyQuizzes");
-
-    User loggedInUser = new User(helper.getUsername(), helper.getPassword());
+    FXMLLoader loader = helper.loadFromUserInterface("Login");
 
     // Set state in controller.
-    // The controller uses a RemoteCognitionAccess configured with the port for testing
-    this.myQuizzesController = new MyQuizzesController(loggedInUser, new RemoteCognitionAccess());
-    loader.setController(myQuizzesController);
+    this.loginController = new LoginController(new RemoteCognitionAccess());
+    loader.setController(loginController);
 
     // Switch stage
     scene = new Scene(loader.load());
@@ -56,17 +51,25 @@ public class MyQuizzesIT extends ApplicationTest {
   @Test
   @DisplayName("Controller is defined.")
   void controllerIsDefined() {
-    Assertions.assertNotNull(myQuizzesController);
+    Assertions.assertNotNull(loginController);
   }
 
   @Test
   @DisplayName("Client can connect to web server.")
   void clientCanConnectToWebServer() throws IOException, InterruptedException {
+    String username = "it-username";
+    String password = "it-password";
+
+    User user = new User(username, password);
+
+    // Create sample user
+    this.loginController.getRemoteCognitionAccess().create(user);
+
     // Read stored user
-    User parsedUser = myQuizzesController.getRemoteCognitionAccess().read(helper.getUsername());
+    User parsedUser = loginController.getRemoteCognitionAccess().read(username);
 
     // Assertions
     Assertions.assertNotNull(parsedUser);
-    Assertions.assertEquals(helper.getUsername(), parsedUser.getUsername());
+    Assertions.assertEquals(username, parsedUser.getUsername());
   }
 }
