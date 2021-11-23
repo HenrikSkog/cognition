@@ -258,25 +258,12 @@ using `cd ui && mvn javafx:run`.
 For deliverable 3, we converted the application to interact with a web server using the Spring Boot framework. This
 demanded that we reworked how the tests and the application is run, as there are more moving parts currently.
 
-First, you need to **install dependencies without running tests**, in order to ensure that all Maven modules have
-downloaded necessary dependencies.
-
-Then, you need to **test** the application. For the user interface tests to pass, this requires using a Spring Boot
-server running on our port for testing (port `3000`).
-
-**Running the application** also requires a Spring Boot server to be running, this time on port `8080`. We made the
-choice of not running the test server and the application server on the same port in order to prevent potential crashes.
-
-In summary, all these moving parts led us to streamline the process of testing and running the application. Hence, we
+This led us to streamline the process of testing and running the application. Hence, we
 added a [`Makefile`](../../cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life
 for the current developers and "future" developer (the one grading this project). **We underline that we still use Maven
-for building the application.** Make is simply acts as an abstraction above the existing Maven commands.
+for building the application.** `Make` simply acts as an abstraction above the existing `mvn` commands.
 
-Given the number of actual commands to run the application, the group saw this abstraction as necessary and worth
-dedicating time to, in order to improve the quality of life for the developer.
-
-Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`
-.
+Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`.
 
 **TL;DR** - You can now run tests using `make test` and run the application using `make` in the `cognition` directory.
 
