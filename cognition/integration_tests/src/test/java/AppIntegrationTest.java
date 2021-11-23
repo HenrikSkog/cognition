@@ -21,13 +21,7 @@ public class AppIntegrationTest extends ApplicationTest {
   @BeforeAll
   static void beforeAll() {
     // Ensure that we're using file for testing in persistent storage, and start web server
-    RestApplication.setTestMode(true);
-    RestApplication.main(new String[]{});
-  }
-
-  @AfterAll
-  static void afterAll() {
-    RestApplication.stop();
+    RestApplication.main(new String[]{"testmode"});
   }
 
   @AfterEach
@@ -41,7 +35,7 @@ public class AppIntegrationTest extends ApplicationTest {
     FXMLLoader loader = loadFromUserInterface("Login");
 
     // Set state in controller.
-    this.loginController = new LoginController(new RemoteCognitionAccess());
+    this.loginController = new LoginController(new RemoteCognitionAccess(RestApplication.TEST_PORT));
     loader.setController(loginController);
 
     // Switch stage
