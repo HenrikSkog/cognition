@@ -1,8 +1,9 @@
 package api;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 /**
@@ -14,16 +15,29 @@ public class RestApplication {
   private static int PORT = 8080;
   private static boolean testMode = false;
 
-  private static ConfigurableApplicationContext context;
-
   /**
    * Starts the Spring Boot application.
    *
    * @param args are the optional arguments passed in when starting the Spring Boot application.
    */
   public static void main(String[] args) {
-    context = new SpringApplicationBuilder(RestApplication.class).run();
+    SpringApplication application = new SpringApplication(RestApplication.class);
+
+    // If Spring Boot arguments contain the word "testmode",
+    // set test mode to true.
+    if (Arrays.stream(args).toList().contains("testmode")) {
+      setTestMode(true);
+      PORT = 3000;
+    }
+
+    // Set the server port
+    application.setDefaultProperties(
+            Collections.singletonMap("server.port", String.valueOf(PORT))
+    );
+
+    application.run(args);
   }
+
 
   public static void setTestMode(boolean testMode) {
     RestApplication.testMode = testMode;
@@ -33,8 +47,4 @@ public class RestApplication {
     return testMode;
   }
 
-  public static void stop() {
-    context.stop();
-    context.close();
-  }
 }
