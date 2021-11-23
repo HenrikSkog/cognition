@@ -80,13 +80,6 @@ public class CreateQuizTest extends ApplicationTest {
     clickOn(helper.findTextField(node -> true, "#answer-input", 0))
             .write(answer);
 
-    // Mock response
-    try {
-      Mockito.doNothing().when(mockRemoteCognitionAccess).update(loggedInUser);
-    } catch (InterruptedException | IOException e) {
-      fail();
-    }
-
     // Create quiz
     verifyInputData(name, description, false);
 
