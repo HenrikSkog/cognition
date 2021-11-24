@@ -54,3 +54,33 @@ web server handling interaction with the persistent storage.
 Please see the [release 3 documentation](../../docs/release3/README.md) for more information on improvements and new
 functionality in the `ui` module, specifically under the
 heading `## Balancing implementing new functionality and ensuring code quality`.
+
+## Diagrams
+
+The `abstract` diagram helps a new developer get an overview of the relationships and roles of each class before reading the `detailed` version, which in essence, is the more familiar way of drawing class diagrams. We choose this way of presenting the modules as it helps new developers to the project quickly understand the purpose of each class and how that comes into play in the broader task of the module.
+
+### Abstracted
+
+![Interaction between UI controllers](../../docs/plantuml/release2/img/ui_controllers_abstracted.png)
+
+### Detailed
+
+![Interaction between UI controllers](../../docs/plantuml/release2/img/ui_controllers_detailed.png)
+
+> Does not include setter and getter methods as well as variables and functions that are not necesary to get an overview of the classes function and its relationship to other classes.
+
+## Sequence diagrams
+
+An overview of the user flow between UI controllers can be found below.
+
+### Login Sequence
+
+![Login Sequence](../../docs/plantuml/release2/img/login_sequence.png)
+
+### Dashboard Sequence
+
+![Dashboard Sequence](../../docs/plantuml/release2/img/dashboard_controller.png)
+
+### MyQuizzes Sequence
+
+![MyQuizzes Sequence](../../docs/plantuml/release2/img/myquizzes_controller.png)
