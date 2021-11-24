@@ -120,6 +120,7 @@
                         @{argLine} --add-opens ui/ui=ALL-UNNAMED --add-exports
                         javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
+                    <rerunFailingTestsCount>1</rerunFailingTestsCount>    
                 </configuration>
             </plugin>
 
