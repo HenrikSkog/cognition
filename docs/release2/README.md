@@ -113,15 +113,17 @@ These tests can be found [here](../../cognition/ui/src/test/java/ui). We validat
 
 ### User Interface
 
-Please see the [UI module documentation](../../cognition/ui/README.md) for a thorough documentation of its classes.
+Please see the [UI module documentation](../../cognition/ui) for a thorough documentation of its classes.
 
 ### Core and persistent local storage
 
-Please see the [Core module documentation](../../cognition/core/README.md) for a thorough documentation of its classes.
+Please see the [Core module documentation](../../cognition/core) for a thorough documentation of its classes.
 
 ### REST API
 
-Please see the [API module documentation](../../cognition/api/README.md) for a thorough documentation of its classes.
+Please see the [API module documentation](../../cognition/api) for a thorough documentation of its classes.
+
+> Please note that we have added a module called [`integration_tests`](../../cognition/integration_tests).
 
 ## Reflection
 

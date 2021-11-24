@@ -49,6 +49,20 @@ As a result of this, the [presentation layer controllers](src/main/java/ui)
 and [corresponding UI tests](src/test/java/ui) were refactored to use `RemoteCognitionAccess` to communicate with the
 web server handling interaction with the persistent storage.
 
+### The choice of not testing `RemoteCognitionAccess`
+
+In order to test the client application in isolation, we use the [Mockito](https://site.mockito.org/) framework to mock the client application class that interacts with the web server: [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java). In other words, `RemoteCognitionAccess` is not explicitly tested in the `ui` module.
+
+Rather, **we consider [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) to be implicitly tested using the [`integration_tests`](../integration_tests) module. This is not registered by JaCoCo in the `ui` module**. It thus seems like [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) is not tested, but that is not true.
+
+Please read below for a version of the application that tests `RemoteCognitionAccess` using deployment tests, thus increasing its coverage in the `ui` module.
+
+### Testing the UI
+
+In the current `main` branch, the client application is tested in isolation; not dependent on a running web server. We achieved this by mocking [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) and its returning values when testing.
+
+However, **we have created a tag for a snapshot of the `main` branch with functional deployment testing**. This includes a starting a Spring Boot web server, and then testing all UI functionality against a running web server, not mocking any responses. Inspect the [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag on GitLab. The root `README.md` has information on how to test the full-stack application, with a running client application and a running Spring Boot web server.
+
 ### Improvements and new functionality
 
 Please see the [release 3 documentation](../../docs/release3/README.md) for more information on improvements and new

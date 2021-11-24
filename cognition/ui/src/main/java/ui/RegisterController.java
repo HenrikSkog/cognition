@@ -98,7 +98,7 @@ public class RegisterController extends Controller {
     // Get users from local storage
     List<User> users = null;
     try {
-      users = getCognitionAccess().readUsers();
+      users = getRemoteCognitionAccess().readUsers();
     } catch (IOException | InterruptedException e) {
       feedbackErrorMessage = "An error occurred when reading from local storage.";
       feedback.setText(feedbackErrorMessage);
@@ -132,7 +132,7 @@ public class RegisterController extends Controller {
       Quiz introductionQuiz = createDefaultQuiz();
       user.addQuiz(introductionQuiz);
 
-      getCognitionAccess().create(user);
+      getRemoteCognitionAccess().create(user);
 
       setFeedbackErrorMode(false);
       feedback.setText(feedbackSuccessMessage);
@@ -149,7 +149,7 @@ public class RegisterController extends Controller {
    */
   @FXML
   public void goToLogin(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionAccess()),
+    changeToView(event, new LoginController(getRemoteCognitionAccess()),
             "Login");
   }
 

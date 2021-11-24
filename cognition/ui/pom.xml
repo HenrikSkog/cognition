@@ -43,6 +43,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
         <!-- Test with TextFX -->
         <dependency>
             <groupId>org.testfx</groupId>
@@ -114,6 +120,7 @@
                         @{argLine} --add-opens ui/ui=ALL-UNNAMED --add-exports
                         javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
+                    <rerunFailingTestsCount>1</rerunFailingTestsCount>    
                 </configuration>
             </plugin>
 
@@ -152,6 +159,17 @@
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                     </javaOptions>
+
+                    <!-- linux options -->
+                    <linuxShortcut>true</linuxShortcut>
+                    <linuxMenuGroup>Cognition</linuxMenuGroup>
+
+                    <!-- windows options -->
+                    <winDirChooser>true</winDirChooser>
+                    <winShortcut>true</winShortcut>
+                    <winMenu>true</winMenu>
+                    <winMenuGroup>Cognition</winMenuGroup>
+
                 </configuration>
             </plugin>
 

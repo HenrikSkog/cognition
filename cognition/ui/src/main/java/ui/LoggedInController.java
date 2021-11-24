@@ -29,7 +29,7 @@ public abstract class LoggedInController extends Controller {
    */
   @FXML
   private void handleLogout(ActionEvent event) {
-    changeToView(event, new LoginController(getCognitionAccess()),
+    changeToView(event, new LoginController(getRemoteCognitionAccess()),
             "Login");
   }
 
@@ -40,7 +40,7 @@ public abstract class LoggedInController extends Controller {
    */
   @FXML
   private void handleDashboard(ActionEvent event) {
-    changeToView(event, new DashboardController(getUser(), getCognitionAccess()),
+    changeToView(event, new DashboardController(getUser(), getRemoteCognitionAccess()),
             "Dashboard");
   }
 
@@ -51,7 +51,7 @@ public abstract class LoggedInController extends Controller {
    */
   @FXML
   private void handleMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()),
+    changeToView(event, new MyQuizzesController(getUser(), getRemoteCognitionAccess()),
             "MyQuizzes");
   }
 
@@ -62,7 +62,7 @@ public abstract class LoggedInController extends Controller {
    */
   @FXML
   protected void handleCreateQuiz(ActionEvent event) {
-    changeToView(event, new QuizController(getUser(), getCognitionAccess()),
+    changeToView(event, new QuizController(getUser(), getRemoteCognitionAccess()),
             "Quiz");
   }
 }
