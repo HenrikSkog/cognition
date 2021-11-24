@@ -8,22 +8,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import java.io.IOException;
+import java.util.stream.Collectors;
+
 import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
 import static ui.TestFxHelper.waitForFxEvents;
 
 public class MyQuizzesTest extends ApplicationTest {
   private Scene scene;
   private MyQuizzesController myQuizzesController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
   private User loggedInUser;
 
   private final String validUsername = "valid-username";
@@ -38,25 +41,30 @@ public class MyQuizzesTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("MyQuizzes");
 
-    // Logged-in user and storage instances must be present for this view to function
-    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
     this.loggedInUser = new User(validUsername, validPassword);
 
     // create some test data. 10 quizzes
     for (int i = 0; i < 10; i++) {
       Quiz quiz = new Quiz(createUuid(), "Test quiz "
-              + i, "Test description " + i);
+          + i, "Test description " + i);
       for (int j = 0; j < 10; j++) {
         Flashcard fc = new Flashcard(createUuid(), "Front"
-                + j, "Back" + j);
+            + j, "Back" + j);
         quiz.addFlashcard(fc);
       }
       loggedInUser.addQuiz(quiz);
     }
 
-    remoteCognitionAccess.create(loggedInUser);
+    Mockito.when(mockRemoteCognitionAccess.getQuizTitlesByUsername(loggedInUser.getUsername()))
+        .thenReturn(loggedInUser
+                .getQuizzes()
+                .stream()
+                .map(quiz -> new CompactQuiz(quiz.getUuid(), quiz.getName()))
+                .collect(Collectors.toList()
+                )
+        );
 
-    myQuizzesController = new MyQuizzesController(loggedInUser, remoteCognitionAccess);
+    myQuizzesController = new MyQuizzesController(loggedInUser, mockRemoteCognitionAccess);
 
     loader.setController(myQuizzesController);
 
@@ -91,8 +99,8 @@ public class MyQuizzesTest extends ApplicationTest {
     // assert listview has all quizzes that user object has
     for (int i = 0; i < listView.getItems().size(); i++) {
       Assertions.assertEquals(
-              loggedInUser.getQuizzes().get(i).getUuid(),
-              listView.getItems().get(i).getUuid()
+          loggedInUser.getQuizzes().get(i).getUuid(),
+          listView.getItems().get(i).getUuid()
       );
     }
   }
@@ -106,13 +114,22 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // Validate that user got correct feedback in UI
     Assertions.assertEquals(
-            "No selected quiz",
-            myQuizzesController.getFeedbackErrorMessage()
+        "No selected quiz",
+        myQuizzesController.getFeedbackErrorMessage()
     );
 
     // click on item in list -> click on delete button
     clickOn("#quizzesListView");
     waitForFxEvents();
+
+
+    // mock getting back a quiz from local storage
+    try {
+      Mockito.when(mockRemoteCognitionAccess.getQuizByUuid(notNull()))
+          .thenReturn(loggedInUser.getQuizzes().get(0));
+    } catch (IOException | InterruptedException e) {
+      fail();
+    }
 
     // delete selected quiz
     clickOn("#deleteQuizButton");
@@ -134,14 +151,22 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // cannot start quiz without selecting one first
     Assertions.assertEquals(
-            "No selected quiz",
-            myQuizzesController.getFeedbackErrorMessage()
+        "No selected quiz",
+        myQuizzesController.getFeedbackErrorMessage()
     );
     waitForFxEvents();
 
     // select a quiz
     clickOn("#quizzesListView");
     waitForFxEvents();
+
+    // mock finding the selected () from local storage
+    try {
+      Mockito.when(mockRemoteCognitionAccess.getQuizByUuid(notNull()))
+          .thenReturn(loggedInUser.getQuizzes().get(0));
+    } catch (IOException | InterruptedException e) {
+      fail();
+    }
 
     // start quiz
     clickOn("#startQuizButton");
@@ -161,8 +186,8 @@ public class MyQuizzesTest extends ApplicationTest {
 
     // cannot update quiz without selecting one first
     Assertions.assertEquals(
-            "No selected quiz",
-            myQuizzesController.getFeedbackErrorMessage()
+        "No selected quiz",
+        myQuizzesController.getFeedbackErrorMessage()
     );
     waitForFxEvents();
 

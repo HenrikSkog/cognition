@@ -5,8 +5,6 @@ note top of UI : Packages are named in lowercase (e.g. ui)
 
 component UI {
   package ui {
-    package ui.controllers {
-    }
   }
 }
 

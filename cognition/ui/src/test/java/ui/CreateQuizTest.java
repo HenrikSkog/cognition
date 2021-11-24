@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.tools.Tools.createUuid;
 import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
 
@@ -25,9 +27,13 @@ public class CreateQuizTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private QuizController quizController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+
+  // Mock RemoteCognitionAccess in order to test the client application in isolation
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   private TestFxHelper helper = new TestFxHelper();
+
+  private User loggedInUser;
 
   @AfterEach
   void tearDown() {
@@ -38,16 +44,13 @@ public class CreateQuizTest extends ApplicationTest {
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Quiz");
 
-    RemoteCognitionAccess remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    this.remoteCognitionAccess = remoteCognitionAccess;
-
     // in the app there is no logical way for Create Quiz to be accessed without a
     // logged-in user. Thus, we create a fake user here to emulate it
-    User loggedInUser = new User(validUsername, validPassword);
+    loggedInUser = new User(validUsername, validPassword);
 
-    remoteCognitionAccess.create(loggedInUser);
+    // create the controller with the mocked version of cognition access
+    quizController = new QuizController(loggedInUser, mockRemoteCognitionAccess);
 
-    quizController = new QuizController(loggedInUser, remoteCognitionAccess);
     // IMPORTANT: We do not set a quiz object here. Thus, we render the view like we
     // create a quiz.
     loader.setController(quizController);
@@ -79,14 +82,27 @@ public class CreateQuizTest extends ApplicationTest {
     clickOn(helper.findTextField(node -> true, "#answer-input", 0))
             .write(answer);
 
-
     // Create quiz
-    verifyInputData("name", "description", false);
+    verifyInputData(name, description, false);
+
+    try {
+      // Mock response
+      User loggedInUserWithQuizzes = loggedInUser;
+      Quiz quiz = new Quiz(createUuid(), name, description);
+      quiz.addFlashcard(new Flashcard(createUuid(), front, answer));
+
+      loggedInUserWithQuizzes.addQuiz(quiz);
+
+      Mockito.when(mockRemoteCognitionAccess.read(validUsername))
+              .thenReturn(loggedInUserWithQuizzes);
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
 
     List<Quiz> quizzes = new ArrayList<>();
 
     try {
-      quizzes = remoteCognitionAccess.read(validUsername).getQuizzes();
+      quizzes = mockRemoteCognitionAccess.read(validUsername).getQuizzes();
     } catch (IOException | InterruptedException e) {
       fail();
     }
@@ -109,6 +125,7 @@ public class CreateQuizTest extends ApplicationTest {
         }
       }
     }
+    
     Assertions.assertTrue(quizWasStored);
   }
 

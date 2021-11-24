@@ -187,7 +187,9 @@ public class ViewQuizController extends LoggedInController {
 
   @FXML
   private void goToMyQuizzes(ActionEvent event) {
-    changeToView(event, new MyQuizzesController(getUser(), getCognitionAccess()), "MyQuizzes");
+    changeToView(event,
+            new MyQuizzesController(getUser(), getRemoteCognitionAccess()), "MyQuizzes"
+    );
   }
 
   /**

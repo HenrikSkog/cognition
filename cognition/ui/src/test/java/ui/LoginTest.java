@@ -5,10 +5,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static ui.TestFxHelper.waitForFxEvents;
@@ -18,32 +21,17 @@ public class LoginTest extends ApplicationTest {
   private final String validPassword = "valid-password";
   private Scene scene;
   private LoginController loginController;
-  private RemoteCognitionAccess remoteCognitionAccess;
+
+  // Mock RemoteCognitionAccess in order to test the client application in isolation
+  private final RemoteCognitionAccess mockRemoteCognitionAccess = Mockito.mock(RemoteCognitionAccess.class);
 
   private TestFxHelper helper = new TestFxHelper();
-
-  @BeforeEach
-  void setUp() {
-    try {
-      // Add a user, such that storage is not empty. Empty storage is tested in core
-      // module.
-      remoteCognitionAccess.create(new User("placeholder", "placeholder"));
-    } catch (IOException | InterruptedException e) {
-      fail();
-    }
-  }
-
-  @AfterEach
-  void tearDown() {
-    TestFxHelper.clearTestStorage();
-  }
 
   @Override
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = getLoader("Login");
 
-    this.remoteCognitionAccess = new RemoteCognitionAccess(AppTest.TEST_PORT);
-    this.loginController = new LoginController(remoteCognitionAccess);
+    this.loginController = new LoginController(mockRemoteCognitionAccess);
 
     loader.setController(loginController);
 
@@ -65,9 +53,9 @@ public class LoginTest extends ApplicationTest {
   }
 
   @Test
-  @DisplayName("Storage is defined.")
-  void storageIsDefined() {
-    Assertions.assertNotNull(remoteCognitionAccess);
+  @DisplayName("Accessor is defined.")
+  void accessorIsDefined() {
+    Assertions.assertNotNull(mockRemoteCognitionAccess);
   }
 
   /**
@@ -77,12 +65,15 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Existing user can log in.")
   void existingUserCanLogIn() {
-    User user = new User(validUsername, validPassword);
+    // mock created users
+    List<User> users = List.of(new User(validUsername, validPassword));
 
-    // Create sample user
     try {
-      remoteCognitionAccess.create(user);
-    } catch (IOException | InterruptedException e) {
+      Mockito.when(mockRemoteCognitionAccess.readUsers())
+              .thenReturn(users);
+      Mockito.when(mockRemoteCognitionAccess.read(validUsername))
+              .thenReturn(users.get(0));
+    } catch (InterruptedException | IOException e) {
       fail();
     }
 
@@ -120,6 +111,14 @@ public class LoginTest extends ApplicationTest {
   @Test
   @DisplayName("Non-existing user cannot log in.")
   void nonExistingUserCannotLogIn() {
+    // mock already created users
+    List<User> users = new ArrayList<>();
+    try {
+      Mockito.when(mockRemoteCognitionAccess.readUsers())
+          .thenReturn(users);
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
     // This username and password is not in local storage, as users.json is cleared
     // after each test
     verifyInputData("non-existing-user", "non-existing-password", loginController.getFeedbackErrorMessage());

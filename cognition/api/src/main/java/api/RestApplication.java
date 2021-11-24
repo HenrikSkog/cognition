@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class RestApplication {
+  public static final int TEST_PORT = 3000;
   private static int PORT = 8080;
   private static boolean testMode = false;
 
@@ -45,4 +46,5 @@ public class RestApplication {
   public static boolean isTestMode() {
     return testMode;
   }
+
 }

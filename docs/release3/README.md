@@ -6,15 +6,19 @@ Please note that all prior documentation in all modules have been revised and up
 
 ### `ui` module documentation
 
-[Click here](../../cognition/ui/README.md) to read the documentation for the `ui` module.
+[Click here](../../cognition/ui) to read the documentation for the `ui` module.
 
 ### `core` module documentation
 
-[Click here](../../cognition/core/README.md) to read the documentation for the `core` module.
+[Click here](../../cognition/core) to read the documentation for the `core` module.
 
 ### `api` module documentation
 
-[Click here](../../cognition/api/README.md) to read the documentation for the `api` module.
+[Click here](../../cognition/api) to read the documentation for the `api` module.
+
+### `integration_tests` module documentation
+
+[Click here](../../cognition/integration_tests) to read the documentation for the `integration_tests` module.
 
 ## Changelog from deliverable 2 to deliverable 3
 
@@ -56,6 +60,11 @@ Below, you can view a short summary of the changelog from deliverable 2 to deliv
   - Add REST controller test
   - Add endpoint test
 - Add functionality for autogenerating documentation of the REST application
+
+### The `integration_tests` module
+
+- Add `integration_tests` module
+- Test that client application can communicate with running Spring Boot web server
 
 ## Feedback from deliverable 2
 
@@ -110,17 +119,42 @@ this issue was less prioritized at the end of deliverable 3.
 
 **We encourage you to run the UI tests locally.**
 
+#### Fixing the issue
+
+In order to fix this issue, we read the [Maven Surefire documentation](https://maven.apache.org/surefire/maven-surefire-plugin/examples/rerun-failing-tests.html) and found that tests can be re-run using Maven Surefire.Thus, we added the `<rerunFailingTestsCount>1</rerunFailingTestsCount>` to all relevant `pom.xml` files. When `rerunFailingTestsCount` is set to a value larger than `0`, the output xml of the test report will also be extended to include information of each re-run. Please read the Maven Surefire documentation for more information about re-running failing tests.
+
+A test that fails on its first run will be considered **flaky** by Surefire, and will be re-run. The developer is informed about a flaky test in the terminal. If the developer sees something along the lines of the following...
+
+```sh
+...
+
+Run 1: FAIL
+Run 2: PASS
+
+...
+```
+
+...then this should be considered as a test passing.
+
+_The following image is a screenshot from a flaky test in GitPod. It failed on its first run, but was re-run, and passed on its second run._
+
+![Flaky test in GitPod](./img/gitpod-flaky.png)
+
+**We see this as a good workaround in order for tests to pass in GitPod, considering we have little to no power to control the latency issues occuring in GitPod.**
+
 ### UUID
 
-We got feedback on the usage of UUID in the `User` class, as `username` is unique per user. We agree on this and refactored the
-codebase to use `username`.
+We got feedback on the usage of UUID in the `User` class, as `username` is unique per user. We agree on this and
+refactored the codebase to use `username`.
 
-For `Quiz` and `Flashcard`, we still use UUID as we do not want to force uniqueness in the quiz name and flashcard name. We feel that this is a clean solution which makes for a good developer experience.
+For `Quiz` and `Flashcard`, we still use UUID as we do not want to force uniqueness in the quiz name and flashcard name.
+We feel that this is a clean solution which makes for a good developer experience.
 
 ### Encapsulation
 
-We got multiple comments on encapsulation problems of lists throughout the code base. One of these was getters that returned internal lists, which we
-resolved by returning new lists with the same contents. The `Controller` class also had three methods that we changed to `private`.
+We got multiple comments on encapsulation problems of lists throughout the code base. One of these was getters that
+returned internal lists, which we resolved by returning new lists with the same contents. The `Controller` class also
+had three methods that we changed to `private`.
 
 ## Reflection
 
@@ -131,10 +165,56 @@ added [`CognitionStorage`](../../cognition/core/src/main/java/json/CognitionStor
 and the `Storable` interface at the same time. For deliverable 1 and 2, we went on interacting with the local storage
 using only the `CognitionStorage` class, not utilizing the full potential of the hierarchy we had sketched out. This
 class hierarchy would have been more fitting if we had several implementing storage classes, but there was no need for
-this, due to the nature of our Java models and the [file format defintion found in the core module documentation (`### Storage Format`)](../../cognition/core/README.md).
+this, due to the nature of our Java models and
+the [file format defintion found in the core module documentation (`### Storage Format`)](../../cognition/core/README.md)
+.
 
 In hindsight, we should have started with only the `CognitionStorage` class, and then later improved on the persistence
 solution. **That is more akin to agile software development**; continuously improving upon a working solution.
+
+### Integration tests and deployment tests
+
+#### Integration tests
+
+Integration testing is a widely used term when talking about testing functionality across multiple modules. Some
+understand the term as the different modules interacting in a full-fledged version of the full-stack application. Others
+understand integration testing as simply verifying that the modules correctly interacts with each other, leaving details
+to each module. This approach is sometimes called systems testing.
+
+**The `integration_tests` module tests the latter scenario, leaving details to be tested by the `api`, `core` and `ui`
+module.**
+
+Please see the [`integration_tests`](../../cognition/integration_tests/README.md) documentation for more information
+about this module.
+
+#### Deployment tests
+
+The former understanding of integration testing - "different modules interacting in a full-fledged version of the
+full-stack application" - is sometimes referred to as deployment testing. The group has also developed a version where
+the full-stack application is tested in this manner.
+
+First, some context. Throughout the project, there has been a lot of back-and-forth regarding how to test the `ui`
+module. The solution for some time was to spin up a Spring web server beforehand, and then test `ui` given that a web
+server was running. This was achieved using a
+custom [`Makefile` found in the `cognition` directory](../../cognition/Makefile).
+
+We later moved to test `ui` in isolation, and rather have an additional module called `integration_tests`, in order to perform integration tests with a running client application and a web server.
+
+However, our initial solution for testing `ui` given a running Spring Boot web server is really a deployment test, based on information provided by the IT1901 staff.
+
+**We do not want this test functionality to go to waste, but it does not really fit in our `main` branch.** Thus, we have decided to tag the `main` branch at the moment when the `ui` module used deployment tests, rather than testing the client application functionality in isolation. The tag [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag is available on GitLab with explaining documentation.
+
+**Please note that this tag of the `main` branch excludes the `integration_tests` module, as the two approaches have quite fundamentally different setups in the `api` module and consequently the Spring Boot configuration.**
+
+#### An alternative approach
+
+Let's take a moment to reflect on a different approach, and why we deem this less fitting in a multi-modular Maven project.
+
+We could have easily made `ui` depend on `api`. `ui` would then be able to simply call `RestApplication.main(...)` on test startup and `RestApplication.stop()` on test shutdown, or something similar. This would allow us to keep UI unit tests and integration tests in the same module (`ui`). However, this would introduce a **very unnecessary** dependency. The client application should really have no relation to the running web server. It should simply assume that some actor has the web server running on a machine, and act accordingly.
+
+#### In summary
+
+The `main` branch should test, **and currently is testing**, `api`, `core` and `ui` in isolation. Additionally, we have a module called `integration_tests` for testing connections between the client application and web server. The integration tests do not test many deatils in neither the `ui` module or the `api` module. This is tested in the respective modules. Rather, `integration_tests` verify that a client application view can successfully connect to the web server. You can find the deployment tests with explaining documentation in the [`snapshot-ui-module-using-deployment-tests`](https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103/-/tree/snapshot-ui-module-using-deployment-tests) tag on GitLab.
 
 ### Commit Culture
 
@@ -147,9 +227,9 @@ rarely descriptions and footers. This was sufficient for the four of us in the g
 not sustainable for new developers** contributing to the code base.
 
 Thus, we put more effort into every single commit during deliverable 3. Our commit messages now have a category (
-e.g. `feat`, `fix`, `docs`, etc...), title, an optional description with **why** this change is needed, and a reference to the issue to
-resolve. Branch names are clear and concise, and is to be marked with the ID number of the issue it resolves.
-Example: `#10/feat-frontend`.
+e.g. `feat`, `fix`, `docs`, etc...), title, an optional description with **why** this change is needed, and a reference
+to the issue to resolve. Branch names are clear and concise, and is to be marked with the ID number of the issue it
+resolves. Example: `#10/feat-frontend`.
 
 ### Public methods in REST controller
 
@@ -160,21 +240,26 @@ won't break if they are `private`. We have done this for three reasons:
 2. The class is not being instantiated anywhere, and therefore the access modifiers do not matter
 3. It makes it possible to unit test them
 
-**Public route methods are also the convention in Spring Boot**, so doing this another way would confuse someone familiar with Spring Boot.
+**Public route methods are also the convention in Spring Boot**, so doing this another way would confuse someone
+familiar with Spring Boot.
 
 ### Component Based UI
 
 After working with multiples FXML views, we realized that it would be convinient to separate some parts of the code into
 components that could be imported into the main views of our projects. Specifically, 4 of our views include a navigation
 bar that is identical in all of the views. Making this part of the code a component would not only make the current FXML
-views easier to read, but it would also facilitate modifing the component as well as guarantee that the navigation bar is identical in all views.
+views easier to read, but it would also facilitate modifing the component as well as guarantee that the navigation bar
+is identical in all views.
 
-However, when trying to implement this change we stumbled into a problem. The `FXMLLoader` (a class that loads the object
-hierarchy from an XML document) expects a **parameterless constructor** when initializing a controller with `fx:include`. `fx:include` is how you are able to import the external fxml file. This problem makes the creation of a navigation bar
-component difficult, as all the links in the navigation bar call functions that require a specific `User`. This `User` is only accesible because the FXML Controller is constructed with it as a parameter.
+However, when trying to implement this change we stumbled into a problem. The `FXMLLoader` (a class that loads the
+object hierarchy from an XML document) expects a **parameterless constructor** when initializing a controller
+with `fx:include`. `fx:include` is how you are able to import the external fxml file. This problem makes the creation of
+a navigation bar component difficult, as all the links in the navigation bar call functions that require a
+specific `User`. This `User` is only accesible because the FXML Controller is constructed with it as a parameter.
 
-In this case, we opted to not create a component based UI, as it would require modificating several parts of our code base. In this case, we **suffer from technical debt**, in the sense that we commited to a solution that is hard to modify
-without putting in more effort than what we deemed as efficient.
+In this case, we opted to not create a component based UI, as it would require modificating several parts of our code
+base. In this case, we **suffer from technical debt**, in the sense that we commited to a solution that is hard to
+modify without putting in more effort than what we deemed as efficient.
 
 ### The choice of not testing `CompactQuiz`
 
@@ -202,25 +287,12 @@ using `cd ui && mvn javafx:run`.
 For deliverable 3, we converted the application to interact with a web server using the Spring Boot framework. This
 demanded that we reworked how the tests and the application is run, as there are more moving parts currently.
 
-First, you need to **install dependencies without running tests**, in order to ensure that all Maven modules have
-downloaded necessary dependencies.
-
-Then, you need to **test** the application. For the user interface tests to pass, this requires using a Spring Boot
-server running on our port for testing (port `3000`).
-
-**Running the application** also requires a Spring Boot server to be running, this time on port `8080`. We made the
-choice of not running the test server and the application server on the same port in order to prevent potential crashes.
-
-In summary, all these moving parts led us to streamline the process of testing and running the application. Hence, we
+This led us to streamline the process of testing and running the application. Hence, we
 added a [`Makefile`](../../cognition/Makefile) as a wrapper for the needed `mvn` commands to improve the quality of life
 for the current developers and "future" developer (the one grading this project). **We underline that we still use Maven
-for building the application.** Make is simply acts as an abstraction above the existing Maven commands.
+for building the application.** `Make` simply acts as an abstraction above the existing `mvn` commands.
 
-Given the number of actual commands to run the application, the group saw this abstraction as necessary and worth
-dedicating time to, in order to improve the quality of life for the developer.
-
-Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`
-.
+Please see the root [`README`](../../README.md) for more information on running the application, preferably using `make`.
 
 **TL;DR** - You can now run tests using `make test` and run the application using `make` in the `cognition` directory.
 

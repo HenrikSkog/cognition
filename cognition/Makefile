@@ -25,10 +25,9 @@ test: install tests
 install:
 	@ $(MVN) $(MVNFLAGS) clean install -DskipTests
 
-# Run tests for all Maven modules, and start Spring Boot server on port for testing.
+# Run tests for all Maven modules.
 tests:
-	@ cd api && $(MVN) $(MVNFLAGS) spring-boot:run -Dspring-boot.run.arguments=testmode &\
-  	sleep 10 && $(MVN) $(MVNFLAGS) test ; lsof -t -i:3000 | xargs kill -9
+	@ $(MVN) $(MVNFLAGS) test
 
 # Run the client application, and start Spring Boot server on port for application logic
 application:
@@ -47,10 +46,6 @@ server:
 stop-server:
 	@ lsof -t -i:8080 | xargs kill -9
 
-# Stop the Spring Boot server running on port for testing
-stop-test-server:
-	@ lsof -t -i:3000 | xargs kill -9
-
 # Print the available targets.
 help:
 	@ echo "Usage   :  make <target>"
@@ -58,10 +53,9 @@ help:
 	@ echo "   app : Install dependencies, start application server, and start client application."
 	@ echo "   test : Install dependencies, start test server, and run tests for all modules."
 	@ echo "   install : Install dependencies without running tests."
-	@ echo "   tests : Run tests for all Maven modules, and start Spring Boot server on port for testing."
+	@ echo "   tests : Run tests."
 	@ echo "   application : Run the client application, and start Spring Boot server on port for application logic."
 	@ echo "   client : Run the client application."
 	@ echo "   server : Run the Spring Boot server."
 	@ echo "   stop-server : Stop the Spring Boot server."
-	@ echo "   stop-test-server : Stop the Spring Boot server running on port for testing."
 	@ echo "   help : Print the available targets."

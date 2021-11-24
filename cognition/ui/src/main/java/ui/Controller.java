@@ -93,7 +93,7 @@ public abstract class Controller {
     }
   }
 
-  protected RemoteCognitionAccess getCognitionAccess() {
+  public RemoteCognitionAccess getRemoteCognitionAccess() {
     return remoteCognitionAccess;
   }
 
