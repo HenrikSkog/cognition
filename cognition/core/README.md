@@ -80,3 +80,17 @@ converting Java objects into JSON data and vice versa, developed by Google.
 
 [`CognitionStorage`](src/main/java/json/CognitionStorage.java) is
 responsible for persistently storing the plain old Java objects in our application.
+
+## Diagrams
+
+The `abstract` diagram helps a new developer get an overview of the relationships and roles of each class before reading the `detailed` version, which in essence, is the more familiar way of drawing class diagrams. We choose this way of presenting the modules as it helps new developers to the project quickly understand the purpose of each class and how that comes into play in the broader task of the module.
+
+### Abstracted
+
+![Core Descriptive Diagram](../../docs/plantuml/release3/img/core_abstracted.png)
+
+### Detailed
+
+![Core Diagram](../../docs/plantuml/release3/img/core_detailed.png)
+
+> Does not include setter and getter methods as well as variables and functions that are not necesary to get an overview of the classes function and its relationship to other classes.
