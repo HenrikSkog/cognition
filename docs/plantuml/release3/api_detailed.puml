@@ -5,18 +5,24 @@ class CogntionController{
 + getCogntionStorage()
 + setCognitionStorage()
 ..
-+ getUsers(): GET ("/users")
-+ getUserByUsername(): GET ("/users/{username}")
-+ createUser(): POST ("/users")
-+ updateUser(): PUT ("/users")
-+ deleteUser(): DELETE ("/users/{username}")
+GET Requests
++ getUsers(): ("/users")
++ getUserByUsername(): ("/users/{username}")
++ getQuizzesByUsername(): ("/quizzes/{username}")
++ getQuizTitlesByUsername(): ("/quizzes/{username}/titles")
++ getQuizByUuid(): ("/quiz/{uuid}")
 ..
-+ getQuizzesByUsername(): GET ("/quizzes/{username}")
-+ getQuizTitlesByUsername(): GET ("/quizzes/{username}/titles")
-+ getQuizByUuid(): GET ("/quiz/{uuid}")
-+ updateQuizByUuid: PUT ("/quiz")
-+ deleteQuizByUuid(): DELETE ("/quiz/{uuid}")
-+ createQuiz(): POST ("/quiz/{username}")
+PUT Requests
++ updateQuizByUuid: ("/quiz")
++ updateUser(): ("/users")
+..
+POST Requests
++ createQuiz():("/quiz/{username}")
++ createUser(): ("/users")
+..
+DELETE Requests
++ deleteQuizByUuid(): ("/quiz/{uuid}")
++ deleteUser(): ("/users/{username}")
 }
 
 class CognitionService{

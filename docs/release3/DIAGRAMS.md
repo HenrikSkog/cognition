@@ -14,11 +14,25 @@ This package diagram shows the dependencies of each module and package in the Co
 
 ## Class diagram documentation
 
-This class diagram shows the relationship between the classes in the core module.
-![Core Diagram](../plantuml/release3/img/core_diagram.png)
+We have chosen to both model these relationships abstracted and detailed. This is done in order for a new developer to
+get an abstracted overview of the relationships before reading the details of a UI controller.
 
-This class diagram shows the rellationship between the classes in the api module
-![API Class Diagram](../plantuml/release3/img/api_class_diagram.png)
+### Core
+
+**Abstracted**
+![Core Descriptive Diagram](../plantuml/release3/img/core_abstracted.png)
+
+**Detailed**
+
+![Core Diagram](../plantuml/release3/img/core_detailed.png)
+
+### API
+
+**Abstracted**
+![API Descriptive Diagram](../plantuml/release3/img/api_abstracted.png)
+
+**Detailed**
+![API Class Diagram](../plantuml/release3/img/api_detailed.png)
 
 ## Sequence diagram documentation
 
