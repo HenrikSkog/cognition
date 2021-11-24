@@ -119,6 +119,21 @@ this issue was less prioritized at the end of deliverable 3.
 
 **We encourage you to run the UI tests locally.**
 
+#### Fixing the issue
+
+In order to fix this issue, we read the [Maven Surefire documentation](https://maven.apache.org/surefire/maven-surefire-plugin/examples/rerun-failing-tests.html) and found that tests can be re-run using Maven Surefire.Thus, we added the `<rerunFailingTestsCount>1</rerunFailingTestsCount>` to all relevant `pom.xml` files. When `rerunFailingTestsCount` is set to a value larger than `0`, the output xml of the test report will also be extended to include information of each re-run. Please read the Maven Surefire documentation for more information about re-running failing tests.
+
+A test that fails on its first run will be considered **flaky** by Surefire, and will be re-run. The developer is informed about a flaky test in the terminal. If the developer sees something along the lines of the following...
+
+```sh
+Run 1: FAIL
+Run 2: PASS
+```
+
+...then this should be considered as a test passing.
+
+**We see this as a good workaround in order for tests to pass in GitPod, considering we have little to no power to control the latency issues occuring in GitPod.**
+
 ### UUID
 
 We got feedback on the usage of UUID in the `User` class, as `username` is unique per user. We agree on this and
