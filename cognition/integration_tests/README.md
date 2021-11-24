@@ -3,7 +3,7 @@
 ## Description
 
 The `integration_tests` module tests and verifies that the client application can successfully communicate with a
-running Spring Boot web server from the [`api`](../api) module.
+Spring Boot web server running on port for testing (`3000`) from the [`api`](../api) module.
 
 This is tested by using the presentation layer
 controller's [`RemoteCognitionAccess`](../ui/src/main/java/ui/RemoteCognitionAccess.java) in order to communicate with a
