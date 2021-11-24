@@ -14,8 +14,9 @@ This package diagram shows the dependencies of each module and package in the Co
 
 ## Class diagram documentation
 
-We have chosen to both model these relationships abstracted and detailed. This is done in order for a new developer to
-get an abstracted overview of the relationships before reading the details of a UI controller.
+We have chosen to model the class diagrams for all modules in two different ways. The result is an `abstract` and `detailed` version of each class diagram. The `abstract` diagram helps a new developer get an overview of the relationships and roles of each class before reading the `detailed` version, which in essence, is the more familiar way of drawing class diagrams. We choose this way of presenting the modules as it helps new developers to the project quickly understand the purpose of each class and how that comes into play in the broader task of the module.
+
+Additionaly none of the `detailed` class diagram does not include setter and getter methods as well as variables and functions that are not necesary to get an overview of the classes function and its relationship to other classes. For a more detailed explanation of each module please navigate to the documentation of the module.
 
 ### Core
 
@@ -33,6 +34,16 @@ get an abstracted overview of the relationships before reading the details of a 
 
 **Detailed**
 ![API Class Diagram](../plantuml/release3/img/api_detailed.png)
+
+### UI
+
+**Abstracted**
+
+![Interaction between UI controllers](../plantuml/release2/img/ui_controllers_abstracted.png)
+
+**Detailed**
+
+![Interaction between UI controllers](../plantuml/release2/img/ui_controllers_detailed.png)
 
 ## Sequence diagram documentation
 
