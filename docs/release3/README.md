@@ -126,11 +126,19 @@ In order to fix this issue, we read the [Maven Surefire documentation](https://m
 A test that fails on its first run will be considered **flaky** by Surefire, and will be re-run. The developer is informed about a flaky test in the terminal. If the developer sees something along the lines of the following...
 
 ```sh
+...
+
 Run 1: FAIL
 Run 2: PASS
+
+...
 ```
 
 ...then this should be considered as a test passing.
+
+_The following image is a screenshot from a flaky test in GitPod. It failed on its first run, but was re-run, and passed on its second run._
+
+![Flaky test in GitPod](./img/gitpod-flaky.png)
 
 **We see this as a good workaround in order for tests to pass in GitPod, considering we have little to no power to control the latency issues occuring in GitPod.**
 
