@@ -1,41 +1,38 @@
 @startuml
-class CognitionController {
-    -CognitionStorage congnitionStorage
-    +setCognitionStorage()
-    +getUsers(): GET /users
-    +getUsersByUsername(): /users/{username}
-    +createUser(): POST /users
-    +updateUser(): PUT /users
-    +deleteUser(): DELETE /users/{username}
-    +getQuizzesByUsername(): GET /quizzes/{username}
-    +getQuizByUuid(): GET /quiz/{uuid}
-    +updateQuizByUuid(): PUT /quiz
-    +deleteQuizByUuid(): DELETE /quiz/{uuid}
-    +createQuiz(): POST /quiz/{username}
-    -getQuizzes()
-
+class CogntionController{
+- final CogntionService cogntionService
+--
++ getCogntionStorage()
++ setCognitionStorage()
+..
++ getUsers(): GET ("/users")
++ getUserByUsername(): GET ("/users/{username}")
++ createUser(): POST ("/users")
++ updateUser(): PUT ("/users")
++ deleteUser(): DELETE ("/users/{username}")
+..
++ getQuizzesByUsername(): GET ("/quizzes/{username}")
++ getQuizTitlesByUsername(): GET ("/quizzes/{username}/titles")
++ getQuizByUuid(): GET ("/quiz/{uuid}")
++ updateQuizByUuid: PUT ("/quiz")
++ deleteQuizByUuid(): DELETE ("/quiz/{uuid}")
++ createQuiz(): POST ("/quiz/{username}")
 }
 
-class StorageException
-
-class UserNotFoundException
-
-class QuizNotFoundException
-
-class IdentifierAlreadyInUseException
+class CognitionService{
+- CognitionStorage cognitionStorage
++ getCognitionStorage()
++ setCogntionStorage()
+}
 
 class RestApplication{
--int PORT
--boolean testMode
-+{static}main()
-+{static}setTestMode()
-+{static}isTestMode()
+- {static} int PORT
+- {static} boolean testMode
++ {static} main()
++ setTestMode()
++ isTestMode()
 }
 
-CognitionController ..> IdentifierAlreadyInUseException : <<throws>>
-CognitionController ..> UserNotFoundException: <<throws>>
-CognitionController ..> QuizNotFoundException: <<throws>>
-CognitionController ..> StorageException: <<throws>>
-
-CognitionController .> RestApplication: Framework connection
+RestApplication ..> CogntionController: <<Framework connection>>
+CogntionController --> CognitionService
 @enduml

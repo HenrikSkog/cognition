@@ -8,12 +8,7 @@ class Flashcard{
 
 +isValidFront()
 +isValidAnswer()
-+getUuid()
-+setUuid()
-+getFront()
-+setFront()
-+getAnswer()
-+setAnswer()
+
 
 }
 class Quiz{
@@ -25,16 +20,8 @@ class Quiz{
 +{static}isValidName()
 +{static}isValidDescription()
 +addFlashcards()
-+getUuid()
--setUuid()
 +addFlashcard()
 +removeFlashcard()
-+getName()
-+setName()
-+getDescription()
-+setDescription()
-+getFlashcard()
-+setFlashcard()
 }
 class User{
 -final List<Quiz> quizzes
@@ -42,11 +29,7 @@ class User{
 -String password
 +{static}isValidUsername()
 +{static}isValidPassword()
-+getQuizzes()
 +updateQuiz()
-+setUsername()
-+getPassword()
-+setPassword()
 +addQuiz()
 +removeQuiz()
 }
@@ -60,24 +43,26 @@ class CognitionStorage{
 -final Gson gson
 -Path storagePath
 +readUsers()
--writeToJson()
 +create()
 +read()
--updateUser()
 +update()
 +delete()
 +setStoragePath()
 +isEmpty()
--createDirectoryIfNotExists()
 }
 
-class Comp
+class CompactQuiz{
+- String uuid
+- String name
+}
 
-User ||--o{ Quiz: owns
-Quiz ||--|{ Flashcard: owns
+User ||-o{ Quiz
+Quiz ||-|{ Flashcard
 
-Quiz --> Tools :uses
-Flashcard --> Tools: uses
-CognitionStorage --> User: uses
+Tools <-- Quiz
+Tools <-- Flashcard
+
+CompactQuiz -> Tools
+
+CognitionStorage ..> User: <<Stores User objects in local storage>>
 @enduml
-
