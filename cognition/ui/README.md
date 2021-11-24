@@ -51,9 +51,11 @@ web server handling interaction with the persistent storage.
 
 ### The choice of not testing `RemoteCognitionAccess`
 
-We consider [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) to be implicitly tested using the [`integration_tests`](../integration_tests) module.
+In order to test the client application in isolation, we use the [Mockito](https://site.mockito.org/) framework to mock the client application class that interacts with the web server: [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java). In other words, `RemoteCognitionAccess` is not explicitly tested in the `ui` module.
 
-Please read below for a version about the application that tests `RemoteCognitionAccess` using deployment tests.
+Rather, **we consider [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) to be implicitly tested using the [`integration_tests`](../integration_tests) module. This is not registered by JaCoCo in the `ui` module**. It thus seems like [`RemoteCognitionAccess`](src/main/java/ui/RemoteCognitionAccess.java) is not tested, but that is not true.
+
+Please read below for a version of the application that tests `RemoteCognitionAccess` using deployment tests, thus increasing its coverage in the `ui` module.
 
 ### Testing the UI
 
