@@ -68,3 +68,33 @@ However, **we have created a tag for a snapshot of the `main` branch with functi
 Please see the [release 3 documentation](../../docs/release3/README.md) for more information on improvements and new
 functionality in the `ui` module, specifically under the
 heading `## Balancing implementing new functionality and ensuring code quality`.
+
+## Diagrams
+
+The `abstract` diagram helps a new developer get an overview of the relationships and roles of each class before reading the `detailed` version, which in essence, is the more familiar way of drawing class diagrams. We choose this way of presenting the modules as it helps new developers to the project quickly understand the purpose of each class and how that comes into play in the broader task of the module.
+
+### Abstracted
+
+![Interaction between UI controllers](../../docs/plantuml/release2/img/ui_controllers_abstracted.png)
+
+### Detailed
+
+![Interaction between UI controllers](../../docs/plantuml/release2/img/ui_controllers_detailed.png)
+
+> Please note that this diagram does not include getter and setter methods, as they are implicitly implemented if necessary. Additionally, getters and setters in diagrams offer little overview of the class functionality and its relationship to other classes.
+
+## Sequence diagrams
+
+An overview of the user flow between UI controllers can be found below.
+
+### Login Sequence
+
+![Login Sequence](../../docs/plantuml/release2/img/login_sequence.png)
+
+### Dashboard Sequence
+
+![Dashboard Sequence](../../docs/plantuml/release2/img/dashboard_controller.png)
+
+### MyQuizzes Sequence
+
+![MyQuizzes Sequence](../../docs/plantuml/release2/img/myquizzes_controller.png)

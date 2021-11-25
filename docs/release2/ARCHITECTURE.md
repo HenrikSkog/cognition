@@ -64,6 +64,8 @@ get an abstracted overview of the relationships before reading the details of a 
 
 ![Interaction between UI controllers](../plantuml/release2/img/ui_controllers_detailed.png)
 
+> This diagram does not show every function and variable in every class. Rather, it illustrates what we deemed important to get an overview of each class function and its relationship to the other classes.
+
 Some of our controller have quite a bit of shared logic. Thus, we have abstracted this logic away from each extending
 controller, and rather put all shared logic in abstract controller classes (e.g. `Controller`, `LoggedInController`).
 

@@ -29,7 +29,7 @@ install:
 tests:
 	@ $(MVN) $(MVNFLAGS) test
 
-# Run the client application, and start Spring Boot server on port for application logic
+# Run the client application, and start Spring Boot server on port for application logic.
 application:
 	@ cd api && $(MVN) $(MVNFLAGS) spring-boot:run &\
   	cd ui && sleep 2 && $(MVN) $(MVNFLAGS) javafx:run
