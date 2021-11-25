@@ -81,7 +81,7 @@ The `abstract` diagram helps a new developer get an overview of the relationship
 
 ![Interaction between UI controllers](../../docs/plantuml/release2/img/ui_controllers_detailed.png)
 
-> Does not include setter and getter methods as well as variables and functions that are not necesary to get an overview of the classes function and its relationship to other classes.
+> Please note that this diagram does not include getter and setter methods, as they are implicitly implemented if necessary. Additionally, getters and setters in diagrams offer little overview of the class functionality and its relationship to other classes.
 
 ## Sequence diagrams
 
