@@ -33,5 +33,3 @@ The `abstract` diagram helps a new developer get an overview of the relationship
 ### Detailed
 
 ![API Class Diagram](../../docs/plantuml/release3/img/api_detailed.png)
-
-> Does not include setter and getter methods as well as variables and functions that are not necesary to get an overview of the classes function and its relationship to other classes.
