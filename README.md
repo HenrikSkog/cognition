@@ -1,8 +1,10 @@
-# IT1901 - Group 2103
+# Cognition
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.stud.ntnu.no/#https://gitlab.stud.idi.ntnu.no/it1901/groups-2021/gr2103/gr2103)
 
 ## Description
+
+This is the project me and my group developed in the subject **IT1901 - Informatics, Project I**. 
 
 Cognition is - plain and simple - a flashcard application. If you've used [Quizlet](https://quizlet.com/), Cognition
 should feel quite familiar.
