@@ -1,0 +1,30 @@
+image: maven:latest
+
+variables:
+  # Parent pom.xml
+  PARENT_CLI_OPTS: "-f cognition/pom.xml -s .m2/settings.xml --batch-mode"
+  # API pom.xml
+  API_CLI_OPTS: "-f cognition/api/pom.xml -s .m2/settings.xml --batch-mode"
+  # Core pom.xml
+  CORE_CLI_OPTS: "-f cognition/core/pom.xml -s .m2/settings.xml --batch-mode"
+  # UI pom.xml
+  UI_CLI_OPTS: "-f cognition/ui/pom.xml -s .m2/settings.xml --batch-mode"
+
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  # 1. Cleans previous build
+  # 2. Installs dependencies
+  # 3. Run tests in core and api module
+  # 4. Checks that the project compiles
+  script:
+    - mvn $PARENT_CLI_OPTS clean install -DskipTests
+    - mvn $API_CLI_OPTS test
+    - mvn $CORE_CLI_OPTS test
+    - mvn $PARENT_CLI_OPTS compile -e

@@ -1,0 +1,9 @@
+# Custom ignores
+.idea
+.DS_Store
+*.iml
+.project
+.classpath
+.settings
+*.properties
+out
