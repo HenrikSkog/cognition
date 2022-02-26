@@ -25,9 +25,14 @@ Additionaly none of the `detailed` class diagram does not include setter and get
 
 **Detailed**
 
+This class diagram shows the relationship between the classes in the core module.
+
 ![Core Diagram](../plantuml/release3/img/core_detailed.png)
 
+
 ### API
+
+This class diagram shows the relationship between the classes in the api module.
 
 **Abstracted**
 ![API Descriptive Diagram](../plantuml/release3/img/api_abstracted.png)
